@@ -77,12 +77,7 @@ function HeroStat({
   )
 }
 
-export function Hero({
-  headline,
-  eyebrow = "Jameson Sotheby's International Realty · Chicago",
-  primaryCta = { label: 'Our Process', href: '/our-process' },
-  secondaryCta = { label: 'Get in Touch', href: '/contact' },
-}: HeroProps) {
+export function Hero(_props: HeroProps) {
   const statsRef = useRef<HTMLDivElement>(null)
   const [animate, setAnimate] = useState(false)
 
@@ -100,21 +95,18 @@ export function Hero({
     return () => observer.disconnect()
   }, [])
 
-  // Split headline on comma for line break
-  const parts = headline.split(',')
-
   return (
     <section className="pg-hero">
-      <video
-        className="pg-hero-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster=""
-      >
-        <source src="/hero-video.mp4" type="video/mp4" />
-      </video>
+      <div className="pg-hero-video-wrap">
+        <video
+          src="/hero-video.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="pg-hero-video"
+        />
+      </div>
       <div className="pg-hero-content">
 
         <div className="pg-hero-stats" ref={statsRef}>

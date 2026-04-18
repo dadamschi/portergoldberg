@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { NavItem } from '@/types'
 
 type NavProps = {
@@ -16,16 +17,16 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
   return (
     <>
       <nav className="pg-nav">
-        <a href="/" className="pg-logo">
+        <Link href="/" className="pg-logo">
           <Image
             src={logoSrc}
             alt="PorterGoldberg Residential"
-            width={200}
-            height={32}
-            style={{ width: 'auto', height: '28px' }}
+            width={340}
+            height={48}
+            style={{ width: 'auto', height: '48px' }}
             priority
           />
-        </a>
+        </Link>
 
         <ul className="pg-nav-links">
           {items.slice(0, 6).map((item) => (
@@ -35,17 +36,17 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
               onMouseEnter={() => setHoveredItem(item.label)}
               onMouseLeave={() => setHoveredItem(null)}
             >
-              <a href={item.href ?? '#'} className="pg-nav-link">
+              <Link href={item.href ?? '#'} className="pg-nav-link">
                 {item.label}
                 {item.children && <span className="pg-nav-arrow">▾</span>}
-              </a>
+              </Link>
 
               {item.children && hoveredItem === item.label && (
                 <div className="pg-dropdown">
                   {item.children.map((child) => (
-                    <a key={child.label} href={child.href} className="pg-dropdown-link">
+                    <Link key={child.label} href={child.href ?? '#'} className="pg-dropdown-link">
                       {child.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -54,9 +55,6 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
         </ul>
 
         <div className="pg-nav-right">
-          <a href="/contact" className="pg-nav-cta">
-            Let's Connect
-          </a>
           <button
             className="pg-hamburger"
             onClick={() => setMobileOpen((o) => !o)}
@@ -73,22 +71,15 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
       {mobileOpen && (
         <div className="pg-mobile-menu" role="navigation" aria-label="Mobile navigation">
           {items.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href ?? '#'}
               className="pg-mobile-link"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="/contact"
-            className="pg-mobile-link"
-            onClick={() => setMobileOpen(false)}
-          >
-            Let's Connect
-          </a>
         </div>
       )}
     </>

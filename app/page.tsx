@@ -1,27 +1,52 @@
-import { Nav, Hero, Stats, About, Listings, Testimonials, Contact, Footer } from '@/components'
-import { NAV_ITEMS, HERO, STATS, ABOUT, LISTINGS, TESTIMONIALS, AGENTS } from '@/lib/data'
+import { Nav, Hero, Listings, Testimonials, Footer } from '@/components'
+import { NAV_ITEMS, HERO, LISTINGS, TESTIMONIALS } from '@/lib/data'
+import { client } from '@/lib/client'
+import { HOME_PAGE_QUERY } from '@/lib/queries'
+import type { Listing, Testimonial } from '@/types'
 
-export default function HomePage() {
+// Revalidate every hour (or on-demand via webhook)
+export const revalidate = 3600
+
+type HomePageData = {
+  settings: {
+    hero?: { headline: string; subheadline: string }
+  } | null
+  listings: Listing[]
+  testimonials: Testimonial[]
+}
+
+async function getHomePageData(): Promise<HomePageData> {
+  try {
+    const data = await client.fetch<HomePageData>(HOME_PAGE_QUERY)
+    return data
+  } catch (error) {
+    console.error('Failed to fetch from Sanity:', error)
+    return { settings: null, listings: [], testimonials: [] }
+  }
+}
+
+export default async function HomePage() {
+  const data = await getHomePageData()
+
+  // Use Sanity data if available, otherwise fall back to static data
+  const hero = data.settings?.hero ?? HERO
+  const listings = data.listings.length > 0 ? data.listings : LISTINGS
+  const testimonials = data.testimonials.length > 0 ? data.testimonials : TESTIMONIALS
+
   return (
-    <>
+    <div className="page-container">
       <Nav items={NAV_ITEMS} />
 
-      <main>
+      <main className="pg-main">
         <Hero
-          headline={HERO.headline}
-          subheadline={HERO.subheadline}
+          headline={hero.headline}
+          subheadline={hero.subheadline}
         />
-        {/* <About
-          sectionLabel={ABOUT.sectionLabel}
-          headline={ABOUT.headline}
-          paragraphs={ABOUT.intro}
-          tagline={ABOUT.tagline}
-        /> */}
-        <Listings listings={LISTINGS} />
-        <Testimonials testimonials={TESTIMONIALS} />
+        <Listings listings={listings} />
+        <Testimonials testimonials={testimonials} />
       </main>
 
       <Footer />
-    </>
+    </div>
   )
 }
