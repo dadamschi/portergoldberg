@@ -1,5 +1,7 @@
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
+import { Nav, Footer, ConnectForm } from '@/components'
+import { NAV_ITEMS } from '@/lib/data'
 
 export const metadata: Metadata = {
   title: {
@@ -16,7 +18,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="page-container">
+          <Nav items={NAV_ITEMS} />
+          <main className="pg-main">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <ConnectForm />
+      </body>
     </html>
   )
 }

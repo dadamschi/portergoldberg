@@ -1,5 +1,5 @@
-import { Nav, Hero, Listings, Testimonials, Footer } from '@/components'
-import { NAV_ITEMS, HERO, LISTINGS, TESTIMONIALS } from '@/lib/data'
+import { Hero, Listings, Testimonials } from '@/components'
+import { HERO, LISTINGS, TESTIMONIALS } from '@/lib/data'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial } from '@/types'
@@ -34,19 +34,13 @@ export default async function HomePage() {
   const testimonials = data.testimonials.length > 0 ? data.testimonials : TESTIMONIALS
 
   return (
-    <div className="page-container">
-      <Nav items={NAV_ITEMS} />
-
-      <main className="pg-main">
-        <Hero
-          headline={hero.headline}
-          subheadline={hero.subheadline}
-        />
-        <Listings listings={listings} />
-        <Testimonials testimonials={testimonials} />
-      </main>
-
-      <Footer />
-    </div>
+    <>
+      <Hero
+        headline={hero.headline}
+        subheadline={hero.subheadline}
+      />
+      <Listings listings={listings} />
+      <Testimonials testimonials={testimonials} />
+    </>
   )
 }

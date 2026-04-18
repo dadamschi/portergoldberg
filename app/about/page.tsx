@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Nav items={NAV_ITEMS} />
-
       <main className="pg-about-page">
         {/* Samantha Porter */}
         <section className="pg-agent-section">
@@ -21,7 +19,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="pg-agent-bio">
-            <h2 className="pg-agent-name">Samantha Porter</h2>
+            <span className="pg-agent-name" style={{ fontWeight: '800' }}>Samantha Porter</span>
             <p>
               Samantha Porter is a seasoned, relationship-based broker with Jameson
               Sotheby&apos;s International Realty, starting her career in 1999 in Chicago.
@@ -40,13 +38,14 @@ export default function AboutPage() {
             <p>
               Samantha married the same year she entered real estate. Her husband David, a
               trained carpenter in his home country, England, is owner and operator of
-              Homescape Construction delivering high quality residential new homes,
+               <a href="https://www.homescapeconstructioninc.com/" target="_blank" rel="noreferrer">
+                Homescape Construction
+              </a> delivering high quality residential new homes,
               restorations and additions. Samantha and David have two children they are
               raising in Logan Square. They are active in the children&apos;s school and
               sports, love to try new restaurants, go to shows, do the occasional run and
               support a range of local and national charities and causes.
             </p>
-            <a href="/contact" className="pg-agent-cta">Let&apos;s Connect</a>
           </div>
         </section>
 
@@ -63,7 +62,7 @@ export default function AboutPage() {
         {/* Lauren Goldberg */}
         <section className="pg-agent-section pg-agent-section--reversed">
           <div className="pg-agent-bio">
-            <h2 className="pg-agent-name">Lauren Goldberg</h2>
+            <span className="pg-agent-name" style={{ fontWeight: '800' }}>Lauren Goldberg</span>
             <p>
               Lauren Goldberg is a broker at Jameson Sotheby&apos;s International Realty.
               With a background in Design and Fine Arts, Lauren brings an artistic eye to
@@ -124,7 +123,6 @@ export default function AboutPage() {
               CAR&mdash;Chicago Association of Realtors, and has been consistently awarded a
               Chicago Top Producer since 2011.
             </p>
-            <a href="/contact" className="pg-agent-cta">Let&apos;s Connect</a>
           </div>
           <div className="pg-agent-photo">
             <div className="pg-agent-photo-placeholder" style={{ backgroundColor: '#28303C' }}>
@@ -132,37 +130,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-
-        {/* Contact cards */}
-        <section className="pg-agent-contacts">
-          <div className="pg-agent-contact-card">
-            <img
-              src="/cropped-PorterGoldberg.png"
-              alt="PorterGoldberg"
-              className="pg-agent-contact-logo"
-            />
-            <h3 className="pg-agent-contact-name">Samantha Porter</h3>
-            <p className="pg-agent-contact-phone">773.988.7898</p>
-            <a href="mailto:samantha@portergoldberg.com" className="pg-agent-contact-email">
-              samantha@portergoldberg.com
-            </a>
-          </div>
-          <div className="pg-agent-contact-card">
-            <img
-              src="/PGRR_Logo_VerticalwithJ.png"
-              alt="PorterGoldberg with Jameson Sotheby's"
-              className="pg-agent-contact-logo"
-            />
-            <h3 className="pg-agent-contact-name">Lauren Goldberg</h3>
-            <p className="pg-agent-contact-phone">773.576.0053</p>
-            <a href="mailto:lauren@portergoldberg.com" className="pg-agent-contact-email">
-              lauren@portergoldberg.com
-            </a>
-          </div>
-        </section>
       </main>
-
-      <Footer />
     </>
   )
 }
