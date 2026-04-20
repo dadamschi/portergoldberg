@@ -199,7 +199,7 @@ export const PAST_EVENTS_QUERY = defineQuery(/* groq */ `
     replayUrls[] {
       _key,
       replaySessionUrl,
-      replaySessionPartDefinition
+      
     }
   }
 `)
