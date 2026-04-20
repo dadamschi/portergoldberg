@@ -26,24 +26,35 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
     status,
     statusType,
     "image": image { ${imageFragment} },
-    fallbackColor,
     brochureUrl
   }
 `)
 
 export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
-  *[_type == "listing"] | order(order asc) {
-    _id,
-    address,
-    neighborhood,
-    price,
-    status,
-    statusType,
-    "image": image { ${imageFragment} },
-    fallbackColor,
-    brochureUrl
-  }
-`)
+ {                                                          
+    "available": *[_type == "listing" && statusType in ["active", "coming"]] {                 
+          _id,                                                   
+          address,                                               
+          neighborhood,                                          
+          price,                                                 
+          status,                                                
+          statusType,                                            
+          "image": image { ${imageFragment} },                   
+          brochureUrl                                            
+        },                                                       
+    "sold": *[_type == "listing" && statusType == "sold"] |  
+      order(order asc) {                                         
+          _id,                                                   
+          address,                                               
+          neighborhood,                                          
+          price,                                                 
+          status,                                                
+          statusType,                                            
+          "image": image { ${imageFragment} },                   
+          brochureUrl                                            
+        }                                                        
+  }                                                          
+  `) 
 
 // =============================================================================
 // TESTIMONIALS
@@ -135,6 +146,65 @@ export const SELLING_PROCESS_QUERY = defineQuery(/* groq */ `
 `)
 
 // =============================================================================
+// EVENTS
+// =============================================================================
+
+export const UPCOMING_EVENTS_QUERY = defineQuery(/* groq */ `
+  *[_type == "event" && date >= now()] | order(date asc) {
+    _id,
+    title,
+    date,
+    endDate,
+    description,
+    "image": image { ${imageFragment} },
+    registrationUrl,
+    speakerName,
+    speakerTitle,
+    "speakerPhoto": speakerPhoto { ${imageFragment} },
+    location,
+    tags,
+    schedule[] {
+      _key,
+      startTime,
+      endTime,
+      speakerName,
+      speakerOrganization,
+      topics
+    }
+  }
+`)
+
+export const PAST_EVENTS_QUERY = defineQuery(/* groq */ `
+  *[_type == "event" && date < now()] | order(date desc) {
+    _id,
+    title,
+    date,
+    endDate,
+    description,
+    "image": image { ${imageFragment} },
+    replayUrl,
+    speakerName,
+    speakerTitle,
+    "speakerPhoto": speakerPhoto { ${imageFragment} },
+    location,
+    tags,
+    schedule[] {
+      _key,
+      startTime,
+      endTime,
+      speakerName,
+      speakerOrganization,
+      topics
+    },
+    replayUrls[] {
+      _key,
+      replaySessionUrl,
+      replaySessionPartDefinition
+    }
+  }
+`)
+
+// =============================================================================
 // COMBINED HOME PAGE QUERY
 // =============================================================================
 
@@ -155,7 +225,6 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     status,
     statusType,
     "image": image { ${imageFragment} },
-    fallbackColor,
     brochureUrl
   },
   "testimonials": *[_type == "testimonial" && featured == true] | order(order asc) [0...5] {

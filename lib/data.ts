@@ -1,4 +1,4 @@
-import type { NavItem, Stat, Listing, Testimonial, Agent, AboutContent, SocialLink, HeroContent } from '@/types'
+import type { NavItem, Stat, Listing, Testimonial, Agent, AboutContent, SocialLink, HeroContent, EventItem, EventSession } from '@/types'
 
 // =============================================================================
 // NAVIGATION
@@ -15,13 +15,7 @@ export const NAV_ITEMS: NavItem[] = [
       { label: 'Staging Services', href: '/staging-services' },
     ],
   },
-  {
-    label: 'Properties',
-    children: [
-      { label: 'Inventory', href: '/inventory' },
-      { label: 'Past Sales', href: '/past-sales' },
-    ],
-  },
+  { label: 'Properties', href: '/inventory' },
   { label: 'Halcyon Development', href: '/halcyon-development' },
   { label: 'Testimonials', href: '/testimonials' },
   {
@@ -87,51 +81,51 @@ export const ABOUT: AboutContent = {
 // LISTINGS
 // =============================================================================
 
-export const LISTINGS: Listing[] = [
-  {
-    _id: '1',
-    address: '2129 N. Damen',
-    neighborhood: 'Bucktown',
-    price: '$965,000',
-    status: '50% Sold',
-    statusType: 'active',
-    image: { asset: { _id: 'static-1', url: '/exterior-mohawk_crop-2048x2034.png' } },
-    fallbackColor: '#2C3E35',
-    brochureUrl: 'https://presentation.jamesonps.com/2129-n-damen-property-brochure',
-  },
-  {
-    _id: '2',
-    address: '2481 N. Milwaukee',
-    neighborhood: 'Logan Square',
-    price: 'Inquire',
-    status: "Delivering Spring '26",
-    statusType: 'coming',
-    image: { asset: { _id: 'static-2', url: '/home_2481-N-MILWAUKEE-2.png' } },
-    fallbackColor: '#3A3228',
-    brochureUrl: 'https://presentation.jamesonps.com/2481-n-milwaukee-property-brochure',
-  },
-  {
-    _id: '3',
-    address: '327 W. Armitage',
-    neighborhood: 'Lincoln Park',
-    price: 'Inquire',
-    status: 'Sold',
-    statusType: 'sold',
-    image: { asset: { _id: 'static-3', url: '/327-W-Armitage-e1768086391919.png' } },
-    fallbackColor: '#28303C',
-    brochureUrl: 'https://presentation.jamesonps.com/327-w-armitage-1-property-brochrue',
-  },
-  {
-    _id: '4',
-    address: '2485 N. Milwaukee',
-    neighborhood: 'Logan Square',
-    price: '$975,000',
-    status: 'Sold',
-    statusType: 'sold',
-    image: { asset: { _id: 'static-4', url: '/2485-N-Milwaukee.png' } },
-    fallbackColor: '#362E2E',
-  },
-]
+// export const LISTINGS: Listing[] = [
+//   {
+//     _id: '1',
+//     address: '2129 N. Damen',
+//     neighborhood: 'Bucktown',
+//     price: '$965,000',
+//     status: '50% Sold',
+//     statusType: 'active',
+//     image: { asset: { _id: 'static-1', url: '/exterior-mohawk_crop-2048x2034.png' } },
+//     fallbackColor: '#2C3E35',
+//     brochureUrl: 'https://presentation.jamesonps.com/2129-n-damen-property-brochure',
+//   },
+//   {
+//     _id: '2',
+//     address: '2481 N. Milwaukee',
+//     neighborhood: 'Logan Square',
+//     price: 'Inquire',
+//     status: "Delivering Spring '26",
+//     statusType: 'coming',
+//     image: { asset: { _id: 'static-2', url: '/home_2481-N-MILWAUKEE-2.png' } },
+//     fallbackColor: '#3A3228',
+//     brochureUrl: 'https://presentation.jamesonps.com/2481-n-milwaukee-property-brochure',
+//   },
+//   {
+//     _id: '3',
+//     address: '327 W. Armitage',
+//     neighborhood: 'Lincoln Park',
+//     price: 'Inquire',
+//     status: 'Sold',
+//     statusType: 'sold',
+//     image: { asset: { _id: 'static-3', url: '/327-W-Armitage-e1768086391919.png' } },
+//     fallbackColor: '#28303C',
+//     brochureUrl: 'https://presentation.jamesonps.com/327-w-armitage-1-property-brochrue',
+//   },
+//   {
+//     _id: '4',
+//     address: '2485 N. Milwaukee',
+//     neighborhood: 'Logan Square',
+//     price: '$975,000',
+//     status: 'Sold',
+//     statusType: 'sold',
+//     image: { asset: { _id: 'static-4', url: '/2485-N-Milwaukee.png' } },
+//     fallbackColor: '#362E2E',
+//   },
+// ]
 
 // =============================================================================
 // TESTIMONIALS
@@ -213,4 +207,81 @@ export const AGENTS: Agent[] = [
 export const SOCIAL: SocialLink[] = [
   { platform: 'Facebook', url: 'https://www.facebook.com/portergoldbergresidential/' },
   { platform: 'Instagram', url: 'https://www.instagram.com/portergoldbergchicago/' },
+]
+
+// =============================================================================
+// EVENTS (fallback data for development)
+// =============================================================================
+
+export const EVENTS: EventItem[] = [
+  {
+    _id: 'evt-1',
+    title: 'Spring 2026 Chicago Market Update',
+    date: '2026-05-15T16:00:00Z',
+    description: 'Join Samantha and Lauren for an in-depth look at the Chicago housing market heading into summer. We\'ll cover pricing trends, inventory levels, and neighborhood-by-neighborhood analysis to help you make informed decisions.',
+    registrationUrl: 'https://zoom.us/webinar/register/example',
+    speakerName: 'Samantha Porter & Lauren Goldberg',
+    speakerTitle: 'Broker Associates, Jameson Sotheby\'s International Realty',
+    location: 'Online / Zoom',
+    tags: ['Webinar', 'Market Update'],
+    schedule: [
+      {
+        _key: 'sess-1a',
+        startTime: '11:00 AM',
+        endTime: '11:55 AM',
+        speakerName: 'Samantha Porter',
+        speakerOrganization: 'Jameson Sotheby\'s International Realty',
+        topics: [
+          'Chicago market pricing trends',
+          'Neighborhood-level inventory analysis',
+          'Interest rate outlook and buyer impact',
+        ],
+      },
+      {
+        _key: 'sess-1b',
+        startTime: '12:00 PM',
+        endTime: '1:00 PM',
+        speakerName: 'Lauren Goldberg',
+        speakerOrganization: 'Jameson Sotheby\'s International Realty',
+        topics: [
+          'Luxury segment performance',
+          'New construction pipeline',
+          'Investment opportunities for summer 2026',
+        ],
+      },
+    ],
+  },
+  {
+    _id: 'evt-2',
+    title: 'First-Time Homebuyer Workshop',
+    date: '2026-06-10T17:30:00Z',
+    description: 'A free workshop covering everything first-time buyers need to know — from pre-approval and budgeting to inspections and closing. Bring your questions!',
+    registrationUrl: 'https://zoom.us/webinar/register/example2',
+    speakerName: 'Lauren Goldberg',
+    speakerTitle: 'Broker Associate',
+    location: 'Online / Zoom',
+    tags: ['Workshop', 'Buying'],
+  },
+  {
+    _id: 'evt-3',
+    title: 'Winter 2026 Market Outlook',
+    date: '2026-01-20T18:00:00Z',
+    description: 'Our recap of the winter market with predictions for the spring selling season. We discussed interest rate impacts, luxury segment trends, and the best neighborhoods for investment.',
+    replayUrl: 'https://youtube.com/watch?v=example1',
+    speakerName: 'Samantha Porter & Lauren Goldberg',
+    speakerTitle: 'Broker Associates',
+    location: 'Online / Zoom',
+    tags: ['Webinar', 'Market Update'],
+  },
+  {
+    _id: 'evt-4',
+    title: 'Preparing Your Home to Sell',
+    date: '2025-11-05T18:00:00Z',
+    description: 'Samantha walked through the key steps to maximize your home\'s value before listing — from staging and photography to pricing strategy and timeline planning.',
+    replayUrl: 'https://youtube.com/watch?v=example2',
+    speakerName: 'Samantha Porter',
+    speakerTitle: 'Broker Associate',
+    location: 'Online / Zoom',
+    tags: ['Webinar', 'Selling'],
+  },
 ]

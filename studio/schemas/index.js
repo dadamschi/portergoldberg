@@ -4,6 +4,7 @@ import { agent } from "./agent";
 import { siteSettings } from "./siteSettings";
 import { sellingProcess } from "./sellingProcess";
 import { aboutPage } from "./aboutPage";
+import { event } from "./event";
 
 export const schemaTypes = [
   listing,
@@ -12,4 +13,5 @@ export const schemaTypes = [
   siteSettings,
   sellingProcess,
   aboutPage,
+  event,
 ];

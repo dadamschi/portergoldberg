@@ -21,15 +21,12 @@ export const listing = defineType({
       name: "price",
       title: "Price",
       type: "string",
-      description: 'Display price (e.g., "$965,000" or "Inquire")',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "status",
       title: "Status Label",
       type: "string",
       description: "Display status (e.g., \"50% Sold\", \"Delivering Spring '26\")",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "statusType",
@@ -41,7 +38,7 @@ export const listing = defineType({
           { title: "Coming Soon", value: "coming" },
           { title: "Sold", value: "sold" },
         ],
-        layout: "radio",
+        layout: "dropdown",
       },
       validation: (rule) => rule.required(),
     }),
@@ -59,12 +56,6 @@ export const listing = defineType({
       ],
     }),
     defineField({
-      name: "fallbackColor",
-      title: "Fallback Background Color",
-      type: "string",
-      description: 'Hex color if no image (e.g., "#2C3E35")',
-    }),
-    defineField({
       name: "brochureUrl",
       title: "Brochure URL",
       type: "url",
@@ -76,12 +67,6 @@ export const listing = defineType({
       type: "boolean",
       description: "Show on homepage",
       initialValue: false,
-    }),
-    defineField({
-      name: "order",
-      title: "Display Order",
-      type: "number",
-      description: "Lower numbers appear first",
     }),
   ],
   preview: {

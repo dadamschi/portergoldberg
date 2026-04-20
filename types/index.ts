@@ -23,7 +23,6 @@ export type Listing = {
   status: string
   statusType: 'active' | 'coming' | 'sold'
   image?: SanityImage
-  fallbackColor?: string
   brochureUrl?: string
 }
 
@@ -104,6 +103,38 @@ export type SanityImage = {
     }
   }
   alt?: string
+}
+
+export type EventSession = {
+  _key: string
+  startTime: string
+  endTime: string
+  speakerName: string
+  speakerOrganization?: string
+  topics?: string[]
+}
+
+export type ReplayUrl = {
+  _key: string
+  replaySessionUrl: string
+  replaySessionPartDefinition?: string
+}
+
+export type EventItem = {
+  _id: string
+  title: string
+  date: string
+  endDate?: string
+  description: string
+  image?: SanityImage
+  registrationUrl?: string
+  replayUrls?: ReplayUrl[]
+  speakerName?: string
+  speakerTitle?: string
+  speakerPhoto?: SanityImage
+  location?: string
+  tags?: string[]
+  schedule?: EventSession[]
 }
 
 export type HomePageData = {

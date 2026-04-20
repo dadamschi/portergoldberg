@@ -1,5 +1,5 @@
 import { Hero, Listings, Testimonials } from '@/components'
-import { HERO, LISTINGS, TESTIMONIALS } from '@/lib/data'
+import { HERO, TESTIMONIALS } from '@/lib/data'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial } from '@/types'
@@ -30,7 +30,7 @@ export default async function HomePage() {
 
   // Use Sanity data if available, otherwise fall back to static data
   const hero = data.settings?.hero ?? HERO
-  const listings = data.listings.length > 0 ? data.listings : LISTINGS
+  const listings = data.listings
   const testimonials = data.testimonials.length > 0 ? data.testimonials : TESTIMONIALS
 
   return (
