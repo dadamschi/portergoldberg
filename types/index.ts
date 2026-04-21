@@ -26,11 +26,16 @@ export type Listing = {
   brochureUrl?: string
 }
 
+import type { PortableTextBlock } from '@portabletext/types'
+
 export type Testimonial = {
   _id: string
+  _createdAt: string
   clientName: string
   clientTitle?: string
-  quote: string
+  quote: PortableTextBlock[]
+  pinOnHomePage?: boolean
+  order?: number
 }
 
 export type Agent = {

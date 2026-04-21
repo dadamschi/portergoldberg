@@ -20,13 +20,38 @@ export const testimonial = defineType({
     defineField({
       name: "quote",
       title: "Quote",
-      type: "text",
-      rows: 4,
+      type: "array",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "featured",
-      title: "Featured",
+      name: "pinOnHomePage",
+      title: "Pin on Home Page",
       type: "boolean",
       description: "Show in homepage carousel",
       initialValue: false,
@@ -41,12 +66,13 @@ export const testimonial = defineType({
   preview: {
     select: {
       title: "clientName",
-      subtitle: "quote",
+      quote: "quote",
     },
-    prepare({ title, subtitle }) {
+    prepare({ title, quote }) {
+      const text = quote?.[0]?.children?.[0]?.text || "";
       return {
         title,
-        subtitle: subtitle?.slice(0, 80) + (subtitle?.length > 80 ? "..." : ""),
+        subtitle: text.slice(0, 80) + (text.length > 80 ? "..." : ""),
       };
     },
   },

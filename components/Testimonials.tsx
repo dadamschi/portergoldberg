@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { PortableText } from '@portabletext/react'
 import type { Testimonial } from '@/types'
 
 const AUTO_ROTATE_INTERVAL = 8000
@@ -34,11 +35,6 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
   const current = testimonials[active]
   if (!current) return null
 
-  // Split quote into paragraphs on double newlines or period-space patterns
-  const paragraphs = current.quote
-    .split(/\n\n+/)
-    .filter((p) => p.trim().length > 0)
-
   return (
     <section className="pg-testimonials">
       <div className="pg-testimonials-inner">
@@ -52,20 +48,17 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
         <div
           className="pg-testimonial-content"
-          style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.3s' }}
+          style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.3s', fontWeight: '600', color: '#333' }}
         >
 
           <div className="pg-testimonial-body">
-            {paragraphs.map((p, i) => (
-              <p key={i}>{p.trim()}</p>
-            ))}
+            <PortableText value={current.quote} />
           </div>
-        </div>
-
-          <p className="pg-testimonial-author">
+          <span className="pg-testimonial-author--home">
             — {current.clientName}
             {current.clientTitle && `, ${current.clientTitle}`}
-          </p>
+          </span>
+        </div>
 
         <div className="pg-testimonial-dots" role="tablist" aria-label="Testimonials">
           {testimonials.map((t, i) => (

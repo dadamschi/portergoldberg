@@ -60,21 +60,13 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
 // TESTIMONIALS
 // =============================================================================
 
-export const TESTIMONIALS_QUERY = defineQuery(/* groq */ `
-  *[_type == "testimonial" && featured == true] | order(order asc) {
-    _id,
-    clientName,
-    clientTitle,
-    quote
-  }
-`)
-
 export const ALL_TESTIMONIALS_QUERY = defineQuery(/* groq */ `
-  *[_type == "testimonial"] | order(order asc) {
+  *[_type == "testimonial"] | order(_createdAt desc) {
     _id,
     clientName,
     clientTitle,
-    quote
+    quote,
+    pinOnHomePage
   }
 `)
 
@@ -227,7 +219,12 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     "image": image { ${imageFragment} },
     brochureUrl
   },
-  "testimonials": *[_type == "testimonial" && featured == true] | order(order asc) [0...5] {
+  "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(_createdAt desc) {
+    _id,
+    clientName,
+    clientTitle,
+    quote
+  } + *[_type == "testimonial" && pinOnHomePage != true] | order(_createdAt desc) [0...4] {
     _id,
     clientName,
     clientTitle,

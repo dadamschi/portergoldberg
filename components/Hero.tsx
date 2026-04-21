@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Newsletter } from './Newsletter'
+import { formatNumber } from '@/lib/utils/numbers'
 
 type HeroCard = {
   href: string
@@ -39,10 +40,6 @@ function useCountUp(target: number, duration = 1200, trigger = false) {
   }, [target, duration, trigger])
 
   return count
-}
-
-function formatNumber(n: number): string {
-  return n.toLocaleString('en-US')
 }
 
 function HeroStat({

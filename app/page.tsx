@@ -32,6 +32,7 @@ export default async function HomePage() {
   const hero = data.settings?.hero ?? HERO
   const listings = data.listings
   const testimonials = data.testimonials.length > 0 ? data.testimonials : TESTIMONIALS
+  console.log('homepage testimonials', testimonials)
 
   return (
     <>

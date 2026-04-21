@@ -201,15 +201,6 @@ export const AGENTS: Agent[] = [
 ]
 
 // =============================================================================
-// SOCIAL
-// =============================================================================
-
-export const SOCIAL: SocialLink[] = [
-  { platform: 'Facebook', url: 'https://www.facebook.com/portergoldbergresidential/' },
-  { platform: 'Instagram', url: 'https://www.instagram.com/portergoldbergchicago/' },
-]
-
-// =============================================================================
 // EVENTS (fallback data for development)
 // =============================================================================
 
