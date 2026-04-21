@@ -291,3 +291,47 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     }
   }
 }`)
+
+// =============================================================================
+// SELLING PAGE
+// =============================================================================
+
+export const SELLING_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "sellingPage"][0] {
+    title,
+    heroHeadline,
+    heroIntro,
+    marketingHeadline,
+    marketingIntro,
+    marketingTypes,
+    "marketingImage": marketingImage { ${imageFragment} },
+    propertyPrepHeadline,
+    propertyPrepIntro,
+    beforeAfterGallery[] {
+      name,
+      "beforeImage": beforeImage { ${imageFragment} },
+      "afterImage": afterImage { ${imageFragment} }
+    },
+    stagingHeadline,
+    stagingIntro,
+    stagingPartners[] {
+      name,
+      description,
+      website,
+      "logo": logo { ${imageFragment} }
+    }
+  }
+`)
+
+// =============================================================================
+// SCHOOL GUIDANCE PAGE
+// =============================================================================
+
+export const SCHOOL_GUIDANCE_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "schoolGuidancePage"][0] {
+    title,
+    headline,
+    "image": image { ${imageFragment} },
+    content
+  }
+`)

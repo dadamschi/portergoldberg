@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server'
 
+type ContactBody = {
+  name?: string
+  email?: string
+  message?: string
+  subscribeNewsletter?: boolean
+  addToVendorList?: boolean
+}
+
 export async function POST(request: Request) {
-  const body: { name?: string; email?: string; message?: string } = await request.json()
-  const { name, email, message } = body
+  const body: ContactBody = await request.json()
+  const { name, email, message, subscribeNewsletter, addToVendorList } = body
 
   if (!name || !name.trim()) {
     return NextResponse.json({ message: 'Please enter your name.' }, { status: 400 })
@@ -22,6 +30,7 @@ export async function POST(request: Request) {
   // - Create lead in CRM
   // - Post to Slack channel
   console.log(`[Connect] New inquiry from ${name} (${email}): ${message.slice(0, 100)}`)
+  console.log(`[Connect] Newsletter: ${subscribeNewsletter}, Vendor List: ${addToVendorList}`)
 
   return NextResponse.json(
     { message: "Thanks for reaching out! We'll be in touch soon." },

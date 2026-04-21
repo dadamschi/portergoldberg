@@ -161,3 +161,47 @@ export type HomePageData = {
   testimonials: Testimonial[]
   agents: Agent[]
 }
+
+// =============================================================================
+// SELLING PAGE TYPES
+// =============================================================================
+
+export type BeforeAfterItem = {
+  name?: string
+  beforeImage: SanityImage
+  afterImage: SanityImage
+}
+
+export type StagingPartner = {
+  name: string
+  description?: string
+  website?: string
+  logo?: SanityImage
+}
+
+export type SellingPageData = {
+  title: string
+  heroHeadline?: string
+  heroIntro?: string
+  marketingHeadline?: string
+  marketingIntro?: PortableTextBlock[]
+  marketingTypes?: string[]
+  marketingImage?: SanityImage
+  propertyPrepHeadline?: string
+  propertyPrepIntro?: PortableTextBlock[]
+  beforeAfterGallery?: BeforeAfterItem[]
+  stagingHeadline?: string
+  stagingIntro?: PortableTextBlock[]
+  stagingPartners?: StagingPartner[]
+}
+
+// =============================================================================
+// SCHOOL GUIDANCE PAGE TYPES
+// =============================================================================
+
+export type SchoolGuidancePageData = {
+  title: string
+  headline?: string
+  image?: SanityImage
+  content?: PortableTextBlock[]
+}

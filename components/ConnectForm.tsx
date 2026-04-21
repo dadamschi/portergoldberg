@@ -13,6 +13,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(true)
+  const [addToVendorList, setAddToVendorList] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
 
@@ -50,7 +51,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
       const res = await fetch('/api/connect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message, subscribeNewsletter }),
+        body: JSON.stringify({ name, email, message, subscribeNewsletter, addToVendorList }),
       })
 
       const data: { message: string } = await res.json()
@@ -62,6 +63,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
         setEmail('')
         setMessage('')
         setSubscribeNewsletter(false)
+        setAddToVendorList(false)
       } else {
         setStatus('error')
         setFeedback(data.message)
@@ -179,17 +181,31 @@ export function ConnectForm({ agents }: ConnectFormProps) {
               />
             </div>
 
-            <div className="pg-connect-checkbox">
-              <input
-                id="connect-newsletter"
-                type="checkbox"
-                checked={subscribeNewsletter}
-                onChange={(e) => setSubscribeNewsletter(e.target.checked)}
-                disabled={status === 'loading'}
-              />
-              <label htmlFor="connect-newsletter">
-                Add me to the newsletter list
-              </label>
+            <div className="pg-connect-checkboxes">
+              <div className="pg-connect-checkbox">
+                <input
+                  id="connect-newsletter"
+                  type="checkbox"
+                  checked={subscribeNewsletter}
+                  onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+                  disabled={status === 'loading'}
+                />
+                <label htmlFor="connect-newsletter">
+                  Subscribe to our newsletter
+                </label>
+              </div>
+              <div className="pg-connect-checkbox">
+                <input
+                  id="connect-vendor"
+                  type="checkbox"
+                  checked={addToVendorList}
+                  onChange={(e) => setAddToVendorList(e.target.checked)}
+                  disabled={status === 'loading'}
+                />
+                <label htmlFor="connect-vendor">
+                  Add me to your vendor list
+                </label>
+              </div>
             </div>
 
             {status === 'error' && (

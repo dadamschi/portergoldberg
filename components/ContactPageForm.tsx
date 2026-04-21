@@ -7,6 +7,8 @@ export function ContactPageForm() {
     name: '',
     email: '',
     message: '',
+    addToVendorList: false,
+    subscribeNewsletter: true,
   })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
@@ -23,7 +25,7 @@ export function ContactPageForm() {
 
       if (res.ok) {
         setStatus('success')
-        setFormData({ name: '', email: '', message: '' })
+        setFormData({ name: '', email: '', message: '', addToVendorList: false, subscribeNewsletter: false })
       } else {
         setStatus('error')
       }
@@ -62,6 +64,27 @@ export function ContactPageForm() {
         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
         className="pg-contact-textarea"
       />
+      <div className="pg-contact-checkboxes">
+        <label className="pg-contact-checkbox">
+          <input
+            type="checkbox"
+            name="subscribeNewsletter"
+            checked={formData.subscribeNewsletter}
+            onChange={(e) => setFormData({ ...formData, subscribeNewsletter: e.target.checked })}
+          />
+          <span>Subscribe to our newsletter</span>
+        </label>
+        <label className="pg-contact-checkbox">
+          <input
+            type="checkbox"
+            name="addToVendorList"
+            checked={formData.addToVendorList}
+            onChange={(e) => setFormData({ ...formData, addToVendorList: e.target.checked })}
+          />
+          <span>Add me to your vendor list</span>
+        </label>
+      </div>
+
       <button
         type="submit"
         className="pg-contact-submit"
