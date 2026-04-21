@@ -1,4 +1,4 @@
-import type { NavItem, Stat, Listing, Testimonial, Agent, AboutContent, SocialLink, HeroContent, EventItem, EventSession } from '@/types'
+import type { NavItem, Stat, Listing, Agent, AboutContent, SocialLink, HeroContent, EventItem, EventSession } from '@/types'
 
 // =============================================================================
 // NAVIGATION
@@ -126,41 +126,6 @@ export const ABOUT: AboutContent = {
 //     fallbackColor: '#362E2E',
 //   },
 // ]
-
-// =============================================================================
-// TESTIMONIALS
-// =============================================================================
-
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    _id: '1',
-    clientName: 'Jon Merel',
-    clientTitle: 'Merel Family Law',
-    quote: 'From start to close, working with Porter Goldberg was the most seamless, easy, stress-free home selling process I have ever encountered.',
-  },
-  {
-    _id: '2',
-    clientName: 'Lauren & Jamie Rauch',
-    quote: 'Lauren and Samantha went above and beyond in facilitating the recent sale of our old home and purchase of a new home.',
-  },
-  {
-    _id: '3',
-    clientName: 'Hilary Goldfine',
-    quote: 'Working with Lauren Goldberg and Samantha Porter was a game-changer. They went above and beyond to ensure I not only found the right property but also closed the deal smoothly.',
-  },
-  {
-    _id: '4',
-    clientName: 'Chris DeLeeuw',
-    clientTitle: 'Partner/CEO of Halcyon Development',
-    quote: "Samantha and Lauren's ability to draw on their years of experience, understand location dynamics and consumer demands has made them an invaluable part of our development team.",
-  },
-  {
-    _id: '5',
-    clientName: 'Gabriel Levin',
-    clientTitle: 'Chicago, IL',
-    quote: "NOBODY lists a property like Lauren Goldberg – her eye for detail, work ethic, and vast array of local contacts deliver margins that consistently outperform her competitors.",
-  },
-]
 
 // =============================================================================
 // AGENTS
