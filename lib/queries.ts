@@ -200,6 +200,35 @@ export const PAST_EVENTS_QUERY = defineQuery(/* groq */ `
 `)
 
 // =============================================================================
+// HALCYON LISTINGS
+// =============================================================================
+
+export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
+  "available": *[_type == "listing" && isHalcyonProject == true && statusType in ["active", "coming"]] | order(order asc) {
+    _id,
+    address,
+    neighborhood,
+    price,
+    status,
+    statusType,
+    "image": image { ${imageFragment} },
+    brochureUrl,
+    units
+  },
+  "sold": *[_type == "listing" && isHalcyonProject == true && statusType == "sold"] | order(order asc) {
+    _id,
+    address,
+    neighborhood,
+    price,
+    status,
+    statusType,
+    "image": image { ${imageFragment} },
+    brochureUrl,
+    units
+  }
+}`)
+
+// =============================================================================
 // COMBINED HOME PAGE QUERY
 // =============================================================================
 

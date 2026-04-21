@@ -68,6 +68,19 @@ export const listing = defineType({
       description: "Show on homepage",
       initialValue: false,
     }),
+    defineField({
+      name: "isHalcyonProject",
+      title: "Halcyon Project?",
+      type: "boolean",
+      description: "Is this a Halcyon Development property?",
+      initialValue: false,
+    }),
+    defineField({
+      name: "units",
+      title: "Units",
+      type: "number",
+      description: "Number of units in the development",
+    }),
   ],
   preview: {
     select: {

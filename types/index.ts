@@ -24,6 +24,8 @@ export type Listing = {
   statusType: 'active' | 'coming' | 'sold'
   image?: SanityImage
   brochureUrl?: string
+  isHalcyonProject?: boolean
+  units?: number
 }
 
 import type { PortableTextBlock } from '@portabletext/types'

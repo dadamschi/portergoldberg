@@ -1284,13 +1284,12 @@ body {
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 25px;
   font-weight: 400;
-  margin-bottom: 6px;
 }
 
 .pg-listing-address {
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .pg-listing-neighborhood {
@@ -2590,5 +2589,283 @@ body {
 
   .pg-footer-brand-logo {
     max-width: 280px;
+  }
+}
+
+/* =============================================================================
+   HALCYON DEVELOPMENT PAGE
+   ============================================================================= */
+
+.pg-halcyon-page {
+  background: #fff;
+  color:#000;
+}
+
+.pg-halcyon-hero {
+  background: #1a1a1a;
+  padding: 35px 40px;
+  text-align: center;
+  color: #fff;
+}
+
+.pg-halcyon-hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pg-halcyon-logo {
+  margin-bottom: 40px;
+}
+
+.pg-halcyon-headline {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pg-halcyon-about {
+  background: #fff;
+  padding: 40px 10px 10px;
+}
+
+.pg-halcyon-about-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.pg-halcyon-group-photo {
+  width: 100%;
+  height: auto;
+  border: 4px solid #fff;
+}
+
+.pg-halcyon-about-text h2 {
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.pg-halcyon-about-text p {
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.pg-halcyon-about-text a {
+  color: var(--pg-gold);
+  text-decoration: none;
+}
+
+.pg-halcyon-about-text a:hover {
+  text-decoration: underline;
+}
+
+.pg-halcyon-quote {
+  margin: 32px 0;
+  padding: 24px 32px;
+  border-left: 4px solid var(--pg-gold);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pg-halcyon-quote p {
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.pg-halcyon-quote cite {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.pg-halcyon-media-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  background: #000;
+}
+
+.pg-halcyon-media-image {
+  line-height: 0;
+}
+
+.pg-halcyon-aerial {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pg-halcyon-media-video {
+  position: relative;
+}
+
+.pg-halcyon-media-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pg-halcyon-featured {
+  padding: 60px 40px;
+}
+
+.pg-halcyon-past-projects {
+  padding: 60px 40px;
+}
+
+.pg-halcyon-past-projects h2 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pg-halcyon-projects-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.pg-halcyon-project-card {
+  position: relative;
+  text-align: center;
+  color: #000;
+}
+
+.pg-halcyon-units {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  background: var(--pg-gold);
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.pg-halcyon-project-image {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.pg-halcyon-project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pg-halcyon-project-card:hover .pg-halcyon-project-image img {
+  transform: scale(1.05);
+}
+
+.pg-halcyon-project-address {
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* =============================================================================
+   LIGHTBOX
+   ============================================================================= */
+
+.pg-lightbox-trigger {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.pg-lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 40px;
+}
+
+.pg-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  transition: opacity 0.2s;
+}
+
+.pg-lightbox-close:hover {
+  opacity: 0.7;
+}
+
+.pg-lightbox-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .pg-halcyon-projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pg-halcyon-hero {
+    padding: 80px 20px;
+  }
+
+  .pg-halcyon-headline {
+    font-size: 20px;
+  }
+
+  .pg-halcyon-projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .pg-halcyon-media-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-halcyon-media-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .pg-halcyon-featured,
+  .pg-halcyon-past-projects {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pg-halcyon-projects-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }

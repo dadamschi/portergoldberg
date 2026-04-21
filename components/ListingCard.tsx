@@ -15,7 +15,7 @@ export function ListingCard({ listing }: ListingCardProps) {
 
   const bgStyle = image?.asset?.url
     ? { backgroundImage: `url(${image.asset.url})` }
-    : { backgroundImage: `url('/coming-soon.png')` }
+    : { backgroundImage: `url('/COMING-SOON.png')` }
 
   const Tag = brochureUrl ? 'a' : 'div'
 
