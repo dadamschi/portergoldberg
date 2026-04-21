@@ -13,7 +13,7 @@ type HeroCard = {
 
 const HERO_CARDS: HeroCard[] = [
   { href: '/our-process', label: 'Sell', image: '/Square-Tiles-color-1-1.webp' },
-  { href: '/buying', label: 'Buy', image: '/Square-Tiles-color-2-1.webp' },
+  { href: '/buy', label: 'Buy', image: '/Square-Tiles-color-2-1.webp' },
   { href: '/about', label: 'About Us', image: '/Square-Tiles-color-3-1.webp' },
 ]
 

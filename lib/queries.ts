@@ -200,6 +200,21 @@ export const PAST_EVENTS_QUERY = defineQuery(/* groq */ `
 `)
 
 // =============================================================================
+// BUY PAGE
+// =============================================================================
+
+export const BUY_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "buyPage"][0] {
+    title,
+    headline,
+    "flipbookImages": flipbookImages[] | order(order asc) {
+      ${imageFragment},
+      order
+    }
+  }
+`)
+
+// =============================================================================
 // HALCYON LISTINGS
 // =============================================================================
 

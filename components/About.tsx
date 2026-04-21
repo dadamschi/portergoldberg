@@ -23,7 +23,7 @@ const DEFAULT_TILES: Tile[] = [
     tall: true,
   },
   {
-    href: '/buying',
+    href: '/buy',
     label: 'Buying',
     name: 'Find Your Home',
     bg: '#3A3228',

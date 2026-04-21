@@ -120,14 +120,14 @@ export default async function HalcyonDevelopmentPage() {
       </section>
 
 
-      <section className="pg-halcyon-past-projects">
+      <section className="pg-halcyon-projects">
       {/* Featured Listings from Sanity */}
         {available.length > 0 && (
           <HalcyonSoldProjects listings={available} />
         )}
       </section>
 
-    <section className="pg-halcyon-past-projects">
+    <section className="pg-halcyon-projects">
       {/* Sold Projects from Sanity */}
       {sold.length > 0 && (
         <>

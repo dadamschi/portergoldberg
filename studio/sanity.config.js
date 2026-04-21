@@ -2,6 +2,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas";
+import { structure } from "./deskStructure";
 
 export default defineConfig({
   name: "portergoldberg",
@@ -11,7 +12,7 @@ export default defineConfig({
   dataset: "production",
 
   plugins: [
-    structureTool(),
+    structureTool({ structure }),
     visionTool(),
   ],
 

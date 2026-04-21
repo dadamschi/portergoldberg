@@ -28,6 +28,21 @@ export type Listing = {
   units?: number
 }
 
+export type FlipbookImage = {
+  asset: {
+    _id: string
+    url: string
+  }
+  alt: string
+  order: number
+}
+
+export type BuyPageData = {
+  title: string
+  headline?: string
+  flipbookImages: FlipbookImage[]
+}
+
 import type { PortableTextBlock } from '@portabletext/types'
 
 export type Testimonial = {

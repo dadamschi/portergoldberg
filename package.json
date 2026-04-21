@@ -19,7 +19,8 @@
     "next": "^15.3.3",
     "next-sanity": "^10.1.4",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-pageflip": "^2.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
