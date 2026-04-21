@@ -83,7 +83,10 @@ export const AGENTS_QUERY = defineQuery(/* groq */ `
     email,
     "photo": photo { ${imageFragment} },
     fallbackColor,
-    bio
+    bio {
+      summary,
+      biography
+    }
   }
 `)
 
@@ -237,6 +240,10 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     phone,
     email,
     "photo": photo { ${imageFragment} },
-    fallbackColor
+    fallbackColor,
+    bio {
+      summary,
+      biography
+    }
   }
 }`)

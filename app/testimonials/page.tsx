@@ -3,6 +3,7 @@ import type { Testimonial } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
+import { portableTextComponents } from '@/lib/portableText'
 
 export const metadata: Metadata = {
   title: 'Testimonials',
@@ -25,7 +26,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
   return (
     <div className={`pg-testimonial-card ${cardClass}`}>
       <div className="pg-testimonial-content">
-        <PortableText value={testimonial.quote} />
+        <PortableText value={testimonial.quote} components={portableTextComponents} />
       </div>
       <p className="pg-testimonial-author">- {testimonial.clientName}</p>
       {testimonial.clientTitle && (
@@ -39,7 +40,6 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
 
 export default async function TestimonialsPage() {
   const testimonials = await getTestimonials()
-  console.log('testimonials', testimonials)
 
   return (
     <main className="pg-testimonials-page">

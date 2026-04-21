@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { PortableText } from '@portabletext/react'
+import { portableTextComponents } from '@/lib/portableText'
 import type { Testimonial } from '@/types'
 
 const AUTO_ROTATE_INTERVAL = 8000
@@ -52,7 +53,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
         >
 
           <div className="pg-testimonial-body">
-            <PortableText value={current.quote} />
+            <PortableText value={current.quote} components={portableTextComponents} />
           </div>
           <div className="pg-testimonial-author--home">
             — {current.clientName} <br></br>

@@ -51,11 +51,7 @@ export type Agent = {
 
 export type AgentBio = {
   summary?: string
-  background?: string
-  expertise?: string
-  credentials?: string[]
-  personal?: string
-  startYear?: number
+  biography?: PortableTextBlock[]
 }
 
 export type SocialLink = {

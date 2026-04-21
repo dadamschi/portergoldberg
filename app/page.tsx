@@ -2,7 +2,7 @@ import { Hero, Listings, Testimonials } from '@/components'
 import { HERO } from '@/lib/data'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
-import type { Listing, Testimonial } from '@/types'
+import type { Listing, Testimonial, Agent } from '@/types'
 
 // Revalidate every hour (or on-demand via webhook)
 export const revalidate = 3600
@@ -13,15 +13,17 @@ type HomePageData = {
   } | null
   listings: Listing[]
   testimonials: Testimonial[]
+  agents: Agent[]
 }
 
 async function getHomePageData(): Promise<HomePageData> {
   try {
     const data = await client.fetch<HomePageData>(HOME_PAGE_QUERY)
+    console.log(data)
     return data
   } catch (error) {
     console.error('Failed to fetch from Sanity:', error)
-    return { settings: null, listings: [], testimonials: [] }
+    return { settings: null, listings: [], testimonials: [], agents: [] }
   }
 }
 

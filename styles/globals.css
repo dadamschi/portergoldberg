@@ -929,6 +929,27 @@ body {
   cursor: not-allowed;
 }
 
+.pg-connect-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pg-connect-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #000035;
+  cursor: pointer;
+}
+
+.pg-connect-checkbox label {
+  font-family: 'Quicksand', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
 .pg-connect-error {
   font-family: 'Quicksand', Helvetica, Arial, Lucida, sans-serif;
   font-size: 13px;
@@ -1435,19 +1456,18 @@ body {
 
 /* Partnership highlight */
 .pg-partnership {
-  background: #f5f5f5;
-  padding: 64px 48px;
+  background: 666666;
+  padding: 64px 24px;
   text-align: center;
+  color: #fff
 }
 
 .pg-partnership-quote {
   font-family: var(--font-heading);
   font-size: clamp(18px, 2.5vw, 24px);
   font-weight: 300;
-  font-style: italic;
   line-height: 1.7;
-  color: #333;
-  max-width: 900px;
+  max-width: 70%;
   margin: 0 auto;
 }
 
@@ -1680,7 +1700,17 @@ body {
 }
 
 .pg-contact-agents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
   margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .pg-contact-agents {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .pg-contact-agent p {
@@ -2413,7 +2443,7 @@ body {
 
 .pg-footer-agent-email {
   font-size: 14px;
-  color: var(--pg-black);
+  color: #001dff;
   text-decoration: none;
   transition: color 0.2s;
 }

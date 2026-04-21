@@ -1,12 +1,18 @@
 'use client'
 
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect } from 'react'
+import type { Agent } from '@/types'
 
-export function ConnectForm() {
+type ConnectFormProps = {
+  agents: Agent[]
+}
+
+export function ConnectForm({ agents }: ConnectFormProps) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [subscribeNewsletter, setSubscribeNewsletter] = useState(true)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
 
@@ -36,7 +42,7 @@ export function ConnectForm() {
     return () => window.removeEventListener('open-connect-form', handleOpen)
   }, [])
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault()
     setStatus('loading')
 
@@ -44,7 +50,7 @@ export function ConnectForm() {
       const res = await fetch('/api/connect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, subscribeNewsletter }),
       })
 
       const data: { message: string } = await res.json()
@@ -55,6 +61,7 @@ export function ConnectForm() {
         setName('')
         setEmail('')
         setMessage('')
+        setSubscribeNewsletter(false)
       } else {
         setStatus('error')
         setFeedback(data.message)
@@ -110,20 +117,17 @@ export function ConnectForm() {
         </div>
 
         <div className="pg-connect-agents">
-          <div className="pg-connect-agent">
-            <span className="pg-connect-agent-name">Samantha Porter</span>
-            <a href="tel:7739887898" className="pg-connect-agent-detail">773.988.7898</a>
-            <a href="mailto:samantha@portergoldberg.com" className="pg-connect-agent-detail">
-              samantha@portergoldberg.com
-            </a>
-          </div>
-          <div className="pg-connect-agent">
-            <span className="pg-connect-agent-name">Lauren Goldberg</span>
-            <a href="tel:7735760053" className="pg-connect-agent-detail">773.576.0053</a>
-            <a href="mailto:lauren@portergoldberg.com" className="pg-connect-agent-detail">
-              lauren@portergoldberg.com
-            </a>
-          </div>
+          {agents.map((agent) => (
+            <div key={agent._id} className="pg-connect-agent">
+              <span className="pg-connect-agent-name">{agent.name}</span>
+              <a href={`tel:${agent.phone.replace(/\D/g, '')}`} className="pg-connect-agent-detail">
+                {agent.phone}
+              </a>
+              <a href={`mailto:${agent.email}`} className="pg-connect-agent-detail">
+                {agent.email}
+              </a>
+            </div>
+          ))}
         </div>
 
         {status === 'success' ? (
@@ -173,6 +177,19 @@ export function ConnectForm() {
                 disabled={status === 'loading'}
                 placeholder="We&apos;d love to hear from you. Send us a message and we&apos;ll get back to you shortly."
               />
+            </div>
+
+            <div className="pg-connect-checkbox">
+              <input
+                id="connect-newsletter"
+                type="checkbox"
+                checked={subscribeNewsletter}
+                onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+                disabled={status === 'loading'}
+              />
+              <label htmlFor="connect-newsletter">
+                Add me to the newsletter list
+              </label>
             </div>
 
             {status === 'error' && (

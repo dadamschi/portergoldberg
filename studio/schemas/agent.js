@@ -37,13 +37,7 @@ export const agent = defineType({
       options: { hotspot: true },
     }),
     defineField({
-      name: "fallbackColor",
-      title: "Fallback Background Color",
-      type: "string",
-      description: 'Hex color if no photo (e.g., "#2C3E35")',
-    }),
-    defineField({
-      name: "bio",
+      name: "biography",
       title: "Biography",
       type: "object",
       fields: [
@@ -55,37 +49,36 @@ export const agent = defineType({
           description: "Brief one-liner intro",
         }),
         defineField({
-          name: "background",
-          title: "Background",
-          type: "text",
-          rows: 3,
-          description: "Education and career background",
-        }),
-        defineField({
-          name: "expertise",
-          title: "Expertise",
-          type: "text",
-          rows: 3,
-          description: "Areas of specialization",
-        }),
-        defineField({
-          name: "credentials",
-          title: "Credentials",
+          name: "biography",
+          title: "Biography",
           type: "array",
-          of: [{ type: "string" }],
-          description: "Professional certifications and memberships",
-        }),
-        defineField({
-          name: "personal",
-          title: "Personal",
-          type: "text",
-          rows: 3,
-          description: "Family, community involvement, charities",
-        }),
-        defineField({
-          name: "startYear",
-          title: "Career Start Year",
-          type: "number",
+          of: [
+            {
+              type: "block",
+              styles: [{ title: "Normal", value: "normal" }],
+              marks: {
+                decorators: [
+                  { title: "Bold", value: "strong" },
+                  { title: "Italic", value: "em" },
+                ],
+                annotations: [
+                  {
+                    name: "link",
+                    type: "object",
+                    title: "Link",
+                    fields: [
+                      {
+                        name: "href",
+                        type: "url",
+                        title: "URL",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+          validation: (rule) => rule.required(),
         }),
       ],
     }),
