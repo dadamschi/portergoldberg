@@ -28,7 +28,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
       <div className="pg-testimonial-content">
         <PortableText value={testimonial.quote} />
       </div>
-      <p className="pg-testimonial-author">{testimonial.clientName}</p>
+      <p className="pg-testimonial-author">- {testimonial.clientName}</p>
       {testimonial.clientTitle && (
         <p className="pg-testimonial-meta">
           <span className="pg-testimonial-position">{testimonial.clientTitle}</span>
