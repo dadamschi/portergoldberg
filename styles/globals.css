@@ -1320,15 +1320,10 @@ body {
 }
 
 .pg-testimonial-body p {
-  font-family: 'Quicksand', Helvetica, Arial, Lucida, sans-serif;
   font-size: 15px;
   line-height: 1.75;
   color: #444;
   margin-bottom: 20px;
-}
-
-.pg-testimonial-body p:last-child {
-  margin-bottom: 0;
 }
 
 .pg-testimonial-dots {
@@ -2344,6 +2339,11 @@ body {
   display: block;
   font-size: 12px;
   margin-bottom: 1px;
+}
+
+.pg-testimonial-author--home {
+  margin-bottom: 1px;
+  margin-top: 6px;
 }
 
 .pg-testimonial-meta {

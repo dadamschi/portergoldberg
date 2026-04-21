@@ -54,10 +54,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           <div className="pg-testimonial-body">
             <PortableText value={current.quote} />
           </div>
-          <span className="pg-testimonial-author--home">
-            — {current.clientName}
-            {current.clientTitle && `, ${current.clientTitle}`}
-          </span>
+          <div className="pg-testimonial-author--home">
+            — {current.clientName} <br></br>
+           {current.clientTitle && `${current.clientTitle}`}
+          </div>
         </div>
 
         <div className="pg-testimonial-dots" role="tablist" aria-label="Testimonials">

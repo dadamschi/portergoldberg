@@ -21,7 +21,6 @@ async function getTestimonials(): Promise<Testimonial[]> {
 }
 
 function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; index: number }) {
-  const isAlt = index % 2 === 1;
   const cardClass = testimonial.pinOnHomePage ? `pg-testimonial-card--featured` : '';
   return (
     <div className={`pg-testimonial-card ${cardClass}`}>
