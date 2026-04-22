@@ -12,7 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: 'About',
     children: [
-      { label: 'Our Team', href: '/about' },
+      { label: 'Our Team', href: '/about-us' },
       { label: 'Testimonials', href: '/testimonials' },
       { label: 'Press', href: '/press' },
     ],

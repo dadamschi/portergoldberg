@@ -30,7 +30,7 @@ const DEFAULT_TILES: Tile[] = [
     tall: false,
   },
   {
-    href: '/about',
+    href: '/about-us',
     label: 'About',
     name: 'Meet the Team',
     bg: '#28303C',

@@ -27,7 +27,7 @@ Porter Goldberg Residential serves as the exclusive representatives for Halcyon 
 - Phone: 773-576-0053
 
 ## Key Pages
-- /about - Meet the team
+- /about-us - Meet the team
 - /buying - Buying services and guides
 - /selling - Selling services, marketing, staging
 - /inventory - Current property listings

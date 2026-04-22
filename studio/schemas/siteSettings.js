@@ -80,7 +80,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "about",
-      title: "About Section",
+      title: "About Us Section",
       type: "object",
       fields: [
         defineField({

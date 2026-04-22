@@ -1,6 +1,7 @@
+import { AgentCard } from '@/components'
 import { client } from '@/lib/client'
-import { ALL_LISTINGS_QUERY } from '@/lib/queries'
-import { Listing } from "@/types"
+import { ALL_LISTINGS_QUERY, AGENTS_QUERY } from '@/lib/queries'
+import { Listing, Agent } from "@/types"
 import { ListingCard } from '@/components/ListingCard'
 
 type InventoryData = {
@@ -18,8 +19,20 @@ async function getInventoryData(): Promise<InventoryData> {
   }
 }
 
+async function getAgents(): Promise<Agent[]> {
+  try {
+    return await client.fetch<Agent[]>(AGENTS_QUERY)
+  } catch (error) {
+    console.error('Failed to fetch agents:', error)
+    return []
+  }
+}
+
 export default async function InventoryPage() {
-  const { available, sold } = await getInventoryData();
+  const [{ available, sold }, agents] = await Promise.all([
+    getInventoryData(),
+    getAgents(),
+  ])
   const availableDisplayed = available.slice(0, 4);
   const availableColumnCount = Math.min(availableDisplayed.length, 4);
   const soldDisplayed = sold.slice(0, 4);
@@ -28,7 +41,7 @@ export default async function InventoryPage() {
   return (
     <section className="pg-listings">
       <div className="pg-listings-inner">
-        <h2>Available</h2>
+        <h2>Available & Coming Soon</h2>
         <div
             className="pg-listings-grid"
             style={{ gridTemplateColumns: `repeat(${availableColumnCount}, 1fr)` }}
@@ -38,8 +51,26 @@ export default async function InventoryPage() {
             ))}
           </div>
       </div>
+
+      <div className="pg-listings-cta-section">
+        <AgentCard
+          agent={agents[0]}
+          title="Have questions about our available or upcoming listings?"
+          cta="Reach Out"
+          openContactForm
+        />
+      </div>
+
       <div className="pg-listings-inner">
         <h2>Sold</h2>
+        <a
+          href="https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pg-listings-more-link"
+        >
+          See more sold and rented listings →
+        </a>
         <div
             className="pg-listings-grid"
             style={{ gridTemplateColumns: `repeat(${soldColumnCount}, 1fr)` }}

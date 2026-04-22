@@ -27,6 +27,32 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/buy',
+        destination: '/buying',
+        permanent: true,
+      },
+      {
+        source: '/lets-connect',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/our-trusted-vendors',
+        destination: '/client-resources',
+        permanent: true,
+      },
+      {
+        source: '/local-school-guidance',
+        destination: '/client-resources',
+        permanent: true,
+      },
+
+      
+    ]
+  },
 }
 
 export default nextConfig

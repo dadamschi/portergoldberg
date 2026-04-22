@@ -35,6 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 
 # Playwright
-screenshots/
 playwright-report/
 test-results/
+screenshots/
