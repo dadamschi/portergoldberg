@@ -2765,11 +2765,6 @@ body {
     font-size: 20px;
   }
 
-  .pg-halcyon-projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
   .pg-halcyon-media-row {
     grid-template-columns: 1fr;
   }

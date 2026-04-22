@@ -8,7 +8,7 @@ type HalcyonSoldProjectsProps = {
   listings: Listing[]
 }
 
-export function HalcyonSoldProjects({ listings }: HalcyonSoldProjectsProps) {
+export function HalcyonProjects({ listings }: HalcyonSoldProjectsProps) {
   return (
       <div className="pg-halcyon-projects-grid">
         {listings.map((listing) => {

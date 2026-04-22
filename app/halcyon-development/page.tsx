@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { client } from '@/lib/client'
 import { HALCYON_LISTINGS_QUERY } from '@/lib/queries'
 import type { Listing } from '@/types'
-import { HalcyonSoldProjects } from './components'
+import { HalcyonProjects } from './components'
 
 export const metadata: Metadata = {
   title: 'Halcyon Development',
@@ -119,19 +119,19 @@ export default async function HalcyonDevelopmentPage() {
       </section>
 
 
-      <section className="pg-halcyon-projects">
+      <section className="pg-halcyon-projects" style={{ marginTop: '40px'  }}>
       {/* Featured Listings from Sanity */}
         {available.length > 0 && (
-          <HalcyonSoldProjects listings={available} />
+          <HalcyonProjects listings={available} />
         )}
       </section>
 
-    <section className="pg-halcyon-projects">
+    <section className="pg-halcyon-projects" style={{ marginLeft: '40px', marginTop: '40px'  }}>
       {/* Sold Projects from Sanity */}
       {sold.length > 0 && (
         <>
-        <h2>Sold Projects</h2>
-        <HalcyonSoldProjects listings={sold} />
+        <h2 style={{ textAlign: 'center' }}>Sold Projects</h2>
+        <HalcyonProjects listings={sold} />
         </>
       )}
       </section>
