@@ -8,36 +8,60 @@ React/Next.js real estate website with Sanity CMS.
 - **UI**: React 19, TypeScript
 - **CMS**: Sanity v5 (standalone studio)
 - **Styling**: Plain CSS (`styles/globals.css`)
+- **Testing**: Playwright (screenshots)
+- **Linting**: ESLint 9 (flat config)
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── layout.tsx              # Root layout
-│   └── page.tsx                # Homepage
+│   ├── layout.tsx
+│   ├── page.tsx                    # Homepage
+│   ├── about-us/
+│   ├── buying/
+│   ├── client-resources/
+│   ├── contact/
+│   ├── events/
+│   ├── halcyon-development/
+│   ├── inventory/
+│   ├── newsletters/
+│   │   └── [slug]/
+│   ├── selling/
+│   ├── testimonials/
+│   ├── vendors/
+│   └── api/
+│       ├── connect/                # Contact form submissions
+│       ├── revalidate/             # Sanity webhook revalidation
+│       ├── subscribe/              # Newsletter signup
+│       └── vendor-list/            # Vendor list signup
 ├── components/
-│   ├── Nav.tsx
-│   ├── Hero.tsx
-│   ├── Stats.tsx
-│   ├── About.tsx
-│   ├── Listings.tsx
-│   ├── Testimonials.tsx
-│   ├── Contact.tsx
+│   ├── AgentCard.tsx               # Reusable agent/CTA banner
+│   ├── ConnectForm.tsx             # Flyout contact form
+│   ├── Flipbook.tsx                # Newsletter flipbook viewer
+│   ├── Hero.tsx                    # Homepage hero with stats
+│   ├── ImageLightbox.tsx           # Image gallery lightbox
+│   ├── ListingCard.tsx             # Property listing card
+│   ├── Nav.tsx                     # Main navigation
+│   ├── Newsletter.tsx              # Newsletter signup section
 │   ├── Footer.tsx
 │   └── index.ts
 ├── lib/
-│   ├── data.ts                 # Static content (migrate to Sanity)
-│   ├── client.ts               # Sanity client
-│   └── queries.ts              # GROQ queries
-├── studio/                     # STANDALONE Sanity Studio
-│   ├── schemas/                # Content schemas
+│   ├── client.ts                   # Sanity client
+│   ├── queries.ts                  # GROQ queries
+│   ├── data.ts                     # Static fallback content
+│   └── utils/
+│       ├── dateTime.tsx            # Date formatting
+│       └── numbers.tsx             # Number formatting
+├── studio/                         # STANDALONE Sanity Studio
+│   ├── schemas/
 │   ├── sanity.config.js
-│   ├── sanity.cli.js
-│   └── package.json            # Separate dependencies
+│   └── package.json
 ├── styles/
 │   └── globals.css
+├── tests/
+│   └── screenshots.spec.ts         # Playwright screenshot tests
 └── types/
-    └── index.ts                # TypeScript types
+    └── index.ts
 ```
 
 ## Code Standards
@@ -63,6 +87,17 @@ npm run dev
 # → http://localhost:3333
 ```
 
+**Run Tests:**
+```bash
+npm run test           # Run Playwright tests
+npm run test:ui        # Playwright UI mode
+```
+
+**Lint:**
+```bash
+npm run lint
+```
+
 ## Deployed Studio
 
 **Live**: https://portergoldberg.sanity.studio/
@@ -77,11 +112,17 @@ cd studio && npm run deploy
 | Schema | Type | Description |
 |--------|------|-------------|
 | `listing` | document | Properties with address, price, status |
-| `testimonial` | document | Client quotes for carousel |
+| `testimonial` | document | Client quotes |
 | `agent` | document | Team member profiles |
-| `siteSettings` | singleton | Hero, stats, about section |
-| `sellingProcess` | singleton | Our Process page |
+| `event` | document | Upcoming events |
+| `newsletter` | document | Newsletter archives |
+| `vendor` | document | Trusted vendors |
+| `siteSettings` | singleton | Global site settings |
+| `home` | singleton | Homepage content |
+| `sellingPage` | singleton | Selling/Our Process page |
+| `buyPage` | singleton | Buying page |
 | `aboutPage` | singleton | About page content |
+| `schoolGuidancePage` | singleton | School guidance content |
 
 ## Environment Variables
 
@@ -97,11 +138,10 @@ NEXT_PUBLIC_SANITY_DATASET=production
 - **Dataset**: `production`
 - **Studio URL**: https://portergoldberg.sanity.studio/
 
-## Fetching Content from Sanity
+## URL Redirects
 
-```ts
-import { client } from '@/lib/client'
-
-// Example query
-const listings = await client.fetch(`*[_type == "listing"] | order(order asc)`)
-```
+Configured in `next.config.ts`:
+- `/buy` → `/buying`
+- `/lets-connect` → `/contact`
+- `/our-trusted-vendors` → `/client-resources`
+- `/local-school-guidance` → `/client-resources`

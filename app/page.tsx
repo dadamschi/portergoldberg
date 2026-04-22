@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Hero, Listings, Testimonials } from '@/components'
-import { HERO } from '@/lib/data'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial, Agent } from '@/types'
