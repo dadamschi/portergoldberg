@@ -28,7 +28,6 @@ type HomePageData = {
 async function getHomePageData(): Promise<HomePageData> {
   try {
     const data = await client.fetch<HomePageData>(HOME_PAGE_QUERY)
-    console.log(data)
     return data
   } catch (error) {
     console.error('Failed to fetch from Sanity:', error)
@@ -46,10 +45,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero
-        headline={hero.headline}
-        subheadline={hero.subheadline}
-      />
+      <Hero />
       <Listings listings={listings} />
       <Testimonials testimonials={testimonials} />
     </>

@@ -22,7 +22,6 @@ async function getHalcyonListings(): Promise<HalcyonData> {
 
 export default async function HalcyonDevelopmentPage() {
   const { available, sold } = await getHalcyonListings()
-  console.log(available)
 
   return (
     <main className="pg-halcyon-page">

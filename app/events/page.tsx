@@ -188,8 +188,6 @@ export default async function EventsPage() {
   const upcoming = await getEventsData(UPCOMING_EVENTS_QUERY);
   const past = await getEventsData(PAST_EVENTS_QUERY);
 
-  console.log(upcoming, past);
-
   const renderEventList = (events: EventItem[], isPast: boolean) => (
     <div className="pg-events-list">
       {events.map((event) => (
