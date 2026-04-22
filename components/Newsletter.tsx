@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState } from 'react'
+import Link from 'next/link'
 
 export function Newsletter() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: React.BaseSyntheticEvent) {
     e.preventDefault()
     if (!email.trim()) return
 
@@ -69,6 +70,10 @@ export function Newsletter() {
         {status === 'error' && (
           <p className="pg-newsletter-error">{message}</p>
         )}
+
+        <Link href="/newsletters" className="pg-newsletter-archive-link">
+          Browse past newsletters →
+        </Link>
       </div>
     </section>
   )

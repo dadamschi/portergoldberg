@@ -3,7 +3,6 @@ import type { NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { formatDateOnly } from '@/lib/utils/dateTime'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {

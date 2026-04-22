@@ -706,6 +706,19 @@ body {
   margin-top: 12px;
 }
 
+.pg-newsletter-archive-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: 'Quicksand', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 14px;
+  color: var(--pg-gold);
+  text-decoration: none;
+}
+
+.pg-newsletter-archive-link:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .pg-newsletter {
     padding: 60px 20px;

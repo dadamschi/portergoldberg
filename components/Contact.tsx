@@ -34,7 +34,7 @@ function ContactForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
     // TODO: Wire up to form handler (e.g. Resend, Formspree, or API route)
     console.log('Form submitted:', form)
