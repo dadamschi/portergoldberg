@@ -5,7 +5,7 @@ import { Flipbook } from '@/components/Flipbook'
 import type { BuyPageData } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Buy',
+  title: 'Buying',
   description: 'Your guide to buying a home in Chicago with Porter Goldberg Residential.',
 }
 
@@ -21,7 +21,7 @@ export default async function BuyPage() {
     return (
       <main className="pg-buy-page">
         <section className="pg-buy-hero">
-          <h1>Buy</h1>
+          <h1>Buying</h1>
           <p>Content coming soon. Please add a Buy Page document in Sanity.</p>
         </section>
       </main>

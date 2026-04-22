@@ -4,7 +4,7 @@ export const structure = (S) =>
     .items([
       // Buy Page
       S.listItem()
-        .title("Buy Page")
+        .title("Buying Page")
         .child(
           S.document()
             .schemaType("buyPage")

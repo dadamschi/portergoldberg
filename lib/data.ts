@@ -5,21 +5,25 @@ import type { NavItem, Stat, AboutContent, HeroContent } from '@/types'
 // =============================================================================
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'About Us', href: '/about' },
-  { label: 'Buying', href: '/buy' },
-  { label: 'Selling', href: '/selling' },
+  { label: 'Buying', href: '/buying' },
+  { label: 'Sell', href: '/selling' },
   { label: 'Properties', href: '/inventory' },
   { label: 'Halcyon Development', href: '/halcyon-development' },
-  { label: 'Testimonials', href: '/testimonials' },
   {
-    label: 'Client Resources',
+    label: 'About',
     children: [
-      { label: 'Our Trusted Vendors', href: '/vendors' },
-      { label: 'Local School Guidance', href: '/schools' },
+      { label: 'Our Team', href: '/about' },
+      { label: 'Testimonials', href: '/testimonials' },
+      { label: 'Press', href: '/press' },
     ],
   },
-  { label: 'Events', href: '/events' },
-  { label: 'Press', href: '/press' },
+  {
+    label: 'Resources',
+    children: [
+      { label: 'Client Resources', href: '/client-resources' },
+      { label: 'Events', href: '/events' },
+    ],
+  },
 ]
 
 // =============================================================================

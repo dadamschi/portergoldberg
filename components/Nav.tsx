@@ -29,7 +29,7 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
         </Link>
 
         <ul className="pg-nav-links">
-          {items.slice(0, 6).map((item) => (
+          {items.map((item) => (
             <li
               key={item.label}
               className="pg-nav-item"
