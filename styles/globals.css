@@ -624,14 +624,6 @@ body {
   text-align: center;
 }
 
-.pg-newsletter-title {
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 300;
-  color: #1a1a1a;
-  margin-bottom: 12px;
-}
-
 .pg-newsletter-desc {
   font-family: 'Quicksand', Helvetica, Arial, Lucida, sans-serif;
   font-size: 15px;
@@ -1325,13 +1317,6 @@ body {
   width: 100%;
 }
 
-.pg-testimonials-inner {
-  width: 80%;
-  max-width: 1080px;
-  margin: 0 auto;
-  text-align: center;
-}
-
 .pg-testimonials-title {
   font-family: var(--font-heading);
   font-size: clamp(32px, 4vw, 48px);
@@ -1343,10 +1328,6 @@ body {
 .pg-testimonials-quotemark {
   margin-bottom: 16px;
   line-height: 1;
-}
-
-.pg-testimonial-content {
-  transition: opacity 0.3s;
 }
 
 .pg-testimonial-body {
@@ -1623,12 +1604,6 @@ body {
   opacity: 0.75;
 }
 
-.pg-contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .pg-input {
   width: 100%;
   padding: 12px 14px;
@@ -1821,11 +1796,6 @@ body {
   color: #999;
 }
 
-.pg-contact-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
 .pg-contact-checkboxes {
   display: flex;
   flex-direction: column;
@@ -1903,10 +1873,6 @@ body {
 
   .pg-contact-col-empty {
     display: none;
-  }
-
-  .pg-contact-form-row {
-    grid-template-columns: 1fr;
   }
 }
 
