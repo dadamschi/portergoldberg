@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { client } from '@/lib/client'
 import { HALCYON_LISTINGS_QUERY } from '@/lib/queries'
-import { ListingCard } from '@/components/ListingCard'
 import type { Listing } from '@/types'
 import { HalcyonSoldProjects } from './components'
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { SanityImage } from '@/types'
+import Image from 'next/image'
 
 type ImageModalProps = {
   image: SanityImage
@@ -19,8 +20,9 @@ export function ImageModal({ image, alt = 'Event image' }: ImageModalProps) {
         className="pg-image-modal-trigger"
         onClick={() => setIsOpen(true)}
         aria-label={`View ${alt} full size`}
+        style={{ position: 'relative', aspectRatio: '4/3' }}
       >
-        <img src={src} alt={alt} className="pg-image-modal-thumbnail" />
+        <Image src={src} alt={alt} className="pg-image-modal-thumbnail" fill sizes="300px" />
       </button>
 
       {isOpen && (
@@ -30,6 +32,7 @@ export function ImageModal({ image, alt = 'Event image' }: ImageModalProps) {
           role="dialog"
           aria-modal="true"
           aria-label={alt}
+          style={{ position: 'relative' }}
         >
           <button
             type="button"
@@ -39,11 +42,14 @@ export function ImageModal({ image, alt = 'Event image' }: ImageModalProps) {
           >
             &times;
           </button>
-          <img
+          <Image
             src={src}
             alt={alt}
             className="pg-image-modal-image"
             onClick={(e) => e.stopPropagation()}
+            fill
+            sizes="100vw"
+            style={{ objectFit: 'contain' }}
           />
         </div>
       )}

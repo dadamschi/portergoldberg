@@ -8,12 +8,6 @@ type InventoryData = {
   sold: Listing[]
 }
 
-const STATUS_CLASS: Record<string, string> = {
-  active: 'pg-listing-status--active',
-  coming: 'pg-listing-status--coming',
-  sold: 'pg-listing-status--sold',
-}
-
 async function getInventoryData(): Promise<InventoryData> {
   try {
     const data = await client.fetch<InventoryData>(ALL_LISTINGS_QUERY)

@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, forwardRef } from 'react'
 import HTMLFlipBook from 'react-pageflip'
 import type { FlipbookImage } from '@/types'
+import Image from 'next/image'
 
 type FlipbookProps = {
   images: FlipbookImage[]
@@ -15,11 +16,13 @@ type PageProps = {
 
 const Page = forwardRef<HTMLDivElement, PageProps>(({ image, pageNumber }, ref) => {
   return (
-    <div ref={ref} className="pg-flipbook-page">
-      <img
+    <div ref={ref} className="pg-flipbook-page" style={{ position: 'relative' }}>
+      <Image
         src={image.asset.url}
         alt={image.alt}
         className="pg-flipbook-image"
+        fill
+        sizes="(max-width: 768px) 100vw, 550px"
       />
       <div className="pg-flipbook-page-number">{pageNumber}</div>
     </div>
@@ -71,7 +74,7 @@ export function Flipbook({ images }: FlipbookProps) {
             onClick={() => goToPage(index)}
             aria-label={`Go to page ${index + 1}`}
           >
-            <img src={image.asset.url} alt={image.alt} />
+            <Image src={image.asset.url} alt={image.alt} width={100} height={133} />
             <span className="pg-flipbook-thumbnail-number">{image.alt}</span>
             {/* <span className="pg-flipbook-thumbnail-overlay">{image.alt}</span> */}
           </button>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 import { client } from '@/lib/client'
@@ -56,10 +57,12 @@ export default async function ClientResourcesPage() {
         {/* School Guidance Teaser */}
         <article className="pg-resource-card">
           {schoolData?.image ? (
-            <div className="pg-resource-card-image">
-              <img
+            <div className="pg-resource-card-image" style={{ position: 'relative' }}>
+              <Image
                 src={schoolData.image.asset.url}
                 alt={schoolData.image.alt || 'School guidance'}
+                fill
+                style={{ objectFit: 'cover' }}
               />
             </div>
           ) : (

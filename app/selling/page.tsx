@@ -4,6 +4,7 @@ import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { portableTextComponents } from '@/lib/portableText'
 import type { SellingPageData } from '@/types'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Selling',
@@ -50,10 +51,13 @@ export default async function SellingPage() {
           )}
 
           {data.marketingImage && (
-            <div className="pg-selling-column-image">
-              <img
+            <div className="pg-selling-column-image" style={{ position: 'relative', aspectRatio: '16/9' }}>
+              <Image
                 src={data.marketingImage.asset.url}
                 alt={data.marketingImage.alt || 'Marketing'}
+                fill
+                sizes="(max-width: 768px) 100vw, 400px"
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
               />
             </div>
           )}
@@ -84,16 +88,22 @@ export default async function SellingPage() {
                   <div className="pg-selling-before-after-images">
                     <div className="pg-selling-before">
                       <span className="pg-selling-label">Before</span>
-                      <img
+                      <Image
                         src={item.beforeImage.asset.url}
                         alt={item.beforeImage.alt || `${item.name} before`}
+                        width={400}
+                        height={215}
+                        style={{ objectFit: 'cover' }}
                       />
                     </div>
                     <div className="pg-selling-after">
                       <span className="pg-selling-label">After</span>
-                      <img
+                      <Image
                         src={item.afterImage.asset.url}
                         alt={item.afterImage.alt || `${item.name} after`}
+                        width={400}
+                        height={215}
+                        style={{ objectFit: 'cover' }}
                       />
                     </div>
                   </div>
@@ -126,10 +136,13 @@ export default async function SellingPage() {
               {data.stagingPartners.map((partner, index) => (
                 <div key={index} className="pg-selling-partner">
                   {partner.logo && (
-                    <img
+                    <Image
                       src={partner.logo.asset.url}
                       alt={partner.logo.alt || partner.name}
                       className="pg-selling-partner-logo"
+                      width={120}
+                      height={60}
+                      style={{ objectFit: 'contain' }}
                     />
                   )}
                   <h4>{partner.name}</h4>

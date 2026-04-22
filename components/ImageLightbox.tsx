@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 
 type ImageLightboxProps = {
   src: string
@@ -41,7 +42,7 @@ export function ImageLightbox({ src, alt, children }: ImageLightboxProps) {
       </button>
 
       {isOpen && (
-        <div className="pg-lightbox-overlay" onClick={close}>
+        <div className="pg-lightbox-overlay" onClick={close} style={{ position: 'relative' }}>
           <button
             className="pg-lightbox-close"
             onClick={close}
@@ -51,11 +52,14 @@ export function ImageLightbox({ src, alt, children }: ImageLightboxProps) {
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
-          <img
+          <Image
             src={src}
             alt={alt}
             className="pg-lightbox-image"
             onClick={(e) => e.stopPropagation()}
+            fill
+            sizes="90vw"
+            style={{ objectFit: 'contain' }}
           />
         </div>
       )}

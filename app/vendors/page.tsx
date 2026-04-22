@@ -36,7 +36,7 @@ export default function VendorsPage() {
       <section className="pg-vendors-hero">
         <h1>Our Trusted Vendors</h1>
         <p>
-          Over the years, we've built relationships with exceptional service providers across
+          Over the years, we&apos;ve built relationships with exceptional service providers across
           Chicago. These are the professionals we trust and recommend to our clients.
         </p>
       </section>

@@ -45,7 +45,7 @@ function ContactForm() {
     return (
       <div style={{ paddingTop: '16px' }}>
         <p style={{ fontSize: '14px', color: 'var(--pg-mid)', lineHeight: 1.7 }}>
-          Thank you — we'll be in touch shortly.
+          Thank you — we will be in touch shortly.
         </p>
       </div>
     )

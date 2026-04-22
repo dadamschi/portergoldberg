@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Newsletter } from './Newsletter'
 import { formatNumber } from '@/lib/utils/numbers'
 import { FacebookIcon, InstagramIcon, SOCIAL_URLS } from './SocialLinks'
+import Image from 'next/image'
 
 type HeroCard = {
   href: string
@@ -16,14 +17,6 @@ const HERO_CARDS: HeroCard[] = [
   { href: '/buying', label: 'Buying', image: '/Square-Tiles-color-2-1.webp' },
   { href: '/about', label: 'About Us', image: '/Square-Tiles-color-3-1.webp' },
 ]
-
-type HeroProps = {
-  headline: string
-  subheadline: string
-  eyebrow?: string
-  primaryCta?: { label: string; href: string }
-  secondaryCta?: { label: string; href: string }
-}
 
 function useCountUp(target: number, duration = 1200, trigger = false) {
   const [count, setCount] = useState(0)
@@ -75,7 +68,7 @@ function HeroStat({
   )
 }
 
-export function Hero(_props: HeroProps) {
+export function Hero() {
   const statsRef = useRef<HTMLDivElement>(null)
   const [animate, setAnimate] = useState(false)
 
@@ -140,12 +133,14 @@ export function Hero(_props: HeroProps) {
         <div className="pg-starts-here-grid" style={{ fontWeight: 600 }}>
           {HERO_CARDS.map((card) => (
             <a key={card.href} href={card.href} className="pg-starts-here-card">
-              <img
+              <Image
                 src={card.image}
                 alt={card.label}
                 className="pg-starts-here-img"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
               />
-              
+
             </a>
           ))}
         </div>
@@ -195,10 +190,12 @@ export function Hero(_props: HeroProps) {
           </div>
         </div>
         <div className="pg-hero-bio-photo">
-          <img
+          <Image
             src="/Lauren-and-Samantha-Oval.webp"
             alt="Samantha Porter and Lauren Goldberg"
             className="pg-hero-bio-img"
+            width={400}
+            height={400}
           />
         </div>
       </div>
