@@ -335,3 +335,38 @@ export const SCHOOL_GUIDANCE_PAGE_QUERY = defineQuery(/* groq */ `
     content
   }
 `)
+
+// =============================================================================
+// NEWSLETTERS
+// =============================================================================
+
+// List query - lighter payload for archive page
+export const ALL_NEWSLETTERS_QUERY = defineQuery(/* groq */ `
+  *[_type == "newsletter"] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    publishedAt,
+    summary,
+    "coverImage": imageSections[0].image { ${imageFragment} }
+  }
+`)
+
+// Single newsletter by slug
+export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "newsletter" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    publishedAt,
+    summary,
+    imageSections[] {
+      _key,
+      "image": image { ${imageFragment} },
+      alt,
+      linkUrl
+    },
+    textContent,
+    hubspotUrl
+  }
+`)

@@ -17,6 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: '/halcyon-development', priority: 0.85, changeFrequency: 'weekly' as const },
     { route: '/testimonials', priority: 0.7, changeFrequency: 'daily' as const },
     { route: '/events', priority: 0.8, changeFrequency: 'weekly' as const },
+    { route: '/newsletters', priority: 0.7, changeFrequency: 'weekly' as const },
     { route: '/contact', priority: 0.7, changeFrequency: 'monthly' as const },
     { route: '/client-resources', priority: 0.6, changeFrequency: 'monthly' as const },
     { route: '/vendors', priority: 0.6, changeFrequency: 'monthly' as const },
@@ -31,9 +32,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch dynamic content from Sanity for last modified dates
   try {
-    const lastUpdated = await client.fetch<{ listings?: string; events?: string }>(`{
+    const lastUpdated = await client.fetch<{ listings?: string; events?: string; newsletters?: string }>(`{
       "listings": *[_type == "listing"] | order(_updatedAt desc)[0]._updatedAt,
-      "events": *[_type == "event"] | order(_updatedAt desc)[0]._updatedAt
+      "events": *[_type == "event"] | order(_updatedAt desc)[0]._updatedAt,
+      "newsletters": *[_type == "newsletter"] | order(_updatedAt desc)[0]._updatedAt
     }`)
 
     // Update lastModified for dynamic pages
@@ -45,6 +47,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (lastUpdated.events) {
       const eventsEntry = staticEntries.find(e => e.url.endsWith('/events'))
       if (eventsEntry) eventsEntry.lastModified = new Date(lastUpdated.events)
+    }
+
+    if (lastUpdated.newsletters) {
+      const newslettersEntry = staticEntries.find(e => e.url.endsWith('/newsletters'))
+      if (newslettersEntry) newslettersEntry.lastModified = new Date(lastUpdated.newsletters)
     }
   } catch (error) {
     console.error('Failed to fetch Sanity dates for sitemap:', error)

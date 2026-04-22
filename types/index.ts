@@ -205,3 +205,36 @@ export type SchoolGuidancePageData = {
   image?: SanityImage
   content?: PortableTextBlock[]
 }
+
+// =============================================================================
+// NEWSLETTER TYPES
+// =============================================================================
+
+export type NewsletterImageSection = {
+  _key: string
+  image: SanityImage
+  alt?: string
+  linkUrl?: string
+}
+
+// Preview for list page
+export type NewsletterPreview = {
+  _id: string
+  title: string
+  slug: { current: string }
+  publishedAt: string
+  summary: string
+  coverImage?: SanityImage
+}
+
+// Full newsletter for detail page
+export type Newsletter = {
+  _id: string
+  title: string
+  slug: { current: string }
+  publishedAt: string
+  summary: string
+  imageSections?: NewsletterImageSection[]
+  textContent?: PortableTextBlock[]
+  hubspotUrl?: string
+}

@@ -22,6 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { label: 'Client Resources', href: '/client-resources' },
       { label: 'Events', href: '/events' },
+      { label: 'Newsletter', href: '/newsletters' },
     ],
   },
 ]
