@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Get in touch with Porter Goldberg Residential — Chicago real estate experts.',
 }
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 async function getAgents(): Promise<Agent[]> {
   return client.fetch<Agent[]>(AGENTS_QUERY)

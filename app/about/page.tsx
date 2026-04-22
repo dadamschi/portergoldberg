@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Meet Samantha Porter and Lauren Goldberg — Chicago real estate experts at Jameson Sotheby\'s International Realty.',
 }
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 async function getAgents(): Promise<Agent[]> {
   return client.fetch<Agent[]>(AGENTS_QUERY)

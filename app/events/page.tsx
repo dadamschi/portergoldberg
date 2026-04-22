@@ -10,8 +10,54 @@ export const metadata: Metadata = {
   description: 'Upcoming webinars, workshops, and past event recordings from PorterGoldberg Residential.',
 }
 
+function EventsJsonLd({ events }: { events: EventItem[] }) {
+  const eventSchemas = events.map((event) => ({
+    '@type': 'Event',
+    name: event.title,
+    description: event.description,
+    startDate: event.date,
+    endDate: event.endDate || event.date,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: event.location
+      ? 'https://schema.org/OfflineEventAttendanceMode'
+      : 'https://schema.org/OnlineEventAttendanceMode',
+    location: event.location
+      ? {
+          '@type': 'Place',
+          name: event.location,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Chicago',
+            addressRegion: 'IL',
+          },
+        }
+      : {
+          '@type': 'VirtualLocation',
+          url: event.registrationUrl || 'https://portergoldberg.com/events',
+        },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Porter Goldberg Residential',
+      url: 'https://portergoldberg.com',
+    },
+    image: event.image?.asset?.url,
+  }))
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': eventSchemas,
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
 // Revalidate every hour (or on-demand via webhook)
-export const revalidate = 3600
+export const revalidate = 86400
 
 async function getEventsData(query:string): Promise<EventItem[]> {
   try {
@@ -155,6 +201,7 @@ export default async function EventsPage() {
 
   return (
     <main className="pg-events-page">
+      <EventsJsonLd events={[...upcoming, ...past]} />
       {/* Header */}
       <section className="pg-events-section">
         <div className="pg-events-inner">

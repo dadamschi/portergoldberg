@@ -1,0 +1,21 @@
+# robots.txt for Porter Goldberg Residential
+# https://portergoldberg.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://portergoldberg.com/sitemap.xml
+
+# AI Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /

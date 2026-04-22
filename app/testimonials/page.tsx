@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { Testimonial } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
-import { PortableText } from '@portabletext/react'
+import { PortableText, toPlainText } from '@portabletext/react'
 import { portableTextComponents } from '@/lib/portableText'
 
 export const metadata: Metadata = {
@@ -10,7 +10,44 @@ export const metadata: Metadata = {
   description: 'Read what our clients say about working with Porter Goldberg Residential.',
 }
 
-export const revalidate = 3600
+function ReviewsJsonLd({ testimonials }: { testimonials: Testimonial[] }) {
+  const reviews = testimonials.map((t) => ({
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: t.clientName,
+    },
+    reviewBody: toPlainText(t.quote),
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: 5,
+      bestRating: 5,
+    },
+  }))
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateAgent',
+    name: 'Porter Goldberg Residential',
+    url: 'https://portergoldberg.com',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: 5,
+      reviewCount: testimonials.length,
+      bestRating: 5,
+    },
+    review: reviews.slice(0, 10), // Limit to 10 reviews for schema
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
+export const revalidate = 86400
 
 async function getTestimonials(): Promise<Testimonial[]> {
   try {
@@ -21,7 +58,7 @@ async function getTestimonials(): Promise<Testimonial[]> {
   }
 }
 
-function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; index: number }) {
+function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   const cardClass = testimonial.pinOnHomePage ? `pg-testimonial-card--featured` : '';
   return (
     <div className={`pg-testimonial-card ${cardClass}`}>
@@ -43,6 +80,7 @@ export default async function TestimonialsPage() {
 
   return (
     <main className="pg-testimonials-page">
+      <ReviewsJsonLd testimonials={testimonials} />
       <section className="pg-testimonials-section">
         <div className="pg-testimonials-inner">
           <div className="pg-testimonials-header">
@@ -54,8 +92,8 @@ export default async function TestimonialsPage() {
 
           {testimonials.length > 0 ? (
             <div className="pg-testimonials-list">
-              {testimonials.map((testimonial, index) => (
-                <TestimonialCard key={testimonial._id} testimonial={testimonial} index={index} />
+              {testimonials.map((testimonial) => (
+                <TestimonialCard key={testimonial._id} testimonial={testimonial} />
               ))}
             </div>
           ) : (
