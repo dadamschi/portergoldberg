@@ -39,7 +39,6 @@ export default async function HomePage() {
   const data = await getHomePageData()
 
   // Use Sanity data if available, otherwise fall back to static data
-  const hero = data.settings?.hero ?? HERO
   const listings = data.listings
   const testimonials = data.testimonials
 
