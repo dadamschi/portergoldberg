@@ -42,18 +42,39 @@ export default function VendorsPage() {
       </section>
 
       <section className="pg-vendors-content">
-        <nav className="pg-vendors-nav">
-          <h3>Categories</h3>
-          <ul>
-            {categories.map((category) => (
-              <li key={category}>
-                <a href={`#${category.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
-                  {category}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <nav className="pg-vendors-nav" id="vendor-categories">
+          <details className="pg-vendors-nav-mobile">
+            <summary>
+              <span>Categories</span>
+              <span className="pg-vendors-nav-count">{categories.length}</span>
+            </summary>
+            <ul>
+              {categories.map((category) => (
+                <li key={category}>
+                  <a href={`#${category.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
+                    {category}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+          <div className="pg-vendors-nav-desktop">
+            <h3>Categories</h3>
+            <ul>
+              {categories.map((category) => (
+                <li key={category}>
+                  <a href={`#${category.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
+                    {category}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
+
+        <a href="#vendor-categories" className="pg-vendors-back-btn" aria-label="Back to categories">
+          ↑ Categories
+        </a>
 
         <div className="pg-vendors-list">
           {categories.map((category) => (

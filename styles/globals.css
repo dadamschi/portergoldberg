@@ -3351,9 +3351,16 @@ body {
   align-self: flex-start;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
+  scroll-margin-top: 100px;
 }
 
-.pg-vendors-nav h3 {
+/* Mobile collapsible nav - hidden on desktop */
+.pg-vendors-nav-mobile {
+  display: none;
+}
+
+/* Desktop nav - shown by default */
+.pg-vendors-nav-desktop h3 {
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -3368,7 +3375,7 @@ body {
   margin: 0;
 }
 
-.pg-vendors-nav li {
+.pg-vendors-nav-desktop li {
   margin-bottom: 8px;
 }
 
@@ -3434,26 +3441,38 @@ body {
 .pg-vendor-details {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
 .pg-vendor-phone,
 .pg-vendor-email,
 .pg-vendor-website {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
   color: var(--pg-gold);
   text-decoration: none;
+  padding: 10px 14px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s;
+  min-height: 44px; /* Touch target minimum */
 }
 
 .pg-vendor-phone:hover,
 .pg-vendor-email:hover,
 .pg-vendor-website:hover {
-  text-decoration: underline;
+  background: var(--pg-gold);
+  color: #fff;
+  border-color: var(--pg-gold);
 }
 
 .pg-vendor-alt {
-  color: #888;
+  color: #666;
+  border-style: dashed;
 }
 
 .pg-vendor-location {
@@ -3462,29 +3481,124 @@ body {
   margin: 0;
 }
 
+/* Back to categories button - hidden on desktop */
+.pg-vendors-back-btn {
+  display: none;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .pg-vendors-content {
     flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Floating back to categories button */
+  .pg-vendors-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    background: var(--pg-navy, #000035);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    min-height: 48px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .pg-vendors-back-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .pg-vendors-nav {
     width: 100%;
     position: static;
     max-height: none;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 24px;
   }
 
-  .pg-vendors-nav ul {
+  /* Hide desktop nav, show mobile collapsible */
+  .pg-vendors-nav-desktop {
+    display: none;
+  }
+
+  .pg-vendors-nav-mobile {
+    display: block;
+    background: #f8f8f8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .pg-vendors-nav-mobile summary {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+    list-style: none;
   }
 
-  .pg-vendors-nav li {
-    margin-bottom: 0;
+  .pg-vendors-nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pg-vendors-nav-mobile summary::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--pg-gold);
+    transition: transform 0.2s;
+  }
+
+  .pg-vendors-nav-mobile[open] summary::after {
+    content: '−';
+  }
+
+  .pg-vendors-nav-count {
+    background: var(--pg-gold);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: 12px;
+  }
+
+  .pg-vendors-nav-mobile ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    padding: 0;
+    background: #e8e8e8;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .pg-vendors-nav-mobile li {
+    margin: 0;
+  }
+
+  .pg-vendors-nav-mobile a {
+    display: block;
+    padding: 14px 16px;
+    background: #fff;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  .pg-vendors-nav-mobile a:active {
+    background: #f0f0f0;
   }
 }
 
@@ -3494,6 +3608,11 @@ body {
   }
 
   .pg-vendors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Single column for category links on small screens */
+  .pg-vendors-nav-mobile ul {
     grid-template-columns: 1fr;
   }
 }
