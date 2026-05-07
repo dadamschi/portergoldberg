@@ -17,7 +17,7 @@ export function ContactForm({ agents }: ContactFormProps) {
             <strong>Let&apos;s Connect</strong>
           </h2>
 
-          <div className="pg-contact-agents">
+          {/* <div className="pg-contact-agents">
             {agents.map((agent) => (
               <div key={agent._id} className="pg-contact-agent">
                 <p>
@@ -31,7 +31,7 @@ export function ContactForm({ agents }: ContactFormProps) {
                 </p>
               </div>
             ))}
-          </div>
+          </div> */}
 
           <div className="pg-contact-address">
             <strong>Jameson Sotheby&apos;s International Realty</strong>

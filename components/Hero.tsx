@@ -44,20 +44,20 @@ function HeroStat({
   description,
   animate,
 }: {
-  value: number
+  value?: number
   prefix?: string
   suffix?: string
   label: string
   description: string
   animate: boolean
 }) {
-  const count = useCountUp(value, 1200, animate)
-  const displayValue = animate ? formatNumber(count) : formatNumber(value)
+  const count = useCountUp(value ?? 0, 1200, animate)
+  const displayValue = value !== undefined ? (animate ? formatNumber(count) : formatNumber(value)) : null
 
   return (
     <div className="pg-hero-stat">
       <div className="pg-hero-stat-value">
-        {prefix && <span className="pg-hero-stat-symbol">{prefix} </span>}
+        {prefix && <span className="pg-hero-stat-symbol">{prefix}</span>}
         {displayValue}
         {suffix && <span className="pg-hero-stat-symbol"> {suffix}</span>}
         {label && <span className="pg-hero-stat-label"> {label}</span>}
@@ -102,8 +102,7 @@ export function Hero() {
 
         <div className="pg-hero-stats" ref={statsRef}>
           <HeroStat
-            value={85}
-            suffix="%"
+            suffix="85%"
             label="Referral"
             description="Client base that confidently recommends our personal service and advocacy"
             animate={animate}
@@ -127,7 +126,7 @@ export function Hero() {
 
       {/* Starts Here cards */}
       <div className="pg-starts-here">
-        <h2 className="pg-starts-here-title">
+        <h2 className="pg-starts-here-title" style={{ fontWeight: 600, lineHeight: 1.2 }}>
           Buying, Selling, Owning, Renting Starts Here
         </h2>
         <div className="pg-starts-here-grid" style={{ fontWeight: 600 }}>

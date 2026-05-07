@@ -115,7 +115,7 @@ body {
   margin-right: 40px;
 }
 
-.pg-logo img {
+.pg-logo-img {
   height: 48px;
   width: auto;
   object-fit: contain;
@@ -228,7 +228,7 @@ body {
 
 .pg-mobile-menu {
   position: fixed;
-  inset: 70px 0 0 0;
+  inset: 80px 0 0 0;
   background: var(--pg-black);
   z-index: 99;
   padding: 40px;
@@ -353,7 +353,7 @@ body {
   font-size: clamp(28px, 3.5vw, 42px);
   color: #1a1a1a;
   font-weight: 500;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .pg-starts-here-grid {
@@ -1707,6 +1707,24 @@ body {
   user-select: none;
 }
 
+.pg-contact-captcha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pg-contact-captcha label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.pg-contact-captcha-input {
+  max-width: 100px;
+}
+
 .pg-contact-submit {
   font-size: 13px;
   font-weight: 600;
@@ -2506,17 +2524,25 @@ body {
 
 @media (max-width: 768px) {
   .pg-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     padding: 0 16px;
+  }
+
+  .pg-main {
+    padding-top: 80px;
   }
 
   .pg-logo {
     margin-right: auto;
-    width: 30%;
+    width: 80%;
   }
 
-  .pg-logo img {
-    height: auto;
-    width: 100%;
+  .pg-logo-img {
+    height: auto !important;
+    width: 100% !important;
   }
 
   .pg-nav-links {

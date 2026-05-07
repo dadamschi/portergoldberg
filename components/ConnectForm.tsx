@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { submitConnectForm } from '@/app/actions'
+import { useCaptcha } from '@/lib/useCaptcha'
 import type { Agent } from '@/types'
 
 type ConnectFormProps = {
@@ -17,6 +18,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
   const [addToVendorList, setAddToVendorList] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
+  const captcha = useCaptcha()
 
   // Lock body scroll when open
   useEffect(() => {
@@ -46,6 +48,13 @@ export function ConnectForm({ agents }: ConnectFormProps) {
 
   async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault()
+
+    if (!captcha.isValid) {
+      setStatus('error')
+      setFeedback('Please answer the math question correctly.')
+      return
+    }
+
     setStatus('loading')
 
     try {
@@ -65,6 +74,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
         setMessage('')
         setSubscribeNewsletter(false)
         setAddToVendorList(false)
+        captcha.reset()
       } else {
         setStatus('error')
         setFeedback(result.message)
@@ -81,6 +91,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     setTimeout(() => {
       setStatus('idle')
       setFeedback('')
+      captcha.reset()
     }, 300)
   }
 
@@ -207,6 +218,24 @@ export function ConnectForm({ agents }: ConnectFormProps) {
                   Add me to your vendor list
                 </label>
               </div>
+            </div>
+
+            <div className="pg-connect-field">
+              <label htmlFor="connect-captcha" className="pg-connect-label">
+                {captcha.question}
+              </label>
+              <input
+                id="connect-captcha"
+                type="text"
+                inputMode="numeric"
+                required
+                value={captcha.answer}
+                onChange={(e) => captcha.setAnswer(e.target.value)}
+                className="pg-connect-input"
+                disabled={status === 'loading'}
+                placeholder="Your answer"
+                autoComplete="off"
+              />
             </div>
 
             {status === 'error' && (

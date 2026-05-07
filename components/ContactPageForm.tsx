@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { submitConnectForm } from '@/app/actions'
+import { useCaptcha } from '@/lib/useCaptcha'
 
 export function ContactPageForm() {
   const [formData, setFormData] = useState({
@@ -12,9 +13,18 @@ export function ContactPageForm() {
     subscribeNewsletter: true,
   })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const captcha = useCaptcha()
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
+
+    if (!captcha.isValid) {
+      setStatus('error')
+      setErrorMessage('Please answer the math question correctly.')
+      return
+    }
+
     setStatus('loading')
 
     try {
@@ -23,11 +33,14 @@ export function ContactPageForm() {
       if (result.success) {
         setStatus('success')
         setFormData({ name: '', email: '', message: '', addToVendorList: false, subscribeNewsletter: false })
+        captcha.reset()
       } else {
         setStatus('error')
+        setErrorMessage('Something went wrong. Please try again.')
       }
     } catch {
       setStatus('error')
+      setErrorMessage('Something went wrong. Please try again.')
     }
   }
 
@@ -82,6 +95,21 @@ export function ContactPageForm() {
         </label>
       </div>
 
+      <div className="pg-contact-captcha">
+        <label htmlFor="contact-captcha">{captcha.question}</label>
+        <input
+          id="contact-captcha"
+          type="text"
+          inputMode="numeric"
+          required
+          value={captcha.answer}
+          onChange={(e) => captcha.setAnswer(e.target.value)}
+          className="pg-contact-input pg-contact-captcha-input"
+          placeholder="Your answer"
+          autoComplete="off"
+        />
+      </div>
+
       <button
         type="submit"
         className="pg-contact-submit"
@@ -94,7 +122,7 @@ export function ContactPageForm() {
         <p className="pg-contact-success">Thank you! We&apos;ll be in touch soon.</p>
       )}
       {status === 'error' && (
-        <p className="pg-contact-error">Something went wrong. Please try again.</p>
+        <p className="pg-contact-error">{errorMessage}</p>
       )}
     </form>
   )

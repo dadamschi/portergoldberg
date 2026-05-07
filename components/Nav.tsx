@@ -23,7 +23,7 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
             alt="PorterGoldberg Residential"
             width={340}
             height={48}
-            style={{ width: 'auto', height: '48px' }}
+            className="pg-logo-img"
             priority
           />
         </Link>
