@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { submitConnectForm } from '@/app/actions'
 
 export function ContactPageForm() {
   const [formData, setFormData] = useState({
@@ -17,13 +18,9 @@ export function ContactPageForm() {
     setStatus('loading')
 
     try {
-      const res = await fetch('/api/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
+      const result = await submitConnectForm(formData)
 
-      if (res.ok) {
+      if (result.success) {
         setStatus('success')
         setFormData({ name: '', email: '', message: '', addToVendorList: false, subscribeNewsletter: false })
       } else {

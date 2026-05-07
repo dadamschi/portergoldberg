@@ -1,5 +1,6 @@
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Nav, Footer, ConnectForm } from '@/components'
 import { LocalBusinessJsonLd, WebsiteJsonLd } from '@/components/JsonLd'
 import { NAV_ITEMS } from '@/lib/data'
@@ -61,6 +62,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  verification: {
+    google: '5xjymRUSMxoa9ROBZMjOEvvMEWMyOgXeMEpjhn_oVAE',
+  },
 }
 
 async function getAgents(): Promise<Agent[]> {
@@ -89,6 +93,20 @@ export default async function RootLayout({
           <Footer agents={agents} />
         </div>
         <ConnectForm agents={agents} />
+
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-JXKWK4V7GW"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-JXKWK4V7GW');
+          `}
+        </Script>
       </body>
     </html>
   )

@@ -8,6 +8,3 @@ export const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Default from address - update this to your verified domain
 export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
-
-// Where contact form submissions should be sent
-export const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'hello@portergoldberg.com'

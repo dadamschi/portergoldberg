@@ -1,34 +1,52 @@
-import { NextResponse } from 'next/server'
-import { resend, FROM_EMAIL, CONTACT_EMAIL } from '@/lib/resend'
+'use server'
 
-type ContactBody = {
-  name?: string
-  email?: string
-  message?: string
+import { resend, FROM_EMAIL } from '@/lib/resend'
+import { client } from '@/lib/client'
+
+type ConnectFormData = {
+  name: string
+  email: string
+  message: string
   subscribeNewsletter?: boolean
   addToVendorList?: boolean
 }
 
-export async function POST(request: Request) {
-  const body: ContactBody = await request.json()
-  const { name, email, message, subscribeNewsletter, addToVendorList } = body
+type ConnectResult = {
+  success: boolean
+  message: string
+}
+
+export async function submitConnectForm(data: ConnectFormData): Promise<ConnectResult> {
+  const { name, email, message, subscribeNewsletter, addToVendorList } = data
 
   if (!name || !name.trim()) {
-    return NextResponse.json({ message: 'Please enter your name.' }, { status: 400 })
+    return { success: false, message: 'Please enter your name.' }
   }
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ message: 'Please enter a valid email address.' }, { status: 400 })
+    return { success: false, message: 'Please enter a valid email address.' }
   }
 
   if (!message || !message.trim()) {
-    return NextResponse.json({ message: 'Please enter a message.' }, { status: 400 })
+    return { success: false, message: 'Please enter a message.' }
+  }
+
+  // Fetch agent emails from Sanity
+  const agents = await client.fetch<{ email: string }[]>(
+    `*[_type == "agent"]{ email }`
+  )
+  const agentEmails = agents.map(a => a.email).filter(Boolean)
+
+  if (agentEmails.length === 0) {
+    throw new Error('No agent emails found in Sanity')
   }
 
   // Send email via Resend
+  const ccEmail = process.env.CONTACT_CC_EMAIL || 'dadams.chi+portergoldbergcc@gmail.com'
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
-    to: CONTACT_EMAIL,
+    to: agentEmails,
+    cc: ccEmail,
     replyTo: email,
     subject: `New inquiry from ${name}`,
     html: `
@@ -45,14 +63,14 @@ export async function POST(request: Request) {
 
   if (error) {
     console.error('[Connect] Failed to send email:', error)
-    return NextResponse.json({ message: 'Failed to send message. Please try again.' }, { status: 500 })
+    return { success: false, message: 'Failed to send message. Please try again.' }
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   // Subscribe to newsletter if checkbox was checked
   if (subscribeNewsletter) {
-    console.log('[Connect] Subscribing', email);
+    console.log('[Connect] Subscribing', email)
     try {
       await fetch(`${baseUrl}/api/subscribe`, {
         method: 'POST',
@@ -66,7 +84,7 @@ export async function POST(request: Request) {
 
   // Add to vendor list if checkbox was checked
   if (addToVendorList) {
-    console.log('[Connect] Adding', email, 'to vendor list');
+    console.log('[Connect] Adding', email, 'to vendor list')
     try {
       await fetch(`${baseUrl}/api/vendor-list`, {
         method: 'POST',
@@ -78,8 +96,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json(
-    { message: "Thanks for reaching out! We'll be in touch soon." },
-    { status: 200 },
-  )
+  return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }
 }

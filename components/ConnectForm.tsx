@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { submitConnectForm } from '@/app/actions'
 import type { Agent } from '@/types'
 
 type ConnectFormProps = {
@@ -48,17 +49,17 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     setStatus('loading')
 
     try {
-      const res = await fetch('/api/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message, subscribeNewsletter, addToVendorList }),
+      const result = await submitConnectForm({
+        name,
+        email,
+        message,
+        subscribeNewsletter,
+        addToVendorList,
       })
 
-      const data: { message: string } = await res.json()
-
-      if (res.ok) {
+      if (result.success) {
         setStatus('success')
-        setFeedback(data.message)
+        setFeedback(result.message)
         setName('')
         setEmail('')
         setMessage('')
@@ -66,7 +67,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
         setAddToVendorList(false)
       } else {
         setStatus('error')
-        setFeedback(data.message)
+        setFeedback(result.message)
       }
     } catch {
       setStatus('error')

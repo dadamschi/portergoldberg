@@ -33,7 +33,7 @@ Required environment variables:
 | `SANITY_REVALIDATE_SECRET` | Secret for webhook revalidation |
 | `RESEND_API_KEY` | Resend API key for transactional emails |
 | `RESEND_FROM_EMAIL` | Verified sender email (or `onboarding@resend.dev` for testing) |
-| `CONTACT_EMAIL` | Where contact form submissions are sent |
+| `CONTACT_CC_EMAIL` | CC recipient for contact form submissions |
 | `ERROR_NOTIFY_EMAIL` | Where error notifications are sent |
 
 ### 3. Run Locally
@@ -88,8 +88,8 @@ portergoldberg/
 │   ├── selling/page.tsx
 │   ├── testimonials/page.tsx
 │   ├── vendors/page.tsx
+│   ├── actions.ts                  # Server Actions (contact form)
 │   └── api/
-│       ├── connect/route.ts        # Contact form submissions
 │       ├── error-notify/route.ts   # Error notification emails
 │       ├── revalidate/route.ts     # Sanity webhook revalidation
 │       ├── subscribe/route.ts      # Newsletter signup
@@ -190,7 +190,6 @@ cd studio && npm run deploy
 
 | Route | Method | Purpose |
 |-------|--------|---------|
-| `/api/connect` | POST | Contact form submissions (sends email via Resend) |
 | `/api/error-notify` | POST | Error notification emails (404s, runtime errors) |
 | `/api/revalidate` | POST | Sanity webhook for ISR cache revalidation |
 | `/api/subscribe` | POST | Newsletter subscription signup |
@@ -202,7 +201,7 @@ The revalidate endpoint requires a `SANITY_REVALIDATE_SECRET` header for authent
 
 Email is handled via [Resend](https://resend.com).
 
-**Contact Form:** Submissions to `/api/connect` send an HTML email to `CONTACT_EMAIL` with the visitor's name, email, message, and newsletter/vendor list preferences.
+**Contact Form:** Uses a Server Action (`submitConnectForm` in `app/actions.ts`) to send HTML email to all agent emails fetched from Sanity. Includes visitor's name, email, message, and newsletter/vendor list preferences. Server Actions keep the endpoint hidden from browser dev tools.
 
 **Error Notifications:** The following pages automatically email `ERROR_NOTIFY_EMAIL`:
 
