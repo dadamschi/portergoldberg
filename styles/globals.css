@@ -325,10 +325,7 @@ body {
 }
 
 .pg-hero-stat-label {
-  font-size: 2.5rem;
-  font-weight: 500;
   color: #ffffff;
-  line-height: 130%;
 }
 
 .pg-hero-stat-desc {
@@ -2285,7 +2282,7 @@ body {
    AGENT CARD (Compact)
    ============================================================ */
 
-.pg-agent-card-link {
+.pg-newsletter-banner-link {
   text-decoration: none;
   color: inherit;
   display: inline-block;
@@ -2296,37 +2293,38 @@ body {
   text-align: left;
 }
 
-.pg-agent-card-compact {
+.pg-newsletter-banner {
   display: flex;
   align-items: stretch;
   background: #000035;
   border-radius: 6px;
   overflow: hidden;
   max-width: 800px;
-  width: 900px;
+  width: 100%;
+  padding-left: 40px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.pg-agent-card-link:hover .pg-agent-card-compact {
+.pg-newsletter-banner-link:hover .pg-newsletter-banner {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-.pg-agent-card-compact-photo {
+.pg-newsletter-banner-photo {
   flex: 1;
   min-height: 120px;
   overflow: hidden;
   position: relative;
 }
 
-.pg-agent-card-compact-img {
+.pg-newsletter-banner-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center;
 }
 
-.pg-agent-card-compact-initials {
+.pg-newsletter-banner-initials {
   width: 100%;
   height: 100%;
   display: flex;
@@ -2340,7 +2338,7 @@ body {
   background: var(--pg-dark);
 }
 
-.pg-agent-card-compact-info {
+.pg-newsletter-banner-info {
   flex-shrink: 0;
   width: 250px;
   display: flex;
@@ -2350,7 +2348,7 @@ body {
   padding: 20px 24px;
 }
 
-.pg-agent-card-compact-name {
+.pg-newsletter-banner-name {
   font-family: 'Quicksand', Helvetica, Arial, sans-serif;
   font-size: 17px;
   font-weight: 500;
@@ -2358,7 +2356,7 @@ body {
   line-height: 1.5;
 }
 
-.pg-agent-card-compact-cta {
+.pg-newsletter-banner-cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -2375,29 +2373,31 @@ body {
   transition: background 0.2s;
 }
 
-.pg-agent-card-link:hover .pg-agent-card-compact-cta {
+.pg-newsletter-banner-link:hover .pg-newsletter-banner-cta {
   background: rgba(183, 153, 98, 0.35);
 }
 
-.pg-agent-card-compact-arrow {
+.pg-newsletter-banner-arrow {
   transition: transform 0.2s ease;
 }
 
-.pg-agent-card-link:hover .pg-agent-card-compact-arrow {
+.pg-newsletter-banner-link:hover .pg-newsletter-banner-arrow {
   transform: translateX(4px);
 }
 
 @media (max-width: 768px) {
-  .pg-agent-card-compact {
-    flex-direction: column;
-    min-height: auto;
+  .pg-newsletter-banner {
+    padding-left: 0;
+    max-width: 100%;
   }
 
-  .pg-agent-card-compact-info {
+  .pg-newsletter-banner-photo {
+    display: none;
+  }
+
+  .pg-newsletter-banner-info {
     width: 100%;
     padding: 24px;
-    border-left: none;
-    border-top: 3px solid var(--pg-gold);
     text-align: center;
     align-items: center;
   }
@@ -2506,13 +2506,28 @@ body {
 
 @media (max-width: 768px) {
   .pg-nav {
-    padding: 0 20px;
+    padding: 0 16px;
+  }
+
+  .pg-logo {
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .pg-logo img {
+    height: auto;
+    width: 100%;
   }
 
   .pg-nav-links {
     display: none;
   }
-.pg-hamburger {
+
+  .pg-nav-right {
+    padding-right: 8px;
+  }
+
+  .pg-hamburger {
     display: flex;
   }
 
@@ -2525,8 +2540,13 @@ body {
     gap: 0;
   }
 
+  .pg-hero-stat {
+    padding: 24px 10px;
+  }
+
   .pg-hero-stat-value {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
   }
 
   .pg-stats {

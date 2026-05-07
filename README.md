@@ -96,7 +96,7 @@ portergoldberg/
 │       └── vendor-list/route.ts    # Vendor list signup
 │
 ├── components/
-│   ├── AgentCard.tsx               # Reusable agent/CTA banner
+│   ├── NewsletterBanner.tsx         # Reusable CTA banner
 │   ├── About.tsx                   # About section
 │   ├── ConnectForm.tsx             # Flyout contact form
 │   ├── Contact.tsx                 # Contact section

@@ -1,4 +1,4 @@
-import { AgentCard } from '@/components'
+import { NewsletterBanner } from '@/components'
 import { client } from '@/lib/client'
 import { ALL_LISTINGS_QUERY, AGENTS_QUERY } from '@/lib/queries'
 import { Listing, Agent } from "@/types"
@@ -53,7 +53,7 @@ export default async function InventoryPage() {
       </div>
 
       <div className="pg-listings-cta-section">
-        <AgentCard
+        <NewsletterBanner
           agent={agents[0]}
           title="Have questions about our available or upcoming listings?"
           cta="Reach Out"

@@ -4,7 +4,7 @@ import type { Agent } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 
-type AgentCardProps = {
+type NewsletterBannerProps = {
   agent: Agent
   href?: string
   title?: string
@@ -12,13 +12,13 @@ type AgentCardProps = {
   openContactForm?: boolean
 }
 
-export function AgentCard({
+export function NewsletterBanner({
   agent,
   href,
   title = 'Contact Us about listings',
   cta = 'Send Message',
   openContactForm = false
-}: AgentCardProps) {
+}: NewsletterBannerProps) {
 
   function handleClick(e: React.MouseEvent) {
     if (openContactForm) {
@@ -28,19 +28,19 @@ export function AgentCard({
   }
 
   const content = (
-    <div className="pg-agent-card-compact">
-      <div className="pg-agent-card-compact-photo" style={{ position: 'relative' }}>
+    <div className="pg-newsletter-banner">
+      <div className="pg-newsletter-banner-photo" style={{ position: 'relative' }}>
         <Image
           src={agent.photo?.asset?.url ?? '/PorterGoldberg-Residential.webp'}
           alt={agent.photo?.alt ?? agent.name}
-          className="pg-agent-card-compact-img"
+          className="pg-newsletter-banner-img"
           fill
           sizes="75vw"
         />
       </div>
-      <div className="pg-agent-card-compact-info">
-        <span className="pg-agent-card-compact-name">{title}</span>
-        <span className="pg-agent-card-compact-cta">
+      <div className="pg-newsletter-banner-info">
+        <span className="pg-newsletter-banner-name">{title}</span>
+        <span className="pg-newsletter-banner-cta">
           {cta}
           <svg
             width="20"
@@ -48,7 +48,7 @@ export function AgentCard({
             viewBox="0 0 20 12"
             fill="none"
             aria-hidden="true"
-            className="pg-agent-card-compact-arrow"
+            className="pg-newsletter-banner-arrow"
           >
             <path
               d="M1 6h17M13 1l5 5-5 5"
@@ -65,14 +65,14 @@ export function AgentCard({
 
   if (openContactForm) {
     return (
-      <button className="pg-agent-card-link" onClick={handleClick} type="button">
+      <button className="pg-newsletter-banner-link" onClick={handleClick} type="button">
         {content}
       </button>
     )
   }
 
   return (
-    <Link href={href ?? '/contact'} className="pg-agent-card-link">
+    <Link href={href ?? '/contact'} className="pg-newsletter-banner-link">
       {content}
     </Link>
   )
