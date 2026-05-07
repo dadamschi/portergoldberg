@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { resend, FROM_EMAIL, CONTACT_EMAIL } from '@/lib/resend'
 
 type ContactBody = {
   name?: string
@@ -24,41 +25,56 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Please enter a message.' }, { status: 400 })
   }
 
-  // TODO: Connect to email service, CRM, or notification system
-  // Examples:
-  // - Send email via Resend/SendGrid
-  // - Create lead in CRM
-  // - Post to Slack channel
-  console.log(`[Connect] New inquiry from ${name} (${email}): ${message.slice(0, 100)}`)
-  console.log(`[Connect] Newsletter: ${subscribeNewsletter}, Vendor List: ${addToVendorList}`)
+  // Send email via Resend
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: CONTACT_EMAIL,
+    replyTo: email,
+    subject: `New inquiry from ${name}`,
+    html: `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+      <hr>
+      <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
+      <p><strong>Vendor list signup:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
+    `,
+  })
+
+  if (error) {
+    console.error('[Connect] Failed to send email:', error)
+    return NextResponse.json({ message: 'Failed to send message. Please try again.' }, { status: 500 })
+  }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   // Subscribe to newsletter if checkbox was checked
   if (subscribeNewsletter) {
+    console.log('[Connect] Subscribing', email);
     try {
       await fetch(`${baseUrl}/api/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       })
-      console.log(`[Connect] Subscribed ${email} to newsletter`)
-    } catch (error) {
-      console.error(`[Connect] Failed to subscribe ${email} to newsletter:`, error)
+    } catch (err) {
+      console.error(`[Connect] Failed to subscribe ${email} to newsletter:`, err)
     }
   }
 
   // Add to vendor list if checkbox was checked
   if (addToVendorList) {
+    console.log('[Connect] Adding', email, 'to vendor list');
     try {
       await fetch(`${baseUrl}/api/vendor-list`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email }),
       })
-      console.log(`[Connect] Added ${email} to vendor list`)
-    } catch (error) {
-      console.error(`[Connect] Failed to add ${email} to vendor list:`, error)
+    } catch (err) {
+      console.error(`[Connect] Failed to add ${email} to vendor list:`, err)
     }
   }
 
