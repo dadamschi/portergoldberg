@@ -31,6 +31,10 @@ Required environment variables:
 | `NEXT_PUBLIC_SANITY_DATASET` | Dataset name (`production`) |
 | `SANITY_API_READ_TOKEN` | API token for server-side fetches |
 | `SANITY_REVALIDATE_SECRET` | Secret for webhook revalidation |
+| `RESEND_API_KEY` | Resend API key for transactional emails |
+| `RESEND_FROM_EMAIL` | Verified sender email (or `onboarding@resend.dev` for testing) |
+| `CONTACT_EMAIL` | Where contact form submissions are sent |
+| `ERROR_NOTIFY_EMAIL` | Where error notifications are sent |
 
 ### 3. Run Locally
 
@@ -53,6 +57,7 @@ cd studio && npm run dev
 | **Framework** | Next.js 15 (App Router) |
 | **UI** | React 19, TypeScript 5.7 |
 | **CMS** | Sanity v5 (standalone studio) |
+| **Email** | Resend |
 | **Styling** | Plain CSS with CSS variables |
 | **Testing** | Playwright (screenshot tests) |
 | **Linting** | ESLint 9 (flat config) |
@@ -65,6 +70,9 @@ portergoldberg/
 │   ├── layout.tsx                  # Root layout
 │   ├── page.tsx                    # Homepage
 │   ├── sitemap.ts                  # Dynamic sitemap
+│   ├── not-found.tsx               # 404 page (sends notification)
+│   ├── error.tsx                   # Error page (sends notification)
+│   ├── global-error.tsx            # Root error page (sends notification)
 │   ├── about-us/page.tsx
 │   ├── buying/page.tsx
 │   ├── client-resources/page.tsx
@@ -82,6 +90,7 @@ portergoldberg/
 │   ├── vendors/page.tsx
 │   └── api/
 │       ├── connect/route.ts        # Contact form submissions
+│       ├── error-notify/route.ts   # Error notification emails
 │       ├── revalidate/route.ts     # Sanity webhook revalidation
 │       ├── subscribe/route.ts      # Newsletter signup
 │       └── vendor-list/route.ts    # Vendor list signup
@@ -113,6 +122,7 @@ portergoldberg/
 │   ├── queries.ts                  # GROQ queries
 │   ├── data.ts                     # Navigation & fallback data
 │   ├── portableText.tsx            # Portable Text config
+│   ├── resend.ts                   # Resend email client
 │   └── utils/
 │       ├── dateTime.tsx            # Date formatting
 │       └── numbers.tsx             # Number formatting
@@ -180,12 +190,29 @@ cd studio && npm run deploy
 
 | Route | Method | Purpose |
 |-------|--------|---------|
-| `/api/connect` | POST | Contact form submissions (name, email, message) |
+| `/api/connect` | POST | Contact form submissions (sends email via Resend) |
+| `/api/error-notify` | POST | Error notification emails (404s, runtime errors) |
 | `/api/revalidate` | POST | Sanity webhook for ISR cache revalidation |
 | `/api/subscribe` | POST | Newsletter subscription signup |
 | `/api/vendor-list` | POST | Vendor list signup request |
 
 The revalidate endpoint requires a `SANITY_REVALIDATE_SECRET` header for authentication.
+
+## Email & Error Notifications
+
+Email is handled via [Resend](https://resend.com).
+
+**Contact Form:** Submissions to `/api/connect` send an HTML email to `CONTACT_EMAIL` with the visitor's name, email, message, and newsletter/vendor list preferences.
+
+**Error Notifications:** The following pages automatically email `ERROR_NOTIFY_EMAIL`:
+
+| Page | Triggers |
+|------|----------|
+| `app/not-found.tsx` | 404 errors |
+| `app/error.tsx` | Runtime errors in pages |
+| `app/global-error.tsx` | Root layout errors |
+
+Emails include URL, referer, error message, and stack trace (for runtime errors).
 
 ## URL Redirects
 
