@@ -2317,9 +2317,8 @@ body {
   background: #000035;
   border-radius: 6px;
   overflow: hidden;
-  max-width: 800px;
-  width: 100%;
-  padding-left: 40px;
+  width: 728px;
+  height: 90px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -2329,9 +2328,9 @@ body {
 }
 
 .pg-newsletter-banner-photo {
-  flex: 1;
-  min-height: 180px;
-  height: 180px;
+  width: 437px;
+  height: 90px;
+  flex-shrink: 0;
   overflow: hidden;
   position: relative;
 }
@@ -2341,6 +2340,7 @@ body {
   height: 100%;
   object-fit: contain;
   object-position: center;
+  padding-left: 40px;
 }
 
 .pg-newsletter-banner-initials {
@@ -2358,35 +2358,34 @@ body {
 }
 
 .pg-newsletter-banner-info {
-  flex-shrink: 0;
-  width: 250px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
-  padding: 20px 24px;
+  gap: 6px;
+  padding: 12px 16px;
 }
 
 .pg-newsletter-banner-name {
   font-family: 'Quicksand', Helvetica, Arial, sans-serif;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 500;
   color: #ffffff;
-  line-height: 1.5;
+  line-height: 1.3;
 }
 
 .pg-newsletter-banner-cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-family: 'Quicksand', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--pg-gold);
   background: rgba(183, 153, 98, 0.2);
-  padding: 12px 16px;
+  padding: 6px 12px;
   border-radius: 4px;
   width: fit-content;
   transition: background 0.2s;

@@ -1,9 +1,22 @@
 import type { Metadata } from 'next'
 import type { EventItem } from '@/types'
+import type { PortableTextBlock } from '@portabletext/types'
+import { PortableText } from '@portabletext/react'
 import { formatDate, formatTime } from '@/lib/utils/dateTime'
 import { client } from '@/lib/client'
 import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
 import { ImageModal } from '@/components/ImageModal'
+
+function toPlainText(blocks: PortableTextBlock[]): string {
+  return blocks
+    .map((block) => {
+      if (block._type !== 'block' || !block.children) return ''
+      return (block.children as Array<{ text?: string }>)
+        .map((child) => child.text || '')
+        .join('')
+    })
+    .join(' ')
+}
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -14,7 +27,7 @@ function EventsJsonLd({ events }: { events: EventItem[] }) {
   const eventSchemas = events.map((event) => ({
     '@type': 'Event',
     name: event.title,
-    description: event.description,
+    description: toPlainText(event.description),
     startDate: event.date,
     endDate: event.endDate || event.date,
     eventStatus: 'https://schema.org/EventScheduled',
@@ -95,7 +108,9 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
                 ))}
               </div>
             )}
-                    <p className="pg-event-desc">{event.description}</p>
+                    <div className="pg-event-desc">
+                      <PortableText value={event.description} />
+                    </div>
 
             {(event.speakerName) && (
               <div className="pg-event-speaker">

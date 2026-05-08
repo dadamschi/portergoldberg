@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 type CaptchaState = {
   num1: number
@@ -7,14 +7,21 @@ type CaptchaState = {
   isValid: boolean
 }
 
-export function useCaptcha() {
-  const generateProblem = useCallback(() => {
-    const num1 = Math.floor(Math.random() * 10) + 1
-    const num2 = Math.floor(Math.random() * 10) + 1
-    return { num1, num2, answer: '', isValid: false }
-  }, [])
+function generateProblem(): CaptchaState {
+  const num1 = Math.floor(Math.random() * 10) + 1
+  const num2 = Math.floor(Math.random() * 10) + 1
+  return { num1, num2, answer: '', isValid: false }
+}
 
-  const [captcha, setCaptcha] = useState<CaptchaState>(generateProblem)
+export function useCaptcha() {
+  // Start with zeros to avoid hydration mismatch, then generate on client
+  const [captcha, setCaptcha] = useState<CaptchaState>({ num1: 0, num2: 0, answer: '', isValid: false })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setCaptcha(generateProblem())
+    setMounted(true)
+  }, [])
 
   const setAnswer = useCallback((value: string) => {
     const correctAnswer = captcha.num1 + captcha.num2
@@ -27,15 +34,16 @@ export function useCaptcha() {
 
   const reset = useCallback(() => {
     setCaptcha(generateProblem())
-  }, [generateProblem])
+  }, [])
 
-  const question = `${captcha.num1} + ${captcha.num2} = ?`
+  const question = mounted ? `${captcha.num1} + ${captcha.num2} = ?` : 'Loading...'
 
   return {
     question,
     answer: captcha.answer,
     isValid: captcha.isValid,
     setAnswer,
-    reset
+    reset,
+    mounted
   }
 }

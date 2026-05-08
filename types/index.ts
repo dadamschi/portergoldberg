@@ -143,7 +143,7 @@ export type EventItem = {
   title: string
   date: string
   endDate?: string
-  description: string
+  description: PortableTextBlock[]
   image?: SanityImage
   registrationUrl?: string
   replayUrls?: ReplayUrl[]
