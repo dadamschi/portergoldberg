@@ -2330,7 +2330,8 @@ body {
 
 .pg-newsletter-banner-photo {
   flex: 1;
-  min-height: 120px;
+  min-height: 180px;
+  height: 180px;
   overflow: hidden;
   position: relative;
 }
