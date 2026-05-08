@@ -1,13 +1,15 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import type { Newsletter, NewsletterImageSection } from '@/types'
+import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
-import { NEWSLETTER_BY_SLUG_QUERY } from '@/lib/queries'
+import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/lib/portableText'
 import { formatDateOnly } from '@/lib/utils/dateTime'
+import { addUtmParams } from '@/lib/utils/utm'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SectionHeader } from '@/components'
 
 export const revalidate = 86400
 
@@ -21,6 +23,15 @@ async function getNewsletter(slug: string): Promise<Newsletter | null> {
   } catch (error) {
     console.error('Failed to fetch newsletter:', error)
     return null
+  }
+}
+
+async function getAllNewsletters(): Promise<NewsletterPreview[]> {
+  try {
+    return await client.fetch<NewsletterPreview[]>(ALL_NEWSLETTERS_QUERY)
+  } catch (error) {
+    console.error('Failed to fetch newsletters:', error)
+    return []
   }
 }
 
@@ -53,7 +64,7 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
   if (section.linkUrl) {
     return (
       <a
-        href={section.linkUrl}
+        href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
         target="_blank"
         rel="noreferrer"
         className="pg-newsletter-section-link"
@@ -68,57 +79,91 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
 
 export default async function NewsletterPage({ params }: Props) {
   const { slug } = await params
-  const newsletter = await getNewsletter(slug)
+  const [newsletter, allNewsletters] = await Promise.all([
+    getNewsletter(slug),
+    getAllNewsletters()
+  ])
 
   if (!newsletter) {
     notFound()
   }
 
+  // Filter out current newsletter from sidebar list
+  const otherNewsletters = allNewsletters.filter(
+    (n) => n.slug.current !== slug
+  )
+
   return (
     <main className="pg-newsletter-detail-page">
       <section className="pg-newsletter-detail-section">
-        <div className="pg-newsletter-detail-inner">
-          <Link href="/newsletters" className="pg-newsletter-back-link">
-            ← Back to Newsletter Archive
-          </Link>
+        <div className="pg-newsletter-detail-layout">
+          <div className="pg-newsletter-detail-main">
+            <Link href="/newsletters" className="pg-newsletter-back-link">
+              ← Back to Newsletter Archive
+            </Link>
 
-          <article className="pg-newsletter-detail">
-            <header className="pg-newsletter-detail-header">
-              <time className="pg-newsletter-date" dateTime={newsletter.publishedAt}>
-                {formatDateOnly(newsletter.publishedAt)}
-              </time>
-              <h1 className="pg-newsletter-detail-title">{newsletter.title}</h1>
-            </header>
+            <article className="pg-newsletter-detail">
+              <header className="pg-newsletter-detail-header">
+                <time className="pg-newsletter-date" dateTime={newsletter.publishedAt}>
+                  {formatDateOnly(newsletter.publishedAt)}
+                </time>
+                <h1 className="pg-newsletter-detail-title">{newsletter.title}</h1>
+              </header>
 
-            {/* Image sections - the visual newsletter */}
-            {newsletter.imageSections && newsletter.imageSections.length > 0 && (
-              <div className="pg-newsletter-images">
-                {newsletter.imageSections.map((section) => (
-                  <ImageSection key={section._key} section={section} />
+              {/* Image sections - the visual newsletter */}
+              {newsletter.imageSections && newsletter.imageSections.length > 0 && (
+                <div className="pg-newsletter-images">
+                  {newsletter.imageSections.map((section, index) => (
+                    <div key={section._key} className="pg-newsletter-section">
+                      {section.heading && <SectionHeader heading={section.heading} index={index} />}
+                      <ImageSection section={section} />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Text content for SEO */}
+              {newsletter.textContent && newsletter.textContent.length > 0 && (
+                <div className="pg-newsletter-text-content">
+                  <PortableText value={newsletter.textContent} components={portableTextComponents} />
+                </div>
+              )}
+
+              {newsletter.hubspotUrl && (
+                <div className="pg-newsletter-external">
+                  <a
+                    href={addUtmParams(newsletter.hubspotUrl, { campaign: 'newsletter' })}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="pg-newsletter-external-link"
+                  >
+                    View in browser →
+                  </a>
+                </div>
+              )}
+            </article>
+          </div>
+
+          {otherNewsletters.length > 0 && (
+            <aside className="pg-newsletter-sidebar">
+              <h2 className="pg-newsletter-sidebar-title">Newsletter Archive</h2>
+              <ul className="pg-newsletter-sidebar-list">
+                {otherNewsletters.map((item) => (
+                  <li key={item._id} className="pg-newsletter-sidebar-item">
+                    <Link
+                      href={`/newsletters/${item.slug.current}`}
+                      className="pg-newsletter-sidebar-link"
+                    >
+                      <span className="pg-newsletter-sidebar-date">
+                        {formatDateOnly(item.publishedAt)}
+                      </span>
+                      {/* <span className="pg-newsletter-sidebar-name">{item.title}</span> */}
+                    </Link>
+                  </li>
                 ))}
-              </div>
-            )}
-
-            {/* Text content for SEO */}
-            {newsletter.textContent && newsletter.textContent.length > 0 && (
-              <div className="pg-newsletter-text-content">
-                <PortableText value={newsletter.textContent} components={portableTextComponents} />
-              </div>
-            )}
-
-            {newsletter.hubspotUrl && (
-              <div className="pg-newsletter-external">
-                <a
-                  href={newsletter.hubspotUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="pg-newsletter-external-link"
-                >
-                  View in browser →
-                </a>
-              </div>
-            )}
-          </article>
+              </ul>
+            </aside>
+          )}
         </div>
       </section>
     </main>

@@ -43,6 +43,8 @@ export function InstagramIcon({ size = 56 }: IconProps) {
   )
 }
 
+import { addUtmParams } from '@/lib/utils/utm'
+
 export const SOCIAL_URLS = {
   facebook: 'https://www.facebook.com/portergoldbergresidential/',
   instagram: 'https://www.instagram.com/portergoldbergchicago/',
@@ -58,7 +60,7 @@ export function SocialLinks({ size = 56, className = '', linkClassName = '' }: S
   return (
     <div className={`pg-social-links ${className}`.trim()}>
       <a
-        href={SOCIAL_URLS.facebook}
+        href={addUtmParams(SOCIAL_URLS.facebook, { campaign: 'social' })}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Facebook"
@@ -67,7 +69,7 @@ export function SocialLinks({ size = 56, className = '', linkClassName = '' }: S
         <FacebookIcon size={size} />
       </a>
       <a
-        href={SOCIAL_URLS.instagram}
+        href={addUtmParams(SOCIAL_URLS.instagram, { campaign: 'social' })}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Instagram"

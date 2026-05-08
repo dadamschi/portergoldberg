@@ -3,6 +3,7 @@ import { PortableText } from '@portabletext/react'
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { portableTextComponents } from '@/lib/portableText'
+import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 
@@ -123,7 +124,7 @@ export default async function SellingPage() {
           )}
 
           <a
-            href="https://www.havenhomestager.com/"
+            href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
             target="_blank"
             rel="noopener noreferrer"
             className="pg-selling-staging-btn"
@@ -148,7 +149,7 @@ export default async function SellingPage() {
                   <h4>{partner.name}</h4>
                   {partner.description && <p>{partner.description}</p>}
                   {partner.website && (
-                    <a href={partner.website} target="_blank" rel="noopener noreferrer">
+                    <a href={addUtmParams(partner.website, { campaign: 'staging-partner' })} target="_blank" rel="noopener noreferrer">
                       Visit Website
                     </a>
                   )}

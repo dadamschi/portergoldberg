@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Newsletter } from './Newsletter'
 import { formatNumber } from '@/lib/utils/numbers'
+import { addUtmParams } from '@/lib/utils/utm'
 import { FacebookIcon, InstagramIcon, SOCIAL_URLS } from './SocialLinks'
 import Image from 'next/image'
 
@@ -168,7 +169,7 @@ export function Hero() {
           </p>
           <div className="pg-hero-bio-links">
             <a
-              href={SOCIAL_URLS.facebook}
+              href={addUtmParams(SOCIAL_URLS.facebook, { campaign: 'social' })}
               target="_blank"
               rel="noopener noreferrer"
               className="pg-hero-bio-social"
@@ -177,7 +178,7 @@ export function Hero() {
               <FacebookIcon size={48} />
             </a>
             <a
-              href={SOCIAL_URLS.instagram}
+              href={addUtmParams(SOCIAL_URLS.instagram, { campaign: 'social' })}
               target="_blank"
               rel="noopener noreferrer"
               className="pg-hero-bio-social"

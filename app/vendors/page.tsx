@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { VENDORS } from '@/lib/data'
+import { addUtmParams } from '@/lib/utils/utm'
 
 export const metadata: Metadata = {
   title: 'Our Trusted Vendors',
@@ -109,7 +110,7 @@ export default function VendorsPage() {
                           </a>
                         )}
                         {vendor.website && (
-                          <a href={vendor.website} target="_blank" rel="noopener noreferrer" className="pg-vendor-website">
+                          <a href={addUtmParams(vendor.website, { campaign: 'vendor-referral' })} target="_blank" rel="noopener noreferrer" className="pg-vendor-website">
                             Website
                           </a>
                         )}

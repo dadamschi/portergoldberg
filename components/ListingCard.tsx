@@ -1,4 +1,5 @@
 import type { Listing } from '@/types'
+import { addUtmParams } from '@/lib/utils/utm'
 
 const STATUS_CLASS: Record<string, string> = {
   active: 'pg-listing-status--active',
@@ -21,9 +22,11 @@ export function ListingCard({ listing }: ListingCardProps) {
 
   const statusText = status ?? statusType
 
+  const href = brochureUrl ? addUtmParams(brochureUrl, { campaign: 'listing-brochure' }) : undefined
+
   return (
     <Tag
-      href={brochureUrl ?? undefined}
+      href={href}
       target={brochureUrl ? '_blank' : undefined}
       rel={brochureUrl ? 'noreferrer' : undefined}
       className="pg-listing-card"

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { client } from '@/lib/client'
 import { HALCYON_LISTINGS_QUERY } from '@/lib/queries'
+import { addUtmParams } from '@/lib/utils/utm'
 import type { Listing } from '@/types'
 import { HalcyonProjects } from './components'
 
@@ -87,7 +88,7 @@ export default async function HalcyonDevelopmentPage() {
 
             <p>
               To learn more about Halcyon Development, please visit them at{' '}
-              <a href="http://halcyon-development.com/" target="_blank" rel="noopener noreferrer">
+              <a href={addUtmParams('https://halcyon-development.com/', { campaign: 'halcyon-partnership' })} target="_blank" rel="noopener noreferrer">
                 halcyon-development.com
               </a>
             </p>

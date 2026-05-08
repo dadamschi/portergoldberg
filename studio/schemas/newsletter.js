@@ -50,6 +50,12 @@ export const newsletter = defineType({
           title: "Image Section",
           fields: [
             defineField({
+              name: "heading",
+              title: "Section Heading",
+              type: "string",
+              description: "e.g. 'LOCAL HIGHLIGHT', 'FEATURED PROFESSIONAL', 'NEW CONSTRUCTION'",
+            }),
+            defineField({
               name: "image",
               title: "Image",
               type: "image",
@@ -72,12 +78,13 @@ export const newsletter = defineType({
           preview: {
             select: {
               media: "image",
+              heading: "heading",
               alt: "alt",
               link: "linkUrl",
             },
-            prepare({ media, alt, link }) {
+            prepare({ media, heading, alt, link }) {
               return {
-                title: alt || "Image section",
+                title: heading || alt || "Image section",
                 subtitle: link ? `Links to: ${link}` : "No link",
                 media,
               };

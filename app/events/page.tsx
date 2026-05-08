@@ -3,6 +3,7 @@ import type { EventItem } from '@/types'
 import type { PortableTextBlock } from '@portabletext/types'
 import { PortableText } from '@portabletext/react'
 import { formatDate, formatTime } from '@/lib/utils/dateTime'
+import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
 import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
 import { ImageModal } from '@/components/ImageModal'
@@ -170,7 +171,7 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
         <div className="pg-event-actions">
           {!isPast && event.registrationUrl && (
             <a
-              href={event.registrationUrl}
+              href={addUtmParams(event.registrationUrl, { campaign: 'event-registration' })}
               target="_blank"
               rel="noreferrer"
               className="pg-event-btn pg-event-btn--primary"
@@ -183,7 +184,7 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
               {event.replayUrls.map((replay, index) => (
                 <a
                   key={replay._key}
-                  href={replay.replaySessionUrl}
+                  href={addUtmParams(replay.replaySessionUrl, { campaign: 'event-replay' })}
                   target="_blank"
                   rel="noreferrer"
                   className="pg-event-btn pg-event-btn--replay"

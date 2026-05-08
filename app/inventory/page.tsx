@@ -1,6 +1,7 @@
 import { NewsletterBanner } from '@/components'
 import { client } from '@/lib/client'
 import { ALL_LISTINGS_QUERY, AGENTS_QUERY } from '@/lib/queries'
+import { addUtmParams } from '@/lib/utils/utm'
 import { Listing, Agent } from "@/types"
 import { ListingCard } from '@/components/ListingCard'
 
@@ -64,7 +65,7 @@ export default async function InventoryPage() {
       <div className="pg-listings-inner">
         <h2>Sold</h2>
         <a
-          href="https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid"
+          href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
           target="_blank"
           rel="noopener noreferrer"
           className="pg-listings-more-link"
