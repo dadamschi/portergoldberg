@@ -29,11 +29,11 @@ export function ListingCard({ listing }: ListingCardProps) {
       <div className="pg-listing-bg">
         {image?.asset?.url ? (
           <Image
-            src={`${image.asset.url}?w=800&h=600&fit=crop&q=100`}
+            src={`${image.asset.url}?w=800&q=100`}
             alt={address}
             fill
             sizes="400px"
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'contain' }}
             unoptimized
           />
         ) : (
