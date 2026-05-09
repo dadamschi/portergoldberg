@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Newsletter } from './Newsletter'
 import { formatNumber } from '@/lib/utils/numbers'
 import { addUtmParams } from '@/lib/utils/utm'
+import { openContactForm } from '@/lib/utils/contact'
 import { FacebookIcon, InstagramIcon, SOCIAL_URLS } from './SocialLinks'
 import Image from 'next/image'
 
@@ -14,9 +15,9 @@ type HeroCard = {
 }
 
 const HERO_CARDS: HeroCard[] = [
-  { href: '/our-process', label: 'Sell', image: '/Square-Tiles-color-1-1.webp' },
-  { href: '/buying', label: 'Buying', image: '/Square-Tiles-color-2-1.webp' },
-  { href: '/about-us', label: 'About Us', image: '/Square-Tiles-color-3-1.webp' },
+  { href: '/selling', label: 'Sell', image: '/sell-home.png' },
+  { href: '/buying', label: 'Buying', image: '/buy-home.png' },
+  { href: '/about-us', label: 'About Us', image: '/about-home.png' },
 ]
 
 function useCountUp(target: number, duration = 1200, trigger = false) {
@@ -186,7 +187,7 @@ export function Hero() {
             >
               <InstagramIcon size={48} />
             </a>
-            <a href="/contact" className="pg-hero-bio-btn">LET&apos;S CONNECT</a>
+            <button onClick={() => openContactForm()} className="pg-hero-bio-btn" type="button">LET&apos;S CONNECT</button>
           </div>
         </div>
         <div className="pg-hero-bio-photo">

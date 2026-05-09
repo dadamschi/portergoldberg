@@ -13,3 +13,4 @@ export { SocialLinks, FacebookIcon, InstagramIcon, SOCIAL_URLS } from './SocialL
 export { ImageLightbox } from './ImageLightbox'
 export { NewsletterBanner } from './NewsletterBanner'
 export { SectionHeader } from './SectionHeader'
+export { ContactLink } from './ContactLink'

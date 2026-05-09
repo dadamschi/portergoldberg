@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { EventItem } from '@/types'
 import type { PortableTextBlock } from '@portabletext/types'
 import { PortableText } from '@portabletext/react'
+import { ContactLink } from '@/components/ContactLink'
 import { formatDate, formatTime } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
@@ -233,7 +234,11 @@ export default async function EventsPage() {
             renderEventList(upcoming, false)
           ) : (
             <p className="pg-events-empty">
-              No upcoming events right now. Check back soon or subscribe to our newsletter to get notified.
+              No upcoming events right now. Check back soon or{' '}
+              <ContactLink message="I'd like to subscribe to your newsletter and get notified about upcoming events" className="pg-events-empty-link">
+                subscribe to our newsletter
+              </ContactLink>{' '}
+              to get notified.
             </p>
           )}
         </div>

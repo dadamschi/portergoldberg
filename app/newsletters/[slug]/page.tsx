@@ -8,7 +8,7 @@ import { formatDateOnly } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SectionHeader } from '@/components'
+import { SectionHeader, ContactLink } from '@/components'
 
 export const revalidate = 604800 // 1 week - webhook handles on-demand revalidation
 
@@ -79,10 +79,18 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
   )
 
   if (section.linkUrl) {
-    const isInternalLink = section.linkUrl.startsWith('/')
+    // Contact form trigger: #contact:Your message here
+    if (section.linkUrl.startsWith('#contact:')) {
+      const message = section.linkUrl.replace('#contact:', '')
+      return (
+        <ContactLink message={message} className="pg-newsletter-section-link">
+          {imageElement}
+        </ContactLink>
+      )
+    }
 
     // Internal links use Next.js Link for client-side navigation
-    if (isInternalLink) {
+    if (section.linkUrl.startsWith('/')) {
       return (
         <Link href={section.linkUrl} className="pg-newsletter-section-link">
           {imageElement}

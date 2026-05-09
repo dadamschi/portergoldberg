@@ -873,6 +873,24 @@ body {
     font-size: 28px;
   }
 }
+
+/* Contact Link - button styled as link */
+.pg-contact-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: var(--pg-gold);
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline;
+}
+
+.pg-contact-link:hover {
+  color: var(--pg-sage);
+}
+
 .pg-btn-gold:hover {
   background: var(--pg-sage-l);
 }
