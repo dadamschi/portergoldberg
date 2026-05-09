@@ -8,6 +8,16 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Newsletter Archive',
   description: 'Browse past newsletters from PorterGoldberg Residential — market updates, tips, and Chicago real estate insights.',
+  alternates: {
+    canonical: 'https://portergoldberg.com/newsletters',
+  },
+  openGraph: {
+    title: 'Newsletter Archive | PorterGoldberg Residential',
+    description: 'Browse past newsletters from PorterGoldberg Residential — market updates, tips, and Chicago real estate insights.',
+    url: 'https://portergoldberg.com/newsletters',
+    type: 'website',
+    siteName: 'PorterGoldberg Residential',
+  },
 }
 
 export const revalidate = 86400

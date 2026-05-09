@@ -18,21 +18,18 @@ type Props = {
 }
 
 async function getNewsletter(slug: string): Promise<Newsletter | null> {
-  try {
-    return await client.fetch<Newsletter | null>(NEWSLETTER_BY_SLUG_QUERY, { slug })
-  } catch (error) {
-    console.error('Failed to fetch newsletter:', error)
-    return null
-  }
+  return client.fetch<Newsletter | null>(NEWSLETTER_BY_SLUG_QUERY, { slug })
 }
 
 async function getAllNewsletters(): Promise<NewsletterPreview[]> {
-  try {
-    return await client.fetch<NewsletterPreview[]>(ALL_NEWSLETTERS_QUERY)
-  } catch (error) {
-    console.error('Failed to fetch newsletters:', error)
-    return []
-  }
+  return client.fetch<NewsletterPreview[]>(ALL_NEWSLETTERS_QUERY)
+}
+
+export async function generateStaticParams() {
+  const newsletters = await client.fetch<{ slug: string }[]>(
+    `*[_type == "newsletter"]{ "slug": slug.current }`
+  )
+  return newsletters.map((newsletter) => ({ slug: newsletter.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -43,9 +40,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Newsletter Not Found' }
   }
 
+  const url = `https://portergoldberg.com/newsletters/${slug}`
+
   return {
-    title: newsletter.title,
+    title: `${newsletter.title} | ${formatDateOnly(newsletter.publishedAt)}`,
     description: newsletter.summary,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${newsletter.title} | ${formatDateOnly(newsletter.publishedAt)}`,
+      description: newsletter.summary,
+      url,
+      type: 'article',
+      publishedTime: newsletter.publishedAt,
+      authors: ['PorterGoldberg Residential'],
+      siteName: 'PorterGoldberg Residential',
+    },
+    twitter: {
+      card: 'summary',
+      title: newsletter.title,
+      description: newsletter.summary,
+    },
   }
 }
 

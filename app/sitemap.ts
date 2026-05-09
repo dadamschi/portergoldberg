@@ -4,6 +4,12 @@ import { client } from '@/lib/client'
 // Revalidate sitemap once a day
 export const revalidate = 86400
 
+type NewsletterSitemapData = {
+  slug: string
+  publishedAt: string
+  _updatedAt: string
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://portergoldberg.com'
 
@@ -30,32 +36,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }))
 
-  // Fetch dynamic content from Sanity for last modified dates
+  // Fetch dynamic content from Sanity
   try {
-    const lastUpdated = await client.fetch<{ listings?: string; events?: string; newsletters?: string }>(`{
+    const dynamicData = await client.fetch<{
+      listings?: string
+      events?: string
+      latestNewsletter?: string
+      newsletters: NewsletterSitemapData[]
+    }>(`{
       "listings": *[_type == "listing"] | order(_updatedAt desc)[0]._updatedAt,
       "events": *[_type == "event"] | order(_updatedAt desc)[0]._updatedAt,
-      "newsletters": *[_type == "newsletter"] | order(_updatedAt desc)[0]._updatedAt
+      "latestNewsletter": *[_type == "newsletter"] | order(_updatedAt desc)[0]._updatedAt,
+      "newsletters": *[_type == "newsletter"] | order(publishedAt desc) {
+        "slug": slug.current,
+        publishedAt,
+        _updatedAt
+      }
     }`)
 
     // Update lastModified for dynamic pages
-    if (lastUpdated.listings) {
+    if (dynamicData.listings) {
       const inventoryEntry = staticEntries.find(e => e.url.endsWith('/inventory'))
-      if (inventoryEntry) inventoryEntry.lastModified = new Date(lastUpdated.listings)
+      if (inventoryEntry) inventoryEntry.lastModified = new Date(dynamicData.listings)
     }
 
-    if (lastUpdated.events) {
+    if (dynamicData.events) {
       const eventsEntry = staticEntries.find(e => e.url.endsWith('/events'))
-      if (eventsEntry) eventsEntry.lastModified = new Date(lastUpdated.events)
+      if (eventsEntry) eventsEntry.lastModified = new Date(dynamicData.events)
     }
 
-    if (lastUpdated.newsletters) {
+    if (dynamicData.latestNewsletter) {
       const newslettersEntry = staticEntries.find(e => e.url.endsWith('/newsletters'))
-      if (newslettersEntry) newslettersEntry.lastModified = new Date(lastUpdated.newsletters)
+      if (newslettersEntry) newslettersEntry.lastModified = new Date(dynamicData.latestNewsletter)
     }
-  } catch (error) {
-    console.error('Failed to fetch Sanity dates for sitemap:', error)
-  }
 
-  return staticEntries
+    // Add individual newsletter pages to sitemap
+    const newsletterEntries: MetadataRoute.Sitemap = dynamicData.newsletters.map((newsletter) => ({
+      url: `${baseUrl}/newsletters/${newsletter.slug}`,
+      lastModified: new Date(newsletter._updatedAt),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }))
+
+    return [...staticEntries, ...newsletterEntries]
+  } catch (error) {
+    console.error('Failed to fetch Sanity data for sitemap:', error)
+    return staticEntries
+  }
 }
