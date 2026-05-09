@@ -2366,7 +2366,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 48px;
   font-weight: 600;
   color: #ffffff;
@@ -2384,7 +2384,7 @@ body {
 }
 
 .pg-newsletter-banner-name {
-  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   color: #ffffff;
@@ -2395,7 +2395,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -4521,13 +4521,13 @@ body {
 }
 
 .pg-todo-h1 {
-  font-family: var(--pg-font-heading);
+  font-family: var(--font-body);
   font-size: 32px;
   margin-bottom: 32px;
 }
 
 .pg-todo-h2 {
-  font-family: var(--pg-font-heading);
+  font-family: var(--font-body);
   font-size: 24px;
   margin-top: 32px;
   margin-bottom: 16px;
@@ -4537,7 +4537,7 @@ body {
 }
 
 .pg-todo-h3 {
-  font-family: var(--pg-font-heading);
+  font-family: var(--font-body);
   font-size: 18px;
   margin-top: 24px;
   margin-bottom: 12px;
