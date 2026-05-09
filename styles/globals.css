@@ -1294,7 +1294,6 @@ body {
 
 .pg-testimonials {
   background: #ffffff;
-  border-top: 4px solid #000035;
   padding: 80px 40px 100px;
   width: 100%;
 }
@@ -4373,6 +4372,8 @@ body {
   max-width: 800px;
   margin: 0 auto;
   min-height: 100vh;
+  color: var(--pg-black);
+
 }
 
 .pg-todo-inner {
@@ -4385,7 +4386,6 @@ body {
   font-family: var(--pg-font-heading);
   font-size: 32px;
   margin-bottom: 32px;
-  color: var(--pg-black);
 }
 
 .pg-todo-h2 {
@@ -4403,7 +4403,6 @@ body {
   font-size: 18px;
   margin-top: 24px;
   margin-bottom: 12px;
-  color: var(--pg-dark);
 }
 
 .pg-todo-item {
@@ -4411,7 +4410,6 @@ body {
   gap: 12px;
   padding: 8px 0;
   font-size: 15px;
-  color: var(--pg-dark);
 }
 
 .pg-todo-item--done {
@@ -4425,7 +4423,7 @@ body {
 }
 
 .pg-todo-item--done .pg-todo-checkbox {
-  color: var(--pg-sage);
+  color: var(--pg-gold);
 }
 
 .pg-todo-sub-item {

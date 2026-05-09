@@ -38,3 +38,6 @@ yarn-error.log*
 playwright-report/
 test-results/
 screenshots/
+
+scripts/wordpress-media/
+scripts/download-log.txt

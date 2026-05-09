@@ -1,12 +1,7 @@
-import type { Agent } from '@/types'
 import { ContactPageForm } from './ContactPageForm'
 import { SocialLinks } from './SocialLinks'
 
-type ContactFormProps = {
-  agents: Agent[]
-}
-
-export function ContactForm({ agents }: ContactFormProps) {
+export function ContactForm() {
   return (
     <section className="pg-contact-page">
       <div className="pg-contact-row">
