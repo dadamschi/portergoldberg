@@ -1,5 +1,6 @@
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import Script from 'next/script'
 import { Nav, Footer, ConnectForm } from '@/components'
 import { LocalBusinessJsonLd, WebsiteJsonLd } from '@/components/JsonLd'
@@ -92,7 +93,9 @@ export default async function RootLayout({
           </main>
           <Footer agents={agents} />
         </div>
-        <ConnectForm agents={agents} />
+        <Suspense fallback={null}>
+          <ConnectForm agents={agents} />
+        </Suspense>
 
         {/* Google Analytics */}
         <Script

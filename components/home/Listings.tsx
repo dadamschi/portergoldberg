@@ -11,7 +11,7 @@ export function Listings({listings}: {
     <section className="pg-listings">
       <div className="pg-listings-inner">
         <div className="pg-section-head" style={{ flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-          <span className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600 }}>
+          <span className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000'   }}>
             Featured Listings
           </span>
           <a href='/inventory' className="pg-section-head-link">
