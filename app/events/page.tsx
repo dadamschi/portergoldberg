@@ -8,6 +8,7 @@ import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
 import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
 import { ImageModal } from '@/components/ImageModal'
+import { portableTextComponents } from '@/lib/portableText'
 
 function toPlainText(blocks: PortableTextBlock[]): string {
   return blocks
@@ -111,7 +112,7 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
               </div>
             )}
                     <div className="pg-event-desc">
-                      <PortableText value={event.description} />
+                      <PortableText value={event.description} components={portableTextComponents} />
                     </div>
 
             {(event.speakerName) && (

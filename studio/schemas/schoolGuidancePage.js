@@ -56,7 +56,7 @@ export const schoolGuidancePage = defineType({
                     name: "href",
                     type: "string",
                     title: "URL",
-                    description: "Use full URL (https://...) for external links or relative path (/contact) for internal links",
+                    description: "Use full URL (https://...) for external links, relative path (/page) for internal links, or #contact:Your message to open the contact form",
                   },
                 ],
               },

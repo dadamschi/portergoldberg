@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { PortableText } from '@portabletext/react'
 import { client } from '@/lib/client'
 import { SCHOOL_GUIDANCE_PAGE_QUERY } from '@/lib/queries'
-import { portableTextComponents } from '@/lib/portableText'
+import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SchoolGuidancePageData } from '@/types'
 
 export const metadata: Metadata = {
@@ -78,9 +77,7 @@ export default async function ClientResourcesPage() {
           <div className="pg-resource-card-content">
             <h2>{schoolData?.headline || 'Local School Guidance'}</h2>
             {schoolData?.content && (
-              <div className="pg-resource-card-body">
-                <PortableText value={schoolData.content} components={portableTextComponents} />
-              </div>
+              <PortableTextClient value={schoolData.content} className="pg-resource-card-body" />
             )}
           </div>
         </article>

@@ -47,8 +47,9 @@ export const event = defineType({
                 fields: [
                   {
                     name: "href",
-                    type: "url",
+                    type: "string",
                     title: "URL",
+                    description: "Use full URL (https://...) for external links, relative path (/page) for internal links, or #contact:Your message to open the contact form",
                   },
                 ],
               },

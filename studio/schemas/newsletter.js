@@ -72,7 +72,7 @@ export const newsletter = defineType({
               name: "linkUrl",
               title: "Link URL",
               type: "string",
-              description: "Optional - makes this section clickable",
+              description: "Use full URL (https://...) for external links, relative path (/contact) for internal links, or #contact:Your message to open the contact form with a pre-filled message",
             }),
           ],
           preview: {
