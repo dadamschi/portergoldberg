@@ -236,6 +236,5 @@ export type Newsletter = {
   publishedAt: string
   summary: string
   imageSections?: NewsletterImageSection[]
-  textContent?: PortableTextBlock[]
   hubspotUrl?: string
 }

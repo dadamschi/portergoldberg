@@ -9,7 +9,7 @@ export const newsletter = defineType({
       name: "title",
       title: "Title",
       type: "string",
-      description: "e.g. 'Your Weekly Walk-Through | March 9, 2026'",
+      description: "e.g. 'Your Weekly Walk-Through'",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -89,36 +89,6 @@ export const newsletter = defineType({
                 media,
               };
             },
-          },
-        },
-      ],
-    }),
-
-    // Text content for SEO - optional for now
-    defineField({
-      name: "textContent",
-      title: "Text Content (SEO)",
-      type: "array",
-      description: "Optional: Add the newsletter text content here for search engines to index. You can add this later.",
-      of: [
-        {
-          type: "block",
-          marks: {
-            annotations: [
-              {
-                name: "link",
-                type: "object",
-                title: "Link",
-                fields: [
-                  {
-                    name: "href",
-                    type: "string",
-                    title: "URL",
-                    validation: (rule) => rule.required(),
-                  },
-                ],
-              },
-            ],
           },
         },
       ],

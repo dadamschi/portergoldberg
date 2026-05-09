@@ -342,7 +342,7 @@ export const SCHOOL_GUIDANCE_PAGE_QUERY = defineQuery(/* groq */ `
 
 // List query - lighter payload for archive page
 export const ALL_NEWSLETTERS_QUERY = defineQuery(/* groq */ `
-  *[_type == "newsletter"] | order(publishedAt desc) {
+  *[_type == "newsletter" && publishedAt < now()] | order(publishedAt desc) {
     _id,
     title,
     slug,
@@ -367,7 +367,6 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
       alt,
       linkUrl
     },
-    textContent,
     hubspotUrl
   }
 `)

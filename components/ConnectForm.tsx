@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { submitConnectForm } from '@/app/actions'
 import { useCaptcha } from '@/lib/useCaptcha'
 import type { Agent } from '@/types'
@@ -9,7 +10,11 @@ type ConnectFormProps = {
   agents: Agent[]
 }
 
+// Custom event type for opening the form with a message
+type OpenConnectFormEvent = CustomEvent<{ message?: string }>
+
 export function ConnectForm({ agents }: ConnectFormProps) {
+  const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -19,6 +24,19 @@ export function ConnectForm({ agents }: ConnectFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
   const captcha = useCaptcha()
+
+  // Check URL params for ?contact=message on mount
+  useEffect(() => {
+    const contactMessage = searchParams.get('contact')
+    if (contactMessage) {
+      setMessage(contactMessage)
+      setOpen(true)
+      // Clean up URL without reload
+      const url = new URL(window.location.href)
+      url.searchParams.delete('contact')
+      window.history.replaceState({}, '', url.toString())
+    }
+  }, [searchParams])
 
   // Lock body scroll when open
   useEffect(() => {
@@ -39,9 +57,15 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // Listen for custom event from nav CTA
+  // Listen for custom event from nav CTA (supports optional message in detail)
   useEffect(() => {
-    function handleOpen() { setOpen(true) }
+    function handleOpen(e: Event) {
+      const customEvent = e as OpenConnectFormEvent
+      if (customEvent.detail?.message) {
+        setMessage(customEvent.detail.message)
+      }
+      setOpen(true)
+    }
     window.addEventListener('open-connect-form', handleOpen)
     return () => window.removeEventListener('open-connect-form', handleOpen)
   }, [])

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 86400
+export const revalidate = 604800 // 1 week - webhook handles on-demand revalidation
 
 async function getNewsletters(): Promise<NewsletterPreview[]> {
   try {
@@ -33,7 +33,7 @@ async function getNewsletters(): Promise<NewsletterPreview[]> {
 
 function NewsletterTeaser({ newsletter }: { newsletter: NewsletterPreview }) {
   return (
-    <Link href={`/newsletters/${newsletter.slug.current}`} className="pg-newsletter-teaser">
+    <Link href={`/newsletters/${newsletter.slug.current}`} className="pg-newsletter-teaser" title={newsletter.summary}>
       {/* {newsletter.coverImage?.asset?.url && (
         <div className="pg-newsletter-teaser-image">
           <Image

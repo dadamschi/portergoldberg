@@ -1,29 +1,29 @@
 import type { Metadata } from 'next'
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
-import { PortableText } from '@portabletext/react'
-import { portableTextComponents } from '@/lib/portableText'
 import { formatDateOnly } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import Image from 'next/image'
 import Link from 'next/link'
 import { SectionHeader } from '@/components'
 
-export const revalidate = 86400
+export const revalidate = 604800 // 1 week - webhook handles on-demand revalidation
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
-async function getNewsletter(slug: string): Promise<Newsletter | null> {
+// Cached to deduplicate requests between generateMetadata and page component
+const getNewsletter = cache(async (slug: string): Promise<Newsletter | null> => {
   return client.fetch<Newsletter | null>(NEWSLETTER_BY_SLUG_QUERY, { slug })
-}
+})
 
-async function getAllNewsletters(): Promise<NewsletterPreview[]> {
+const getAllNewsletters = cache(async (): Promise<NewsletterPreview[]> => {
   return client.fetch<NewsletterPreview[]>(ALL_NEWSLETTERS_QUERY)
-}
+})
 
 export async function generateStaticParams() {
   const newsletters = await client.fetch<{ slug: string }[]>(
@@ -31,6 +31,7 @@ export async function generateStaticParams() {
   )
   return newsletters.map((newsletter) => ({ slug: newsletter.slug }))
 }
+
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -78,6 +79,18 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
   )
 
   if (section.linkUrl) {
+    const isInternalLink = section.linkUrl.startsWith('/')
+
+    // Internal links use Next.js Link for client-side navigation
+    if (isInternalLink) {
+      return (
+        <Link href={section.linkUrl} className="pg-newsletter-section-link">
+          {imageElement}
+        </Link>
+      )
+    }
+
+    // External links open in new tab with UTM params
     return (
       <a
         href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
@@ -138,13 +151,6 @@ export default async function NewsletterPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Text content for SEO */}
-              {newsletter.textContent && newsletter.textContent.length > 0 && (
-                <div className="pg-newsletter-text-content">
-                  <PortableText value={newsletter.textContent} components={portableTextComponents} />
-                </div>
-              )}
-
               {newsletter.hubspotUrl && (
                 <div className="pg-newsletter-external">
                   <a
@@ -178,6 +184,9 @@ export default async function NewsletterPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
+              <Link href="/newsletters" className="pg-newsletter-sidebar-archive-link">
+                View all newsletters →
+              </Link>
             </aside>
           )}
         </div>

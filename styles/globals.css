@@ -4300,7 +4300,7 @@ body {
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 2px;
 }
 
 .pg-section-header-text {
