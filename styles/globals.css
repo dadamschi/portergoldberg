@@ -1220,48 +1220,92 @@ body {
 }
 
 .pg-listing-card {
-  padding: 0px 28px;
   color: white;
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-height: 268px;
-  position: relative;
-  overflow: hidden;
   transition: transform 0.3s;
 }
 
-.pg-listing-card:hover {
-  transform: scale(1.005);
-}
-
-.pg-listing-card:hover .pg-listing-bg {
+.pg-listing-card:hover .pg-listing-image {
   transform: scale(1.04);
 }
 
-.pg-listing-bg {
+.pg-listing-content {
+  position: relative;
+  min-height: 268px;
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.pg-listing-image {
   position: absolute;
   inset: 0;
   transition: transform 0.35s;
   overflow: hidden;
 }
 
-.pg-listing-bg img {
+.pg-listing-image img {
   object-fit: cover;
 }
 
 /* Darken the bottom of listing cards for text legibility */
-.pg-listing-bg::after {
+.pg-listing-image::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 60%, transparent 100%);
 }
 
-.pg-listing-inner {
+.pg-listing-info {
   position: relative;
   z-index: 1;
+}
+
+.pg-listing-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pg-listing-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  min-height: 36px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  background: var(--pg-navy);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.pg-listing-btn:hover {
+  background: var(--pg-navy);
+  border-color: #fff;
+}
+
+.pg-listing-btn--contact {
+  background: var(--pg-gold);
+  border-color: var(--pg-gold);
+}
+
+.pg-listing-btn--contact:hover {
+  background: #a08050;
+  border-color: #a08050;
 }
 
 .pg-listing-status {

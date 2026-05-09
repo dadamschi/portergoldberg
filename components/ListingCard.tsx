@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import type { Listing } from '@/types'
 import { addUtmParams } from '@/lib/utils/utm'
+import { openContactForm } from '@/lib/utils/contact'
 
 const STATUS_CLASS: Record<string, string> = {
   active: 'pg-listing-status--active',
@@ -15,44 +18,59 @@ type ListingCardProps = {
 export function ListingCard({ listing }: ListingCardProps) {
   const { address, neighborhood, price, status, statusType, image, brochureUrl } = listing
 
-  const Tag = brochureUrl ? 'a' : 'div'
   const statusText = status ?? statusType
-  const href = brochureUrl ? addUtmParams(brochureUrl, { campaign: 'listing-brochure' }) : undefined
+  const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
 
   return (
-    <Tag
-      href={href}
-      target={brochureUrl ? '_blank' : undefined}
-      rel={brochureUrl ? 'noreferrer' : undefined}
-      className="pg-listing-card"
-    >
-      <div className="pg-listing-bg">
-        {image?.asset?.url ? (
-          <Image
-            src={`${image.asset.url}?w=800&q=100`}
-            alt={address}
-            fill
-            sizes="400px"
-            style={{ objectFit: 'contain' }}
-            unoptimized
-          />
-        ) : (
-          <Image
-            src="/COMING-SOON.png"
-            alt="Coming Soon"
-            fill
-            style={{ objectFit: 'cover' }}
-          />
+    <div className="pg-listing-card">
+      <div className="pg-listing-content">
+        <div className="pg-listing-image">
+          {image?.asset?.url ? (
+            <Image
+              src={`${image.asset.url}`}
+              alt={address}
+              fill
+              sizes="400px"
+              style={{ objectFit: 'contain' }}
+              unoptimized
+            />
+          ) : (
+            <Image
+              src="/COMING-SOON.png"
+              alt="Coming Soon"
+              fill
+              style={{ objectFit: 'cover' }}
+            />
+          )}
+          <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
+            {statusText}
+          </span>
+        </div>
+        <div className="pg-listing-info">
+          <div className="pg-listing-price">{price}</div>
+          <div className="pg-listing-address">{address}</div>
+          <div className="pg-listing-address">{neighborhood}</div>
+        </div>
+      </div>
+      <div className="pg-listing-actions">
+        {brochureUrl && (
+          <a
+            href={addUtmParams(brochureUrl, { campaign: 'listing-brochure' })}
+            target="_blank"
+            rel="noreferrer"
+            className="pg-listing-btn"
+          >
+            View Brochure
+          </a>
         )}
+        <button
+          type="button"
+          onClick={() => openContactForm(contactMessage)}
+          className="pg-listing-btn pg-listing-btn--contact"
+        >
+          Inquire
+        </button>
       </div>
-      <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
-        {statusText}
-      </span>
-      <div className="pg-listing-inner">
-        <div className="pg-listing-price">{price}</div>
-        <div className="pg-listing-address">{address}</div>
-        <div className="pg-listing-address">{neighborhood}</div>
-      </div>
-    </Tag>
+    </div>
   )
 }
