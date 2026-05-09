@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 86400
 
 async function getAgents(): Promise<Agent[]> {
-  return client.fetch<Agent[]>(AGENTS_QUERY).then(r => (console.log(r), r))
+  return client.fetch<Agent[]>(AGENTS_QUERY)
 }
 
 function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: boolean }) {

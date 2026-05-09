@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Listing } from '@/types'
 import { addUtmParams } from '@/lib/utils/utm'
 
@@ -14,14 +15,8 @@ type ListingCardProps = {
 export function ListingCard({ listing }: ListingCardProps) {
   const { address, neighborhood, price, status, statusType, image, brochureUrl } = listing
 
-  const bgStyle = image?.asset?.url
-    ? { backgroundImage: `url(${image.asset.url})` }
-    : { backgroundImage: `url('/COMING-SOON.png')` }
-
   const Tag = brochureUrl ? 'a' : 'div'
-
   const statusText = status ?? statusType
-
   const href = brochureUrl ? addUtmParams(brochureUrl, { campaign: 'listing-brochure' }) : undefined
 
   return (
@@ -31,7 +26,25 @@ export function ListingCard({ listing }: ListingCardProps) {
       rel={brochureUrl ? 'noreferrer' : undefined}
       className="pg-listing-card"
     >
-      <div className="pg-listing-bg" style={bgStyle} />
+      <div className="pg-listing-bg">
+        {image?.asset?.url ? (
+          <Image
+            src={`${image.asset.url}?w=800&h=600&fit=crop&q=100`}
+            alt={address}
+            fill
+            sizes="400px"
+            style={{ objectFit: 'cover' }}
+            unoptimized
+          />
+        ) : (
+          <Image
+            src="/COMING-SOON.png"
+            alt="Coming Soon"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
+        )}
+      </div>
       <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
         {statusText}
       </span>

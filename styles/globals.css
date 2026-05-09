@@ -1243,9 +1243,12 @@ body {
 .pg-listing-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
   transition: transform 0.35s;
+  overflow: hidden;
+}
+
+.pg-listing-bg img {
+  object-fit: cover;
 }
 
 /* Darken the bottom of listing cards for text legibility */
