@@ -34,12 +34,14 @@ cd studio && npm run deploy
 ### Data Flow Pattern
 
 All CMS content flows through a single pattern:
+
 1. **GROQ queries** defined in `lib/queries.ts` using `defineQuery()` from next-sanity
 2. **Sanity client** in `lib/client.ts` executes queries with CDN in production
 3. **Types** in `types/index.ts` match query return shapes
 4. **Pages** are async Server Components that fetch and render directly
 
 Example pattern:
+
 ```typescript
 // lib/queries.ts - define query
 export const MY_QUERY = defineQuery(`*[_type == "myType"]{...}`)
@@ -51,6 +53,7 @@ const data = await client.fetch<MyType[]>(MY_QUERY)
 ### Image Handling
 
 All Sanity image queries use `imageFragment` from `lib/queries.ts`:
+
 ```groq
 asset->{ _id, url, metadata { lqip, dimensions } }, alt
 ```
@@ -60,12 +63,14 @@ Use `SanityImage` type from `types/index.ts` for image fields.
 ### Global Layout Data
 
 `app/layout.tsx` fetches agents at the root level and passes to:
+
 - `Footer` - displays agent contact info
 - `ConnectForm` - flyout contact form with agent selection
 
 ### Static Data
 
 `lib/data.ts` contains:
+
 - `NAV_ITEMS` - navigation structure (hardcoded, not CMS)
 - `STATS`, `HERO`, `ABOUT` - fallback content
 - `VENDORS` - large static vendor list (not from CMS)
@@ -84,9 +89,11 @@ Studio is standalone in `/studio` with separate `package.json`.
 ### Singleton vs Collection Schemas
 
 **Singletons** (one instance, fetched with `[0]`):
-- `siteSettings`, `home`, `buyPage`, `sellingPage`, `aboutPage`, `schoolGuidancePage`
+
+- `siteSettings`, `home`, `buyPage`, `sellingPage`, `schoolGuidancePage`
 
 **Collections** (multiple documents):
+
 - `listing`, `testimonial`, `agent`, `event`, `newsletter`, `vendor`
 
 ### Key Schema Fields

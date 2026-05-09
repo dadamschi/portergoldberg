@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { client } from '@/lib/client'
 import { AGENTS_QUERY } from '@/lib/queries'
-import { PortableText } from '@portabletext/react'
+import { PortableTextClient } from '@/components/PortableTextClient'
 import type { Agent } from '@/types'
-import { portableTextComponents } from '@/lib/portableText'
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 86400
 
 async function getAgents(): Promise<Agent[]> {
-  return client.fetch<Agent[]>(AGENTS_QUERY)
+  return client.fetch<Agent[]>(AGENTS_QUERY).then(r => (console.log(r), r))
 }
 
 function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: boolean }) {
@@ -40,8 +39,8 @@ function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: bo
   const bioContent = (
     <div className="pg-agent-bio">
       <span className="pg-agent-name" style={{ fontWeight: '800' }}>{agent.name}</span>
-      {agent.bio?.biography && (
-        <PortableText value={agent.bio.biography} components={portableTextComponents} />
+      {agent.biography?.biography && (
+        <PortableTextClient value={agent.biography.biography} />
       )}
     </div>
   )

@@ -63,7 +63,7 @@ export type Agent = {
   email: string
   photo?: SanityImage
   fallbackColor?: string
-  bio?: AgentBio
+  biography?: AgentBio
 }
 
 export type AgentBio = {
