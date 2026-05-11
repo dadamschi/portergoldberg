@@ -75,7 +75,7 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
       await fetch(`${baseUrl}/api/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name }),
       })
     } catch (err) {
       console.error(`[Connect] Failed to subscribe ${email} to newsletter:`, err)

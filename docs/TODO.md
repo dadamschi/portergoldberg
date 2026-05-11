@@ -8,7 +8,7 @@
 - [x] Fix trusted vendors page to be more mobile-friendly
 - [x] Fix the newsletter signup form
 - [ ] Confirm all listing Flipsnack URLs are correct
-- [ ] Get hi-res photos from client — agent headshots, listing photos, brand assets
+- [x] Get hi-res photos from client — agent headshots, listing photos, brand assets
 
 ### Phase 2 — API Connections (Target: 5/8)
 - [x] Verify portergoldberg.com sending domain in Resend dashboard
@@ -19,7 +19,7 @@
 - [ ] Add portergoldberg.com as custom domain in Vercel project
 
 ### Phase 4 — DNS Cutover (Target: 5/9)
-- [ ] Get registrar access from current admin (GoDaddy)
+- [x] Get registrar access from current admin (GoDaddy)
 - [ ] Update DNS records to point to Vercel
 - [ ] Keep WordPress server live for 2 weeks as fallback
 
@@ -41,7 +41,7 @@
 ## Blockers
 
 - [ ] **HubSpot** — Need contact/access to set up API integration
-- [ ] **GoDaddy** — Need registrar access for DNS cutover
+- [x] **GoDaddy** — Need registrar access for DNS cutover
 
 ---
 
@@ -72,6 +72,7 @@
 ## Integrations
 
 ### HubSpot Newsletter Subscriptions
+- [ ] Get subscription process from artplexity.com
 - [ ] Create HubSpot Private App and get API token
 - [ ] Add `HUBSPOT_API_KEY` to environment variables
 - [ ] Update `/api/subscribe` to POST contacts to HubSpot API
