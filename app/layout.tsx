@@ -2,11 +2,11 @@ import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Script from 'next/script'
-import { Nav, Footer, ConnectForm } from '@/components'
+import { Nav, Footer, ConnectForm, NewsletterToast } from '@/components'
 import { LocalBusinessJsonLd, WebsiteJsonLd } from '@/components/JsonLd'
 import { NAV_ITEMS } from '@/lib/data'
 import { client } from '@/lib/client'
-import { AGENTS_QUERY } from '@/lib/queries'
+import { AGENTS_QUERY, RECENT_NEWSLETTER_QUERY } from '@/lib/queries'
 import type { Agent } from '@/types'
 
 const siteUrl = 'https://portergoldberg.com'
@@ -68,8 +68,20 @@ export const metadata: Metadata = {
   },
 }
 
+type RecentNewsletter = {
+  _id: string
+  title: string
+  slug: { current: string }
+  publishedAt: string
+} | null
+
 async function getAgents(): Promise<Agent[]> {
   return client.fetch<Agent[]>(AGENTS_QUERY)
+}
+
+async function getRecentNewsletter(): Promise<RecentNewsletter> {
+  const cutoffDate = new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString().split('T')[0]
+  return client.fetch<RecentNewsletter>(RECENT_NEWSLETTER_QUERY, { cutoffDate })
 }
 
 export default async function RootLayout({
@@ -77,7 +89,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const agents = await getAgents()
+  const [agents, recentNewsletter] = await Promise.all([
+    getAgents(),
+    getRecentNewsletter(),
+  ])
 
   return (
     <html lang="en">
@@ -96,6 +111,8 @@ export default async function RootLayout({
         <Suspense fallback={null}>
           <ConnectForm agents={agents} />
         </Suspense>
+
+        {recentNewsletter && <NewsletterToast newsletter={recentNewsletter} />}
 
         {/* Google Analytics */}
         <Script

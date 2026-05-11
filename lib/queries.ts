@@ -352,6 +352,16 @@ export const ALL_NEWSLETTERS_QUERY = defineQuery(/* groq */ `
   }
 `)
 
+// Recent newsletter (published in last 36 hours) for toast notification
+export const RECENT_NEWSLETTER_QUERY = defineQuery(/* groq */ `
+  *[_type == "newsletter" && publishedAt > $cutoffDate && publishedAt <= now()] | order(publishedAt desc)[0] {
+    _id,
+    title,
+    slug,
+    publishedAt
+  }
+`)
+
 // Single newsletter by slug
 export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
   *[_type == "newsletter" && slug.current == $slug][0] {
