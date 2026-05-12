@@ -59,6 +59,7 @@ export default async function InventoryPage() {
           title="Have questions about our available or upcoming listings?"
           cta="Reach Out"
           openContactForm
+          contactMessage="I have questions about your available or upcoming listings."
         />
       </div>
 

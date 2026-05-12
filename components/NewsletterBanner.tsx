@@ -3,6 +3,7 @@
 import type { Agent } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
+import { openContactForm as openForm } from '@/lib/utils/contact'
 
 type NewsletterBannerProps = {
   agent: Agent
@@ -10,6 +11,7 @@ type NewsletterBannerProps = {
   title?: string
   cta?: string
   openContactForm?: boolean
+  contactMessage?: string
 }
 
 export function NewsletterBanner({
@@ -17,13 +19,14 @@ export function NewsletterBanner({
   href,
   title = 'Contact Us about listings',
   cta = 'Send Message',
-  openContactForm = false
+  openContactForm = false,
+  contactMessage,
 }: NewsletterBannerProps) {
 
   function handleClick(e: React.MouseEvent) {
     if (openContactForm) {
       e.preventDefault()
-      window.dispatchEvent(new CustomEvent('open-connect-form'))
+      openForm(contactMessage)
     }
   }
 

@@ -61,9 +61,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
   useEffect(() => {
     function handleOpen(e: Event) {
       const customEvent = e as OpenConnectFormEvent
-      if (customEvent.detail?.message) {
-        setMessage(customEvent.detail.message)
-      }
+      setMessage(customEvent.detail?.message || '')
       setOpen(true)
     }
     window.addEventListener('open-connect-form', handleOpen)

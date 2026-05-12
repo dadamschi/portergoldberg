@@ -1038,7 +1038,7 @@ body {
    LISTINGS
    ============================================================ */
 .pg-listings {
-  background-color: var(--pg-navy);
+  background-color: #fff;
   width: 100%;
 }
 
@@ -1047,6 +1047,7 @@ body {
   max-width: 1080px;
   margin: 0 auto;
   padding: 10px 0 40px;
+  color: var(--pg-navy);
 }
 
 .pg-section-head {
@@ -1269,24 +1270,48 @@ body {
 }
 
 .pg-listing-actions {
+  position: absolute;
+  inset: 0;
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+/* Desktop: show on hover */
+@media (hover: hover) and (min-width: 1024px) {
+  .pg-listing-card:hover .pg-listing-actions {
+    opacity: 1;
+  }
+}
+
+/* Touch devices: show on tap (active state) */
+@media (hover: none) {
+  .pg-listing-card--active .pg-listing-actions {
+    opacity: 1;
+  }
+
+  .pg-listing-card {
+    cursor: pointer;
+  }
 }
 
 .pg-listing-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
-  min-height: 36px;
-  font-size: 12px;
+  padding: 10px 20px;
+  min-height: 40px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: none;
   border-radius: 4px;
   background: var(--pg-navy);
   color: #fff;
@@ -1297,18 +1322,15 @@ body {
 }
 
 .pg-listing-btn:hover {
-  background: var(--pg-navy);
-  border-color: #fff;
+  background: #1a3a5c;
 }
 
 .pg-listing-btn--contact {
   background: var(--pg-gold);
-  border-color: var(--pg-gold);
 }
 
 .pg-listing-btn--contact:hover {
   background: #a08050;
-  border-color: #a08050;
 }
 
 .pg-listing-status {
