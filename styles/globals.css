@@ -347,6 +347,7 @@ body {
   text-align: center;
   font-size: 38px;
   line-height: 1.5em;
+  margin-bottom: -110px;
 }
 
 .pg-starts-here-title {
@@ -464,16 +465,19 @@ body {
 }
 
 .pg-hero-bio-photo {
-  display: flex;
-  justify-content: center;
+  position: relative;
+  width: 440px;
+  height: 660px;
+  border-radius: 220px;
+  border: 8px solid var(--pg-black);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .pg-hero-bio-img {
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  display: block;
+  object-fit: cover;
 }
+
 @media (max-width: 768px) {
   .pg-hero-bio {
     grid-template-columns: 1fr;
@@ -484,10 +488,10 @@ body {
 
   .pg-hero-bio-photo {
     order: -1;
-  }
-
-  .pg-hero-bio-img {
-    max-width: 280px;
+    width: 240px;
+    height: 360px;
+    border-radius: 120px;
+    margin: 0 auto;
   }
 }
 
@@ -1034,9 +1038,8 @@ body {
    LISTINGS
    ============================================================ */
 .pg-listings {
-  background-color: #fff;
+  background-color: var(--pg-navy);
   width: 100%;
-  color: var(--pg-black);
 }
 
 .pg-listings-inner {
@@ -1051,7 +1054,7 @@ body {
   align-items: baseline;
   justify-content: space-between;
   padding-bottom: 20px;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--pg-border);
 }
 

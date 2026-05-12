@@ -195,8 +195,9 @@ export function Hero() {
             src="/Lauren-and-Samantha-Oval.webp"
             alt="Samantha Porter and Lauren Goldberg"
             className="pg-hero-bio-img"
-            width={400}
-            height={400}
+            fill
+            sizes="(max-width: 768px) 280px, 420px"
+            style={{ objectFit: 'cover' }}
           />
         </div>
       </div>
