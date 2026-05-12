@@ -1,42 +1,37 @@
 import { NextResponse } from 'next/server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
+import {
+  searchContactByEmail,
+  updateContactTier,
+  createContact,
+  addTierValue,
+} from '@/lib/hubspot'
 
-async function addToHubSpot(email: string, name?: string): Promise<{ success: boolean; error?: string }> {
-  const apiKey = process.env.HUBSPOT_API_KEY
-  if (!apiKey) {
-    return { success: false, error: 'HubSpot API key not configured' }
-  }
-
+async function addToHubSpot(email: string, name?: string): Promise<{ success: boolean; error?: string; updated?: boolean }> {
   const [firstName, ...lastNameParts] = (name || '').split(' ')
   const lastName = lastNameParts.join(' ')
 
-  const response = await fetch('https://api.hubapi.com/crm/objects/2026-03/contacts', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      properties: {
-        email,
-        firstname: firstName || '',
-        lastname: lastName || '',
-        lifecyclestage: 'subscriber',
-        tier: 'Newsletter;Warm',
-      },
-    }),
-  })
+  const result = await createContact(email, firstName || '', lastName, 'Newsletter;Warm')
 
-  if (!response.ok) {
-    // 409 = contact already exists, which is fine
-    if (response.status === 409) {
-      return { success: true }
-    }
-    const errorData = await response.json()
-    return { success: false, error: errorData.message || `HTTP ${response.status}` }
+  if (result.success) {
+    return { success: true }
   }
 
-  return { success: true }
+  // 409 = contact already exists, try to update their tier
+  if (result.conflict) {
+    const existingContact = await searchContactByEmail(email)
+    if (existingContact) {
+      const newTier = addTierValue(existingContact.tier, 'Newsletter')
+      if (newTier !== existingContact.tier) {
+        const updated = await updateContactTier(existingContact.id, newTier)
+        return { success: true, updated }
+      }
+      return { success: true, updated: false } // Already had Newsletter
+    }
+    return { success: true } // Couldn't find to update, but contact exists
+  }
+
+  return { success: false, error: result.error }
 }
 
 export async function POST(request: Request) {
@@ -51,11 +46,18 @@ export async function POST(request: Request) {
   }
 
   // Try to add contact to HubSpot
-  const hubspotResult = await addToHubSpot(email, name)
-  if (hubspotResult.success) {
-    console.log(`[HubSpot] Successfully added contact: ${email}`)
-  } else {
-    console.error(`[HubSpot] Failed to add contact: ${hubspotResult.error}`)
+  let hubspotResult: { success: boolean; error?: string }
+  try {
+    hubspotResult = await addToHubSpot(email, name)
+    if (hubspotResult.success) {
+      console.log(`[HubSpot] Successfully added contact: ${email}`)
+    } else {
+      console.error(`[HubSpot] Failed to add contact: ${hubspotResult.error}`)
+    }
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    console.error(`[HubSpot] Error: ${errorMessage}`)
+    hubspotResult = { success: false, error: errorMessage }
   }
 
   // Send notification email as backup/notification
