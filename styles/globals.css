@@ -2887,13 +2887,16 @@ body {
 .pg-buy-hero {
   background: #1a1a1a;
   color: #fff;
-  padding: 60px 40px;
+  padding: 20px 40px;
   text-align: center;
 }
 
 .pg-buy-hero h1 {
-  font-size: 36px;
-  margin: 0 0 16px;
+  font-size: 3rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
 .pg-buy-headline {
@@ -3181,7 +3184,7 @@ body {
 .pg-selling-hero {
   max-width: 900px;
   margin: 0 auto;
-  padding: 80px 24px 0px;
+  padding: 20px 40px;
   text-align: center;
 }
 
@@ -3206,17 +3209,22 @@ body {
   color: #555;
 }
 
-/* Three Column Layout */
+/* Full-Width Sections */
 .pg-selling-columns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 0;
-  max-width: 100%;
 }
 
 .pg-selling-column {
-  padding: 60px 40px;
-  min-height: 600px;
+  padding: 34px 40px;
+  width: 100%;
+}
+
+.pg-selling-column > * {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pg-selling-column:nth-child(1) {
@@ -3232,8 +3240,8 @@ body {
 }
 
 .pg-selling-column h2 {
-  font-size: 1.5rem;
-  font-weight: 300;
+  font-size: 2.0rem;
+  font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-align: center;
@@ -3273,24 +3281,32 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
 }
 
 .pg-selling-marketing-list li {
-  padding: 12px 0;
-  border-bottom: 1px solid #ddd;
+  padding: 16px;
+  background: #fff;
+  border-radius: 6px;
   color: #333;
   font-size: 0.95rem;
-}
-
-.pg-selling-marketing-list li:last-child {
-  border-bottom: none;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* Before & After Gallery */
 .pg-selling-before-after {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0px;
+  width: auto;
+}
+
+.pg-selling-before-after-item {
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .pg-selling-before-after-item h4 {
@@ -3298,6 +3314,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 12px;
+  color: var(--pg-dark);
 }
 
 .pg-selling-before-after-images {
@@ -3315,6 +3332,7 @@ body {
   position: absolute;
   top: 8px;
   left: 8px;
+  z-index: 1;
   background: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 2px 8px;
@@ -3322,19 +3340,132 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-radius: 3px;
+  font-weight: 700;
 }
 
 .pg-selling-before img,
 .pg-selling-after img {
   width: 100%;
-  height: 215px;
+  height: 180px;
   object-fit: cover;
   border-radius: 4px;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.pg-selling-before img:hover,
+.pg-selling-after img:hover {
+  filter: grayscale(0%);
+}
+
+.pg-selling-before-after-item {
+  cursor: pointer;
+}
+
+.pg-selling-before-after-item:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Before/After Modal */
+.pg-ba-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: pointer;
+}
+
+.pg-ba-modal {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  cursor: default;
+  position: relative;
+  padding: 32px;
+}
+
+.pg-ba-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.pg-ba-modal-close:hover {
+  color: #000;
+}
+
+.pg-ba-modal-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--pg-dark);
+}
+
+.pg-ba-modal-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.pg-ba-modal-image {
+  position: relative;
+}
+
+.pg-ba-modal-label {
+  display: inline-block;
+  background: var(--pg-gold);
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.pg-ba-modal-image img {
+  border-radius: 8px;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .pg-ba-modal-images {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-ba-modal {
+    padding: 24px 16px;
+  }
 }
 
 /* Staging Button */
 .pg-selling-staging-btn {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   background: var(--pg-gold);
   color: #fff;
   padding: 14px 32px;
@@ -3344,7 +3475,8 @@ body {
   font-weight: 500;
   text-align: center;
   transition: background 0.2s, transform 0.2s;
-  margin-bottom: 24px;
+  margin: 0 auto 24px 0;
+  max-width: 900px;
 }
 
 .pg-selling-staging-btn:hover {
@@ -3397,25 +3529,30 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .pg-selling-columns {
-    grid-template-columns: 1fr;
-  }
-
+@media (max-width: 768px) {
   .pg-selling-column {
-    min-height: auto;
     padding: 60px 24px;
   }
-}
 
-@media (max-width: 768px) {
   .pg-selling-hero h1 {
     font-size: 2rem;
   }
 
+  .pg-selling-before-after {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-selling-before-after-images {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .pg-selling-before img,
   .pg-selling-after img {
-    height: 100px;
+    height: 120px;
+  }
+
+  .pg-selling-marketing-list {
+    grid-template-columns: 1fr 1fr;
   }
 }
 

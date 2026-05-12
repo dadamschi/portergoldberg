@@ -70,7 +70,7 @@ export default async function InventoryPage() {
           rel="noopener noreferrer"
           className="pg-listings-more-link"
         >
-          See more sold and rented listings →
+          See more closed properties →
         </a>
         <div
             className="pg-listings-grid"

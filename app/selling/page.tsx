@@ -6,6 +6,7 @@ import { portableTextComponents } from '@/lib/portableText'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
+import { BeforeAfterGallery } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Selling',
@@ -82,35 +83,7 @@ export default async function SellingPage() {
           )}
 
           {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
-            <div className="pg-selling-before-after">
-              {data.beforeAfterGallery.map((item, index) => (
-                <div key={index} className="pg-selling-before-after-item">
-                  {item.name && <h4>{item.name}</h4>}
-                  <div className="pg-selling-before-after-images">
-                    <div className="pg-selling-before">
-                      <span className="pg-selling-label">Before</span>
-                      <Image
-                        src={item.beforeImage.asset.url}
-                        alt={item.beforeImage.alt || `${item.name} before`}
-                        width={400}
-                        height={215}
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </div>
-                    <div className="pg-selling-after">
-                      <span className="pg-selling-label">After</span>
-                      <Image
-                        src={item.afterImage.asset.url}
-                        alt={item.afterImage.alt || `${item.name} after`}
-                        width={400}
-                        height={215}
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <BeforeAfterGallery items={data.beforeAfterGallery} />
           )}
         </section>
 
@@ -118,12 +91,12 @@ export default async function SellingPage() {
         <section className="pg-selling-column pg-selling-staging">
           {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>}
           {data.stagingIntro && data.stagingIntro.length > 0 && (
+            <>
             <div className="pg-selling-column-intro">
               <PortableText value={data.stagingIntro} components={portableTextComponents} />
             </div>
-          )}
-
-          <a
+            <div>
+              <a
             href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
             target="_blank"
             rel="noopener noreferrer"
@@ -131,6 +104,9 @@ export default async function SellingPage() {
           >
             Haven Home Stagers
           </a>
+            </div>
+            </>
+          )}
 
           {data.stagingPartners && data.stagingPartners.length > 0 && (
             <div className="pg-selling-partners">
