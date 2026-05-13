@@ -2271,8 +2271,8 @@ body {
 }
 
 .pg-testimonials-inner {
-  width: 80%;
-  max-width: 900px;
+  width: 90%;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -2298,9 +2298,15 @@ body {
 }
 
 .pg-testimonials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .pg-testimonials-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .pg-testimonials-empty {
@@ -2310,50 +2316,131 @@ body {
   color: var(--pg-mid);
 }
 
-/* Testimonial Card */
+/* Testimonial Card - Tweet Style */
 .pg-testimonial-card {
   position: relative;
-  text-align: center;
-  background-color: #f5f5f5;
-  padding-left: 10%;
-  padding-right: 10%;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  font-weight: 600;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #cfd9de;
+  border-radius: 16px;
+  padding: 16px;
   font-family: var(--font-body);
-  font-size: 16px;
-  color: #333;
+  font-size: 15px;
+  color: #0f1419;
+  transition: background-color 0.2s;
 }
 
-/* .pg-testimonial-card:before {
-    content: """";
-    font-size: 64px;
-    font-family: Georgia, serif;
-    color: var(--pg-navy);
-    left: 50%;
-    position: absolute;
-    top: -32px;
-    transform: translateX(-50%);
-    line-height: 1;
-    z-index: 2;
-} */
+.pg-testimonial-card:hover {
+  background-color: #f7f9fa;
+}
+
+/* X/Twitter logo in corner */
+.pg-testimonial-card::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
 
 .pg-testimonial-card--featured {
-  background-color: var(--pg-navy);
-  color: #fff
+  border-color: var(--pg-navy);
+  border-width: 2px;
+}
+
+/* Tweet header with avatar */
+.pg-testimonial-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.pg-testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pg-navy) 0%, #4a5568 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+/* Alternating avatar colors */
+.pg-testimonial-card:nth-child(4n+1) .pg-testimonial-avatar {
+  background: linear-gradient(135deg, #1d9bf0 0%, #0a66c2 100%); /* Blue */
+}
+
+.pg-testimonial-card:nth-child(4n+2) .pg-testimonial-avatar {
+  background: linear-gradient(135deg, var(--pg-navy) 0%, #4a5568 100%); /* Navy */
+}
+
+.pg-testimonial-card:nth-child(4n+3) .pg-testimonial-avatar {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); /* Purple */
+}
+
+.pg-testimonial-card:nth-child(4n) .pg-testimonial-avatar {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%); /* Green */
+}
+
+.pg-testimonial-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.pg-testimonial-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f1419;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Verified badge */
+.pg-testimonial-name::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+.pg-testimonial-handle {
+  font-size: 14px;
+  color: #536471;
+  line-height: 1.3;
 }
 
 .pg-testimonial-content {
-  margin-bottom: 20px;
-  line-height: 1.8;
-  margin: 0;
-  margin-bottom: 1em;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  color: #0f1419;
+  font-weight: 400;
 }
 
-.pg-testimonial-author {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 1px;
+.pg-testimonial-content p {
+  margin: 0;
+}
+
+/* Hide old author/meta - now in header */
+.pg-testimonial-card .pg-testimonial-author,
+.pg-testimonial-card .pg-testimonial-meta {
+  display: none;
 }
 
 .pg-testimonial-author--home {
@@ -2361,13 +2448,14 @@ body {
   margin-top: 6px;
 }
 
-.pg-testimonial-meta {
-  margin: 0;
-}
-
-.pg-testimonial-position {
-  font-family: var(--font-body);
-  font-size: 14px;
+/* Tweet footer */
+.pg-testimonial-footer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: #536471;
+  padding-top: 1px;
 }
 
 @media (max-width: 768px) {
@@ -2382,6 +2470,12 @@ body {
 
   .pg-testimonial-content p {
     font-size: 15px;
+  }
+
+  .pg-testimonial-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
 }
 

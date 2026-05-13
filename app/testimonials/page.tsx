@@ -2,49 +2,12 @@ import type { Metadata } from 'next'
 import type { Testimonial } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
-import { PortableText, toPlainText } from '@portabletext/react'
+import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/lib/portableText'
 
 export const metadata: Metadata = {
   title: 'Testimonials',
   description: 'Read what our clients say about working with Porter Goldberg Residential.',
-}
-
-function ReviewsJsonLd({ testimonials }: { testimonials: Testimonial[] }) {
-  const reviews = testimonials.map((t) => ({
-    '@type': 'Review',
-    author: {
-      '@type': 'Person',
-      name: t.clientName,
-    },
-    reviewBody: toPlainText(t.quote),
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: 5,
-      bestRating: 5,
-    },
-  }))
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'RealEstateAgent',
-    name: 'Porter Goldberg Residential',
-    url: 'https://portergoldberg.com',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: 5,
-      reviewCount: testimonials.length,
-      bestRating: 5,
-    },
-    review: reviews.slice(0, 10), // Limit to 10 reviews for schema
-  }
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
 }
 
 export const revalidate = 86400
@@ -58,19 +21,39 @@ async function getTestimonials(): Promise<Testimonial[]> {
   }
 }
 
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
+
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
-  const cardClass = testimonial.pinOnHomePage ? `pg-testimonial-card--featured` : '';
+  const cardClass = testimonial.pinOnHomePage ? 'pg-testimonial-card--featured' : ''
+  let initials = getInitials(testimonial.clientName)
+  initials = initials.length < 2 ? testimonial.clientName : initials
+  console.log(testimonial.clientName, initials)
+
   return (
-    <div className={`pg-testimonial-card ${cardClass}`}>
+    <div className={`pg-testimonial-card`}>
+      <div className="pg-testimonial-header">
+        <div className="pg-testimonial-avatar">{initials}</div>
+        <div className="pg-testimonial-user-info">
+          <span className="pg-testimonial-name">{testimonial.clientName}</span>
+          {testimonial.clientTitle && (
+            <span className="pg-testimonial-handle">{testimonial.clientTitle}</span>
+          )}
+          {testimonial.clientName.length <= 2 && 
+          (
+            <div className="pg-testimonial-footer">Verified Client</div>
+          )}
+        </div>
+      </div>
       <div className="pg-testimonial-content">
         <PortableText value={testimonial.quote} components={portableTextComponents} />
       </div>
-      <p className="pg-testimonial-author">- {testimonial.clientName}</p>
-      {testimonial.clientTitle && (
-        <p className="pg-testimonial-meta">
-          <span className="pg-testimonial-position">{testimonial.clientTitle}</span>
-        </p>
-      )}
     </div>
   )
 }
@@ -80,7 +63,6 @@ export default async function TestimonialsPage() {
 
   return (
     <main className="pg-testimonials-page">
-      <ReviewsJsonLd testimonials={testimonials} />
       <section className="pg-testimonials-section">
         <div className="pg-testimonials-inner">
           <div className="pg-testimonials-header">
