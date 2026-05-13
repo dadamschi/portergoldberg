@@ -17,6 +17,32 @@ async function getPressItems(): Promise<PressItem[]> {
   return client.fetch<PressItem[]>(PRESS_QUERY)
 }
 
+function LogoCollage({ items }: { items: PressItem[] }) {
+  // Get unique logos by publication name
+  const uniqueLogos = items.reduce((acc, item) => {
+    if (!acc.find((i) => i.publication === item.publication)) {
+      acc.push(item)
+    }
+    return acc
+  }, [] as PressItem[])
+
+  return (
+    <div className="pg-press-collage">
+      {uniqueLogos.map((item, index) => (
+        <div key={item._id} className="pg-press-collage-item" style={{ animationDelay: `${index * 0.1}s` }}>
+          <Image
+            src={item.logo.asset.url}
+            alt={item.publication}
+            fill
+            sizes="150px"
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function PressCard({ item }: { item: PressItem }) {
   const hasBackground = !!item.backgroundImage?.asset?.url
   const url = item.pdfUrl || item.articleUrl || '#'
@@ -78,14 +104,28 @@ export default async function PressPage() {
 
   return (
     <main className="pg-press-page">
-      <section className="pg-press-section">
-        <div className="pg-press-inner">
-          <div className="pg-press-header">
+      {pressItems.length > 0 && (
+        <section className="pg-press-hero">
+          <LogoCollage items={pressItems} />
+          <div className="pg-press-hero-content">
             <h1 className="pg-press-page-title">In the Press</h1>
             <p className="pg-press-page-subtitle">
               PorterGoldberg featured in media and publications.
             </p>
           </div>
+        </section>
+      )}
+
+      <section className="pg-press-section">
+        <div className="pg-press-inner">
+          {pressItems.length === 0 && (
+            <div className="pg-press-header">
+              <h1 className="pg-press-page-title">In the Press</h1>
+              <p className="pg-press-page-subtitle">
+                PorterGoldberg featured in media and publications.
+              </p>
+            </div>
+          )}
 
           {pressItems.length > 0 ? (
             <div className="pg-press-grid">

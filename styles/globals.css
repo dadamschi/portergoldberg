@@ -4974,6 +4974,66 @@ body {
   min-height: 100vh;
 }
 
+/* Press Hero with Logo Collage */
+.pg-press-hero {
+  position: relative;
+  min-height: 300px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pg-press-collage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 40px;
+  opacity: 0.15;
+}
+
+.pg-press-collage-item {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pg-press-hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.pg-press-hero-content .pg-press-page-title {
+  color: var(--pg-navy);
+  margin-bottom: 16px;
+}
+
+.pg-press-hero-content .pg-press-page-subtitle {
+  color: var(--pg-mid);
+}
+
 .pg-press-section {
   padding: 80px 0;
 }
