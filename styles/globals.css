@@ -1366,7 +1366,7 @@ body {
 
 .pg-testimonials {
   background: #ffffff;
-  padding: 80px 40px 100px;
+  padding: 20px 40px 100px;
   width: 100%;
 }
 
@@ -2267,7 +2267,7 @@ body {
 }
 
 .pg-testimonials-section {
-  padding: 80px 0;
+  padding: 20px 0;
 }
 
 .pg-testimonials-inner {
@@ -2446,6 +2446,7 @@ body {
 .pg-testimonial-author--home {
   margin-bottom: 1px;
   margin-top: 6px;
+  text-align: right;
 }
 
 /* Tweet footer */
@@ -2465,7 +2466,7 @@ body {
   }
 
   .pg-testimonials-section {
-    padding: 48px 0;
+    padding: 15px 0;
   }
 
   .pg-testimonial-content p {
