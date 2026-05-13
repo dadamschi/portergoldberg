@@ -6,7 +6,7 @@ import type { BuyPageData } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Buying',
-  description: 'Your guide to buying a home in Chicago with Porter Goldberg Residential.',
+  description: 'Your guide to buying a home in Chicago with PorterGoldberg Residential.',
 }
 
 async function getBuyPageData(): Promise<BuyPageData | null> {

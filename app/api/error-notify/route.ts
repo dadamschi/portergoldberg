@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { resend, FROM_EMAIL } from '@/lib/resend'
-
-const ERROR_NOTIFY_EMAIL = process.env.ERROR_NOTIFY_EMAIL || 'dadams.chi@gmail.com'
+import { resend, FROM_EMAIL, NOTIFY_EMAILS } from '@/lib/resend'
 
 type ErrorNotifyBody = {
   type: '404' | 'error' | 'global-error'
@@ -24,7 +22,7 @@ export async function POST(request: Request) {
 
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
-    to: ERROR_NOTIFY_EMAIL,
+    to: NOTIFY_EMAILS,
     subject: `[Porter Goldberg] ${subjectMap[type]}`,
     html: `
       <h2>${type === '404' ? 'Page Not Found' : 'Error Occurred'}</h2>

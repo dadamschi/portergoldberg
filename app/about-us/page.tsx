@@ -84,7 +84,7 @@ export default async function AboutPage() {
     <main className="pg-page pg-about-page">
       <section className="pg-page-hero">
         <h1>About Us</h1>
-        <p>Meet the team behind Porter Goldberg Residential.</p>
+        <p>Meet the team behind PorterGoldberg Residential.</p>
       </section>
 
       {agents.map((agent, index) => (

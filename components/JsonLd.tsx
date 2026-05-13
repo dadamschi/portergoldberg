@@ -2,7 +2,7 @@ export function LocalBusinessJsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
-    name: 'Porter Goldberg Residential',
+    name: 'PorterGoldberg Residential',
     description: 'Boutique Chicago real estate expertise for buying, selling, and building homes. Samantha Porter & Lauren Goldberg at Jameson Sotheby\'s International Realty.',
     url: 'https://portergoldberg.com',
     logo: 'https://portergoldberg.com/PorterGoldberg-Residential.webp',
@@ -30,7 +30,7 @@ export function LocalBusinessJsonLd() {
     priceRange: '$$$',
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
       opens: '09:00',
       closes: '18:00',
     },
@@ -50,7 +50,7 @@ export function LocalBusinessJsonLd() {
         jobTitle: 'Broker',
         worksFor: {
           '@type': 'Organization',
-          name: 'Porter Goldberg Residential',
+          name: 'PorterGoldberg Residential',
         },
       },
       {
@@ -59,7 +59,7 @@ export function LocalBusinessJsonLd() {
         jobTitle: 'Broker',
         worksFor: {
           '@type': 'Organization',
-          name: 'Porter Goldberg Residential',
+          name: 'PorterGoldberg Residential',
         },
       },
     ],
@@ -77,12 +77,12 @@ export function WebsiteJsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Porter Goldberg Residential',
+    name: 'PorterGoldberg Residential',
     url: 'https://portergoldberg.com',
     description: 'Chicago real estate expertise for buying, selling, and building homes.',
     publisher: {
       '@type': 'Organization',
-      name: 'Porter Goldberg Residential',
+      name: 'PorterGoldberg Residential',
       logo: {
         '@type': 'ImageObject',
         url: 'https://portergoldberg.com/PorterGoldberg-Residential.webp',

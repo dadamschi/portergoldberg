@@ -19,6 +19,7 @@ export type Listing = {
   _id: string
   address: string
   neighborhood: string
+  city?: string
   price?: string
   beds?: number
   baths?: string

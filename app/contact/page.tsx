@@ -3,7 +3,7 @@ import { ContactForm } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with Porter Goldberg Residential — Chicago real estate experts.',
+  description: 'Get in touch with PorterGoldberg Residential — Chicago real estate experts.',
 }
 
 export default function ContactPage() {

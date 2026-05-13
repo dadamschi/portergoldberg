@@ -28,7 +28,7 @@ export function Footer({ agents }: FooterProps) {
         <div className="pg-footer-logo-center">
           <Image
             src="/cropped-PorterGoldberg.png"
-            alt="Porter Goldberg"
+            alt="PorterGoldberg"
             width={150}
             height={150}
           />
@@ -49,7 +49,7 @@ export function Footer({ agents }: FooterProps) {
       <div className="pg-footer-brand">
         <Image
           src="/PGRR_Logo_VerticalwithJ.png"
-          alt="Porter Goldberg Residential - Jameson Sotheby's International Realty"
+          alt="PorterGoldberg Residential - Jameson Sotheby's International Realty"
           width={400}
           height={220}
           className="pg-footer-brand-logo"

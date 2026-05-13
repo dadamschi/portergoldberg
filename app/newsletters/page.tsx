@@ -64,10 +64,10 @@ export default async function NewslettersPage() {
   const newsletters = await getNewsletters()
 
   return (
-    <main className="pg-page pg-newsletters-page">
+    <main className="pg-page">
       <section className="pg-page-hero">
         <h1>Newsletter Archive</h1>
-        <p>Market updates, tips, and insights from Porter Goldberg Residential.</p>
+        <p>Market updates, tips, and insights from PorteGoldberg Residential.</p>
       </section>
 
       <section className="pg-newsletters-section">

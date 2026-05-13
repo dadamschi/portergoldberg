@@ -1,4 +1,4 @@
-# Porter Goldberg Residential
+# PorterGoldberg Residential
 
 Chicago luxury real estate website built with Next.js 15 and Sanity CMS.
 

@@ -53,7 +53,7 @@ function EventsJsonLd({ events }: { events: EventItem[] }) {
         },
     organizer: {
       '@type': 'Organization',
-      name: 'Porter Goldberg Residential',
+      name: 'PorterGoldberg Residential',
       url: 'https://portergoldberg.com',
     },
     image: event.image?.asset?.url,

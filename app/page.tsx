@@ -5,7 +5,7 @@ import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial, Agent } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Chicago Real Estate | Porter Goldberg Residential',
+  title: 'Chicago Real Estate | PorterGoldberg Residential',
   description: 'Chicago real estate, personally delivered. Samantha Porter & Lauren Goldberg offer boutique expertise for buying, selling, and building homes in Chicago\'s North Side neighborhoods.',
   alternates: {
     canonical: 'https://portergoldberg.com',

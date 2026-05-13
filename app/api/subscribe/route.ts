@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { resend, FROM_EMAIL } from '@/lib/resend'
+import { resend, FROM_EMAIL, NOTIFY_EMAILS } from '@/lib/resend'
 import {
   searchContactByEmail,
   updateContactTier,
@@ -62,18 +62,13 @@ export async function POST(request: Request) {
 
   // Send notification email as backup/notification
   const isProduction = process.env.VERCEL_ENV === 'production'
-  const notifyEmails = isProduction
-    ? ['dadams.chi+portergoldbergcc@gmail.com', 'contact@artplexity.com']
-    : ['dadams.chi+portergoldbergcc@gmail.com']
-  let subject = 'New Newsletter Subscriber - Porter Goldberg'
-
-  subject = isProduction
-    ? subject
-    : "PREVIEW - " + subject
+  const subject = isProduction
+    ? 'New Newsletter Subscriber - PorterGoldberg'
+    : 'PREVIEW - New Newsletter Subscriber - PorterGoldberg'
 
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
-    to: notifyEmails,
+    to: NOTIFY_EMAILS,
     subject: `${subject}`,
     html: `
       <h2>New Newsletter Subscriber</h2>

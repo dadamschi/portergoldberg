@@ -19,7 +19,7 @@ export function NewsletterBanner({
   title = 'Contact Us',
   cta = 'Send Message',
   image = '/PorterGoldberg-Residential.webp',
-  imageAlt = 'Porter Goldberg',
+  imageAlt = 'PorterGoldberg',
   openContactForm = false,
   contactMessage,
 }: NewsletterBannerProps) {

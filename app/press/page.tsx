@@ -103,7 +103,7 @@ export default async function PressPage() {
   const pressItems = await getPressItems()
 
   return (
-    <main className="pg-page pg-press-page">
+    <main className="pg-page">
       <section className="pg-page-hero">
         <h1>In the Press</h1>
         <p>PorterGoldberg featured in media and publications.</p>

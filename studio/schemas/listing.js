@@ -9,13 +9,29 @@ export const listing = defineType({
       name: "address",
       title: "Address",
       type: "string",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.required().custom(async (address, context) => {
+          if (!address) return true;
+          const { document, getClient } = context;
+          const client = getClient({ apiVersion: "2024-01-01" });
+          const id = document._id.replace(/^drafts\./, "");
+          const params = { address, id };
+          const query = `count(*[_type == "listing" && address == $address && !(_id in [$id, "drafts." + $id])]) > 0`;
+          const exists = await client.fetch(query, params);
+          return exists ? "A listing with this address already exists" : true;
+        }),
     }),
     defineField({
       name: "neighborhood",
       title: "Neighborhood",
       type: "string",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "city",
+      title: "City",
+      type: "string",
+      initialValue: "Chicago",
     }),
     defineField({
       name: "price",

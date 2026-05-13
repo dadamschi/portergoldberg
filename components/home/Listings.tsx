@@ -21,7 +21,7 @@ export function Listings({listings}: {
 
         <div
           className="pg-listings-grid"
-          style={{ gridTemplateColumns: `repeat(${columnCount}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${columnCount}, 300px)` }}
         >
           {displayed.map((listing) => (
             <ListingCard key={listing._id} listing={listing} />

@@ -8,7 +8,7 @@ import type { SchoolGuidancePageData } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Local School Guidance',
-  description: 'Navigate Chicago\'s school landscape with expert guidance from Porter Goldberg Residential.',
+  description: 'Navigate Chicago\'s school landscape with expert guidance from PorterGoldberg Residential.',
 }
 
 export const revalidate = 86400
@@ -23,7 +23,7 @@ export default async function SchoolGuidancePage() {
 
   if (!data) {
     return (
-      <main className="pg-page pg-school-guidance-page">
+      <main className="pg-page">
         <section className="pg-page-hero">
           <h1>Local School Guidance</h1>
           <p>Content coming soon. Please add a School Guidance Page document in Sanity.</p>
@@ -33,7 +33,7 @@ export default async function SchoolGuidancePage() {
   }
 
   return (
-    <main className="pg-page pg-school-guidance-page">
+    <main className="pg-page">
       <section className="pg-page-hero">
         <h1>{data.title}</h1>
         {data.headline && <p>{data.headline}</p>}

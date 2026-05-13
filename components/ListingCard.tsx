@@ -18,17 +18,18 @@ type ListingCardProps = {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const [isActive, setIsActive] = useState(false)
-  const { address, neighborhood, price, beds, baths, sqft, status, statusType, image, brochureUrl } = listing
+  const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units } = listing
 
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
+  const finalPrice = price ?? 'Inquire for pricing'
 
   // Build amenities string (e.g., "6 Beds  5/1 Baths  25,000 ft²")
   const amenities = [
-    beds ? `${beds} Bed${beds !== 1 ? 's' : ''}` : null,
+    beds ? `${beds} Bed${beds !== 1 ? 's' : ''} |` : null,
     baths ? `${baths} Bath${baths !== '1' ? 's' : ''}` : null,
     sqft,
-  ].filter(Boolean).join('  \u00A0\u00A0')
+  ].filter(Boolean).join(' ')
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Only toggle on touch devices (no hover capability)
@@ -57,16 +58,20 @@ export function ListingCard({ listing }: ListingCardProps) {
               style={{ objectFit: 'cover' }}
             />
           ) : (
-            <Image
-              src="/COMING-SOON.png"
-              alt="Coming Soon"
-              fill
-              style={{ objectFit: 'cover' }}
-            />
+            <div className="pg-listing-placeholder">
+              <span>Coming Soon</span>
+            </div>
           )}
-          <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
-            {statusText}
-          </span>
+          {statusType !== 'coming' && (
+            <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
+              {statusText}
+            </span>
+          )}
+          {units && (
+            <span className="pg-listing-units">
+              {units} Unit{units !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
         <div className="pg-listing-actions">
           {brochureUrl && (
@@ -89,9 +94,9 @@ export function ListingCard({ listing }: ListingCardProps) {
         </div>
       </div>
       <div className="pg-listing-info">
-        {price && <div className="pg-listing-price">{price}</div>}
-        {amenities && <div className="pg-listing-amenities">{amenities}</div>}
-        <div className="pg-listing-address">{address}, {neighborhood}</div>
+        <div className="pg-listing-price">{finalPrice || '\u00A0'}</div>
+        <div className="pg-listing-amenities">{amenities || '\u00A0'}</div>
+        <div className="pg-listing-address">{address}, {city || 'Chicago'}</div>
       </div>
     </div>
   )

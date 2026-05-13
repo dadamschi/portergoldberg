@@ -8,7 +8,7 @@ import type { SchoolGuidancePageData } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Client Resources',
-  description: 'Trusted vendors and local school guidance for Porter Goldberg Residential clients.',
+  description: 'Trusted vendors and local school guidance for PorterGoldberg Residential clients.',
 }
 
 async function getSchoolGuidanceData(): Promise<SchoolGuidancePageData | null> {
@@ -20,7 +20,7 @@ export default async function ClientResourcesPage() {
   const schoolData = await getSchoolGuidanceData()
 
   return (
-    <main className="pg-page pg-client-resources-page">
+    <main className="pg-page">
       <section className="pg-resources-header">
         <h1>Client Resources</h1>
         <p>Tools and guidance to help you navigate your real estate journey.</p>

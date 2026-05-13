@@ -25,6 +25,7 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
             height={48}
             className="pg-logo-img"
             priority
+            quality={95}
           />
         </Link>
 
