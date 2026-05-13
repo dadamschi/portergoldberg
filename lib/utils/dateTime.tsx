@@ -27,6 +27,19 @@ export function formatDateOnly(dateStr: string): string {
   })
 }
 
+/**
+ * Format a date-only string (YYYY-MM-DD) as "Month Year" without timezone shift.
+ * Use this for press articles and similar content.
+ */
+export function formatMonthYear(dateStr: string): string {
+  const [year, month] = dateStr.split('-').map(Number)
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
+  return `${months[month - 1]} ${year}`
+}
+
 export function formatTime(dateStr: string): string {
   const d = new Date(dateStr)
   return d.toLocaleTimeString('en-US', {

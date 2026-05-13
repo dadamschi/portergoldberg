@@ -238,3 +238,18 @@ export type Newsletter = {
   imageSections?: NewsletterImageSection[]
   hubspotUrl?: string
 }
+
+// =============================================================================
+// PRESS TYPES
+// =============================================================================
+
+export type PressItem = {
+  _id: string
+  publication: string
+  logo: SanityImage
+  backgroundImage?: SanityImage
+  articleUrl?: string
+  pdfUrl?: string
+  articleTitle?: string
+  date?: string
+}

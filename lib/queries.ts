@@ -380,3 +380,20 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
     hubspotUrl
   }
 `)
+
+// =============================================================================
+// PRESS
+// =============================================================================
+
+export const PRESS_QUERY = defineQuery(/* groq */ `
+  *[_type == "press"] | order(order asc, date desc) {
+    _id,
+    publication,
+    "logo": logo { ${imageFragment} },
+    "backgroundImage": backgroundImage { ${imageFragment} },
+    articleUrl,
+    "pdfUrl": pdfFile.asset->url,
+    articleTitle,
+    date
+  }
+`)

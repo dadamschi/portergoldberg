@@ -7,6 +7,7 @@ import { buyPage } from "./buyPage";
 import { sellingPage } from "./sellingPage";
 import { schoolGuidancePage } from "./schoolGuidancePage";
 import { newsletter } from "./newsletter";
+import { press } from "./press";
 
 export const schemaTypes = [
   listing,
@@ -18,4 +19,5 @@ export const schemaTypes = [
   sellingPage,
   schoolGuidancePage,
   newsletter,
+  press,
 ];
