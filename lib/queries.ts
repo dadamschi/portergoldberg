@@ -23,6 +23,9 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
     address,
     neighborhood,
     price,
+    beds,
+    baths,
+    sqft,
     status,
     statusType,
     "image": image { ${imageFragment} },
@@ -31,29 +34,35 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
 `)
 
 export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
- {                                                          
-    "available": *[_type == "listing" && statusType in ["active", "coming"]] {                 
-          _id,                                                   
-          address,                                               
-          neighborhood,                                          
-          price,                                                 
-          status,                                                
-          statusType,                                            
-          "image": image { ${imageFragment} },                   
-          brochureUrl                                            
-        },                                                       
-    "sold": *[_type == "listing" && statusType == "sold"] |  
-      order(order asc) {                                         
-          _id,                                                   
-          address,                                               
-          neighborhood,                                          
-          price,                                                 
-          status,                                                
-          statusType,                                            
-          "image": image { ${imageFragment} },                   
-          brochureUrl                                            
-        }                                                        
-  }                                                          
+ {
+    "available": *[_type == "listing" && statusType in ["active", "coming"]] {
+          _id,
+          address,
+          neighborhood,
+          price,
+          beds,
+          baths,
+          sqft,
+          status,
+          statusType,
+          "image": image { ${imageFragment} },
+          brochureUrl
+        },
+    "sold": *[_type == "listing" && statusType == "sold"] |
+      order(order asc) {
+          _id,
+          address,
+          neighborhood,
+          price,
+          beds,
+          baths,
+          sqft,
+          status,
+          statusType,
+          "image": image { ${imageFragment} },
+          brochureUrl
+        }
+  }
   `) 
 
 // =============================================================================
@@ -65,6 +74,7 @@ export const ALL_TESTIMONIALS_QUERY = defineQuery(/* groq */ `
     _id,
     clientName,
     clientTitle,
+    date,
     quote,
     pinOnHomePage
   }
@@ -224,6 +234,9 @@ export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
     address,
     neighborhood,
     price,
+    beds,
+    baths,
+    sqft,
     status,
     statusType,
     "image": image { ${imageFragment} },
@@ -235,6 +248,9 @@ export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
     address,
     neighborhood,
     price,
+    beds,
+    baths,
+    sqft,
     status,
     statusType,
     "image": image { ${imageFragment} },
@@ -288,11 +304,13 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     _id,
     clientName,
     clientTitle,
+    date,
     quote
   } + *[_type == "testimonial" && pinOnHomePage != true] | order(_createdAt desc) [0...4] {
     _id,
     clientName,
     clientTitle,
+    date,
     quote
   },
   "agents": *[_type == "agent"] | order(order asc) {
@@ -366,7 +384,7 @@ export const ALL_NEWSLETTERS_QUERY = defineQuery(/* groq */ `
     slug,
     publishedAt,
     summary,
-    "coverImage": imageSections[0].image { ${imageFragment} }
+    "thumbnail": thumbnail { ${imageFragment} }
   }
 `)
 

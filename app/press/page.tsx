@@ -103,30 +103,20 @@ export default async function PressPage() {
   const pressItems = await getPressItems()
 
   return (
-    <main className="pg-press-page">
+    <main className="pg-page pg-press-page">
+      <section className="pg-page-hero">
+        <h1>In the Press</h1>
+        <p>PorterGoldberg featured in media and publications.</p>
+      </section>
+
       {pressItems.length > 0 && (
-        <section className="pg-press-hero">
+        <section className="pg-press-collage-section">
           <LogoCollage items={pressItems} />
-          <div className="pg-press-hero-content">
-            <h1 className="pg-press-page-title">In the Press</h1>
-            <p className="pg-press-page-subtitle">
-              PorterGoldberg featured in media and publications.
-            </p>
-          </div>
         </section>
       )}
 
       <section className="pg-press-section">
         <div className="pg-press-inner">
-          {pressItems.length === 0 && (
-            <div className="pg-press-header">
-              <h1 className="pg-press-page-title">In the Press</h1>
-              <p className="pg-press-page-subtitle">
-                PorterGoldberg featured in media and publications.
-              </p>
-            </div>
-          )}
-
           {pressItems.length > 0 ? (
             <div className="pg-press-grid">
               {pressItems.map((item) => (

@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function VendorsPage() {
   return (
-    <main className="pg-vendors-page">
-      <section className="pg-vendors-hero">
+    <main className="pg-page pg-vendors-page">
+      <section className="pg-page-hero">
         <h1>Our Trusted Vendors</h1>
         <p>
           Over the years, we&apos;ve built relationships with exceptional service providers across

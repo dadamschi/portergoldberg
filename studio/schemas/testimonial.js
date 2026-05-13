@@ -18,6 +18,12 @@ export const testimonial = defineType({
       description: 'Optional company or location (e.g., "Merel Family Law", "Chicago, IL")',
     }),
     defineField({
+      name: "date",
+      title: "Date",
+      type: "date",
+      description: "When the testimonial was given",
+    }),
+    defineField({
       name: "quote",
       title: "Quote",
       type: "array",

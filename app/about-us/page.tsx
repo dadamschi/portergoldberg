@@ -81,7 +81,12 @@ export default async function AboutPage() {
   const agents = await getAgents()
 
   return (
-    <main className="pg-about-page">
+    <main className="pg-page pg-about-page">
+      <section className="pg-page-hero">
+        <h1>About Us</h1>
+        <p>Meet the team behind Porter Goldberg Residential.</p>
+      </section>
+
       {agents.map((agent, index) => (
         <div key={agent._id}>
           <AgentSection agent={agent} reversed={index % 2 === 1} />

@@ -23,6 +23,23 @@ export const listing = defineType({
       type: "string",
     }),
     defineField({
+      name: "beds",
+      title: "Bedrooms",
+      type: "number",
+    }),
+    defineField({
+      name: "baths",
+      title: "Bathrooms",
+      type: "string",
+      description: "e.g., 3, 2/1, 4.5",
+    }),
+    defineField({
+      name: "sqft",
+      title: "Square Feet",
+      type: "string",
+      description: "e.g., 2,500, 3,200 ft²",
+    }),
+    defineField({
       name: "status",
       title: "Status Label",
       type: "string",

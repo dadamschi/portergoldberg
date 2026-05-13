@@ -62,15 +62,14 @@ export default async function TestimonialsPage() {
   const testimonials = await getTestimonials()
 
   return (
-    <main className="pg-testimonials-page">
+    <main className="pg-page pg-testimonials-page">
+      <section className="pg-page-hero">
+        <h1>Testimonials</h1>
+        <p>Hear from our clients about their experience working with Porter Goldberg.</p>
+      </section>
+
       <section className="pg-testimonials-section">
         <div className="pg-testimonials-inner">
-          <div className="pg-testimonials-header">
-            <h1 className="pg-testimonials-page-title">Testimonials</h1>
-            <p className="pg-testimonials-page-subtitle">
-              Hear from our clients about their experience working with <br />Porter Goldberg.
-            </p>
-          </div>
 
           {testimonials.length > 0 ? (
             <div className="pg-testimonials-list">

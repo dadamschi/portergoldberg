@@ -131,7 +131,7 @@ export default async function NewsletterPage({ params }: Props) {
   )
 
   return (
-    <main className="pg-newsletter-detail-page">
+    <main className="pg-page pg-newsletter-detail-page">
       <section className="pg-newsletter-detail-section">
         <div className="pg-newsletter-detail-layout">
           <div className="pg-newsletter-detail-main">

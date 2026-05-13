@@ -18,10 +18,17 @@ type ListingCardProps = {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const [isActive, setIsActive] = useState(false)
-  const { address, neighborhood, price, status, statusType, image, brochureUrl } = listing
+  const { address, neighborhood, price, beds, baths, sqft, status, statusType, image, brochureUrl } = listing
 
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
+
+  // Build amenities string (e.g., "6 Beds  5/1 Baths  25,000 ft²")
+  const amenities = [
+    beds ? `${beds} Bed${beds !== 1 ? 's' : ''}` : null,
+    baths ? `${baths} Bath${baths !== '1' ? 's' : ''}` : null,
+    sqft,
+  ].filter(Boolean).join('  \u00A0\u00A0')
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Only toggle on touch devices (no hover capability)
@@ -39,7 +46,7 @@ export function ListingCard({ listing }: ListingCardProps) {
       className={`pg-listing-card ${isActive ? 'pg-listing-card--active' : ''}`}
       onClick={handleCardClick}
     >
-      <div className="pg-listing-content">
+      <div className="pg-listing-image-wrapper">
         <div className="pg-listing-image">
           {image?.asset?.url ? (
             <Image
@@ -47,8 +54,7 @@ export function ListingCard({ listing }: ListingCardProps) {
               alt={image.alt || `${address}, ${neighborhood} - ${statusText}`}
               fill
               sizes="400px"
-              style={{ objectFit: 'contain' }}
-              unoptimized
+              style={{ objectFit: 'cover' }}
             />
           ) : (
             <Image
@@ -61,11 +67,6 @@ export function ListingCard({ listing }: ListingCardProps) {
           <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
             {statusText}
           </span>
-        </div>
-        <div className="pg-listing-info">
-          <div className="pg-listing-price">{price}</div>
-          <div className="pg-listing-address">{address}</div>
-          <div className="pg-listing-address">{neighborhood}</div>
         </div>
         <div className="pg-listing-actions">
           {brochureUrl && (
@@ -86,6 +87,11 @@ export function ListingCard({ listing }: ListingCardProps) {
             Inquire
           </button>
         </div>
+      </div>
+      <div className="pg-listing-info">
+        {price && <div className="pg-listing-price">{price}</div>}
+        {amenities && <div className="pg-listing-amenities">{amenities}</div>}
+        <div className="pg-listing-address">{address}, {neighborhood}</div>
       </div>
     </div>
   )

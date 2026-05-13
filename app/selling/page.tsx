@@ -24,8 +24,8 @@ export default async function SellingPage() {
 
   if (!data) {
     return (
-      <main className="pg-selling-page">
-        <section className="pg-selling-hero">
+      <main className="pg-page pg-selling-page">
+        <section className="pg-page-hero">
           <h1>Selling</h1>
           <p>Content coming soon. Please add a Selling Page document in Sanity.</p>
         </section>
@@ -34,12 +34,12 @@ export default async function SellingPage() {
   }
 
   return (
-    <main className="pg-selling-page">
+    <main className="pg-page pg-selling-page">
       {/* Hero Section */}
-      <section className="pg-selling-hero">
+      <section className="pg-page-hero">
         <h1>{data.title}</h1>
-        {data.heroHeadline && <h2 className="pg-selling-headline">{data.heroHeadline}</h2>}
-        {data.heroIntro && <p className="pg-selling-intro">{data.heroIntro}</p>}
+        {data.heroHeadline && <p>{data.heroHeadline}</p>}
+        {data.heroIntro && <p>{data.heroIntro}</p>}
       </section>
 
       {/* Three Vertical Sections */}

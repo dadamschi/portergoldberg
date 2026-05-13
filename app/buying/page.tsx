@@ -19,8 +19,8 @@ export default async function BuyPage() {
 
   if (!data) {
     return (
-      <main className="pg-buy-page">
-        <section className="pg-buy-hero">
+      <main className="pg-page pg-buy-page">
+        <section className="pg-page-hero">
           <h1>Buying</h1>
           <p>Content coming soon. Please add a Buy Page document in Sanity.</p>
         </section>
@@ -29,10 +29,10 @@ export default async function BuyPage() {
   }
 
   return (
-    <main className="pg-buy-page">
-      <section className="pg-buy-hero">
+    <main className="pg-page pg-buy-page">
+      <section className="pg-page-hero">
         <h1>{data.title}</h1>
-        {data.headline && <p className="pg-buy-headline">{data.headline}</p>}
+        {data.headline && <p>{data.headline}</p>}
       </section>
 
       <section className="pg-buy-flipbook">

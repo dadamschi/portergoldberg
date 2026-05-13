@@ -216,19 +216,16 @@ export default async function EventsPage() {
 
 
   return (
-    <main className="pg-events-page">
+    <main className="pg-page pg-events-page">
       <EventsJsonLd events={[...upcoming, ...past]} />
-      {/* Header */}
+
+      <section className="pg-page-hero">
+        <h1>Events</h1>
+        <p>Webinars, workshops, and community events to help you navigate Chicago real estate.</p>
+      </section>
+
       <section className="pg-events-section">
         <div className="pg-events-inner">
-          <div className="pg-events-header">
-            <h1 className="pg-events-page-title">Events</h1>
-            <p className="pg-events-page-subtitle">
-              Webinars, workshops, and community events to help you navigate Chicago real estate.
-            </p>
-          </div>
-
-          {/* Upcoming */}
           <h2 className="pg-events-section-title">Upcoming Events</h2>
 
           {upcoming.length > 0 ? (

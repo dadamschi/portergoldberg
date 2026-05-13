@@ -4,6 +4,7 @@ import { client } from '@/lib/client'
 import { ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { formatDateOnly } from '@/lib/utils/dateTime'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Newsletter Archive',
@@ -32,19 +33,21 @@ async function getNewsletters(): Promise<NewsletterPreview[]> {
 }
 
 function NewsletterTeaser({ newsletter }: { newsletter: NewsletterPreview }) {
+  const thumbnailAlt = newsletter.thumbnail?.alt || `${newsletter.title} - ${formatDateOnly(newsletter.publishedAt)}`
+
   return (
     <Link href={`/newsletters/${newsletter.slug.current}`} className="pg-newsletter-teaser" title={newsletter.summary}>
-      {/* {newsletter.coverImage?.asset?.url && (
+      {newsletter.thumbnail?.asset?.url && (
         <div className="pg-newsletter-teaser-image">
           <Image
-            src={newsletter.coverImage.asset.url}
-            alt={newsletter.title}
+            src={newsletter.thumbnail.asset.url}
+            alt={thumbnailAlt}
             width={400}
             height={300}
             style={{ width: '100%', height: 'auto' }}
           />
         </div>
-      )} */}
+      )}
       <div className="pg-newsletter-teaser-content">
         <time className="pg-newsletter-teaser-date" dateTime={newsletter.publishedAt}>
           {formatDateOnly(newsletter.publishedAt)}
@@ -61,15 +64,14 @@ export default async function NewslettersPage() {
   const newsletters = await getNewsletters()
 
   return (
-    <main className="pg-newsletters-page">
+    <main className="pg-page pg-newsletters-page">
+      <section className="pg-page-hero">
+        <h1>Newsletter Archive</h1>
+        <p>Market updates, tips, and insights from Porter Goldberg Residential.</p>
+      </section>
+
       <section className="pg-newsletters-section">
         <div className="pg-newsletters-inner">
-          <div className="pg-newsletters-header">
-            <h1 className="pg-newsletters-page-title">Newsletter Archive</h1>
-            <p className="pg-newsletters-page-subtitle">
-              Market updates, tips, and insights from Porter Goldberg Residential.
-            </p>
-          </div>
 
           {newsletters.length > 0 ? (
             <div className="pg-newsletters-grid">

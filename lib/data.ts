@@ -9,10 +9,10 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'About',
     children: [
       { label: 'Our Team', href: '/about-us' },
-      { label: 'Testimonials', href: '/testimonials' },
       { label: 'Press', href: '/press' },
     ],
   },
+  { label: 'Testimonials', href: '/testimonials' },
   { label: 'Properties', href: '/inventory' },
   { label: 'Buying', href: '/buying' },
   { label: 'Selling', href: '/selling' },
@@ -20,7 +20,8 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: 'Resources',
     children: [
-      { label: 'Client Resources', href: '/client-resources' },
+      { label: 'Vendor List', href: '/vendors' },
+      { label: 'Local School Guidance', href: '/school-guidance' },
       { label: 'Events', href: '/events' },
       { label: 'Newsletter', href: '/newsletters' },
     ],

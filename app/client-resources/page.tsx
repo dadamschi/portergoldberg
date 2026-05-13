@@ -20,7 +20,7 @@ export default async function ClientResourcesPage() {
   const schoolData = await getSchoolGuidanceData()
 
   return (
-    <main className="pg-client-resources-page">
+    <main className="pg-page pg-client-resources-page">
       <section className="pg-resources-header">
         <h1>Client Resources</h1>
         <p>Tools and guidance to help you navigate your real estate journey.</p>

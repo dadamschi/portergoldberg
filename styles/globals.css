@@ -59,7 +59,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--pg-black);
+  /* background-color: var(--pg-black); */
   color: var(--pg-white);
   font-size: 16px;
   line-height: 1.6;
@@ -84,6 +84,53 @@ body {
 @media (max-width: 768px) {
   .container {
     width: 90%;
+  }
+}
+
+/* ============================================================
+   STANDARDIZED PAGE LAYOUT
+   ============================================================ */
+
+.pg-page {
+  background: #fff;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   STANDARDIZED PAGE HEADERS
+   ============================================================ */
+
+.pg-page-hero {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 20px 40px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pg-page-hero h1 {
+  font-size: 3rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.pg-page-hero p {
+  font-size: 18px;
+  max-width: 680px;
+  margin: 24px auto 0;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .pg-page-hero {
+    padding: 40px 20px;
+  }
+
+  .pg-page-hero h1 {
+    font-size: 28px;
   }
 }
 
@@ -1222,8 +1269,19 @@ body {
   justify-content: center;
 }
 
+@media (max-width: 1024px) {
+  .pg-listings-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .pg-listings-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .pg-listing-card {
-  color: white;
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -1234,13 +1292,9 @@ body {
   transform: scale(1.04);
 }
 
-.pg-listing-content {
+.pg-listing-image-wrapper {
   position: relative;
-  min-height: 268px;
-  padding: 0 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
 }
 
@@ -1255,17 +1309,10 @@ body {
   object-fit: cover;
 }
 
-/* Darken the bottom of listing cards for text legibility */
-.pg-listing-image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 60%, transparent 100%);
-}
-
 .pg-listing-info {
-  position: relative;
-  z-index: 1;
+  padding: 1px 0;
+  color: var(--pg-navy);
+  background-color: #aaa;
 }
 
 .pg-listing-actions {
@@ -1342,6 +1389,7 @@ body {
   text-transform: uppercase;
   padding: 4px 10px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .pg-listing-status--active  { background: var(--pg-gold); color: white; }
@@ -1354,10 +1402,15 @@ body {
   font-weight: 400;
 }
 
+.pg-listing-amenities {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
 .pg-listing-address {
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 2px;
 }
 /* ============================================================
    TESTIMONIALS
@@ -1419,11 +1472,6 @@ body {
 /* ============================================================
    ABOUT PAGE
    ============================================================ */
-
-.pg-about-page {
-  background: #ffffff;
-  width: 100%;
-}
 
 /* Agent bio section */
 .pg-agent-section {
@@ -1884,10 +1932,6 @@ body {
    EVENTS PAGE
    ============================================================ */
 
-.pg-events-page {
-  background: #ffffff;
-}
-
 .pg-events-section {
   padding: 0;
 }
@@ -2276,11 +2320,6 @@ body {
 /* ============================================================
    TESTIMONIALS PAGE
    ============================================================ */
-
-.pg-testimonials-page {
-  background: var(--pg-white);
-  min-height: 100vh;
-}
 
 .pg-testimonials-section {
   padding: 20px 0;
@@ -2837,32 +2876,12 @@ body {
    HALCYON DEVELOPMENT PAGE
    ============================================================================= */
 
-.pg-halcyon-page {
-  background: #fff;
-  color:#000;
-}
-
-.pg-halcyon-hero {
+.pg-halcyon-hero.pg-page-hero {
   background: #666;
-  padding: 35px 40px;
-  text-align: center;
-  color: #fff;
-}
-
-.pg-halcyon-hero-content {
-  max-width: 900px;
-  margin: 0 auto;
 }
 
 .pg-halcyon-logo {
-  margin-bottom: 40px;
-}
-
-.pg-halcyon-headline {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 1.6;
-  margin: 0;
+  margin-bottom: 24px;
 }
 
 .pg-halcyon-about {
@@ -3034,33 +3053,6 @@ body {
 /* =============================================================================
    BUY PAGE / FLIPBOOK
    ============================================================================= */
-
-.pg-buy-page {
-  background: #fff;
-  min-height: 100vh;
-}
-
-.pg-buy-hero {
-  background: #1a1a1a;
-  color: #fff;
-  padding: 20px 40px;
-  text-align: center;
-}
-
-.pg-buy-hero h1 {
-  font-size: 3rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
-.pg-buy-headline {
-  font-size: 18px;
-  max-width: 600px;
-  margin: 0 auto;
-  opacity: 0.9;
-}
 
 .pg-buy-flipbook {
   padding: 60px 40px;
@@ -3336,38 +3328,6 @@ body {
 /* =============================================================================
    SELLING PAGE
    ============================================================================= */
-
-.pg-selling-page {
-  padding-top: 10px;
-}
-
-.pg-selling-hero {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px 40px;
-  text-align: center;
-}
-
-.pg-selling-hero h1 {
-  font-size: 3rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
-.pg-selling-headline {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: var(--pg-gold);
-  margin-bottom: 24px;
-}
-
-.pg-selling-intro {
-  font-size: 1.125rem;
-  line-height: 1.8;
-  color: #555;
-}
 
 /* Full-Width Sections */
 .pg-selling-columns {
@@ -3839,27 +3799,7 @@ body {
 }
 
 .pg-vendors-page {
-  padding-top: 10px;
-}
-
-.pg-vendors-hero {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0px 24px 10px;
-  text-align: center;
-}
-
-.pg-vendors-hero h1 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
-.pg-vendors-hero p {
-  font-size: 1.125rem;
-  line-height: 1.8;
+  background: #fff;
 }
 
 .pg-vendors-content {
@@ -4431,6 +4371,58 @@ body {
   .pg-resource-card-content {
     padding: 24px 20px;
   }
+}
+
+/* =============================================================================
+   SCHOOL GUIDANCE PAGE
+   ============================================================================= */
+
+.pg-school-guidance-page {
+  background: #fff;
+  min-height: 100vh;
+}
+
+.pg-school-guidance-content {
+  padding: 60px 24px 80px;
+}
+
+.pg-school-guidance-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pg-school-guidance-image {
+  margin-bottom: 40px;
+}
+
+.pg-school-guidance-image img {
+  width: 100%;
+  height: auto;
+}
+
+.pg-school-guidance-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.pg-school-guidance-text p {
+  margin-bottom: 1.5em;
+}
+
+.pg-school-guidance-text h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 2em 0 1em;
+}
+
+.pg-school-guidance-text ul,
+.pg-school-guidance-text ol {
+  margin: 1em 0 1.5em 1.5em;
+}
+
+.pg-school-guidance-text li {
+  margin-bottom: 0.5em;
 }
 
 /* =============================================================================
@@ -5017,29 +5009,20 @@ body {
   min-height: 100vh;
 }
 
-/* Press Hero with Logo Collage */
-.pg-press-hero {
-  position: relative;
-  min-height: 300px;
+/* Press Logo Collage Section */
+.pg-press-collage-section {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 40px 20px;
 }
 
 .pg-press-collage {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 20px 40px;
-  opacity: 0.15;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .pg-press-collage-item {
@@ -5061,50 +5044,13 @@ body {
   }
 }
 
-.pg-press-hero-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.pg-press-hero-content .pg-press-page-title {
-  color: var(--pg-navy);
-  margin-bottom: 16px;
-}
-
-.pg-press-hero-content .pg-press-page-subtitle {
-  color: var(--pg-mid);
-}
-
 .pg-press-section {
-  padding: 80px 0;
+  padding: 40px 0;
 }
 
 .pg-press-inner {
   width: 90%;
   max-width: 1200px;
-  margin: 0 auto;
-}
-
-.pg-press-header {
-  text-align: center;
-  margin-bottom: 64px;
-}
-
-.pg-press-page-title {
-  font-family: var(--font-body);
-  font-size: clamp(36px, 5vw, 52px);
-  font-weight: 400;
-  color: var(--pg-navy);
-  margin-bottom: 16px;
-}
-
-.pg-press-page-subtitle {
-  font-family: var(--font-body);
-  font-size: 18px;
-  color: var(--pg-mid);
-  max-width: 600px;
   margin: 0 auto;
 }
 

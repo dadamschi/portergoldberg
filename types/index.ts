@@ -20,6 +20,9 @@ export type Listing = {
   address: string
   neighborhood: string
   price?: string
+  beds?: number
+  baths?: string
+  sqft?: string
   status: string
   statusType: 'active' | 'coming' | 'sold'
   image?: SanityImage
@@ -50,6 +53,7 @@ export type Testimonial = {
   _createdAt: string
   clientName: string
   clientTitle?: string
+  date?: string
   quote: PortableTextBlock[]
   pinOnHomePage?: boolean
   order?: number
@@ -225,7 +229,7 @@ export type NewsletterPreview = {
   slug: { current: string }
   publishedAt: string
   summary: string
-  coverImage?: SanityImage
+  thumbnail?: SanityImage
 }
 
 // Full newsletter for detail page

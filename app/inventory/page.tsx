@@ -28,9 +28,15 @@ export default async function InventoryPage() {
   const soldColumnCount = Math.min(soldDisplayed.length, 4);
 
   return (
-    <section className="pg-listings">
-      <div className="pg-listings-inner">
-        <h2>Available & Coming Soon</h2>
+    <main className="pg-page pg-inventory-page">
+      <section className="pg-page-hero">
+        <h1>Properties</h1>
+        <p>Explore our current listings and recently sold properties in Chicago.</p>
+      </section>
+
+      <section className="pg-listings">
+        <div className="pg-listings-inner">
+          <h2>Available & Coming Soon</h2>
         <div
             className="pg-listings-grid"
             style={{ gridTemplateColumns: `repeat(${availableColumnCount}, 1fr)` }}
@@ -69,6 +75,7 @@ export default async function InventoryPage() {
             ))}
           </div>
       </div>
-    </section>
+      </section>
+    </main>
   )
 }

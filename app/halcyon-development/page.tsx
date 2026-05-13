@@ -25,21 +25,20 @@ export default async function HalcyonDevelopmentPage() {
   const { available, sold } = await getHalcyonListings()
 
   return (
-    <main className="pg-halcyon-page">
+    <main className="pg-page pg-halcyon-page">
       {/* Hero Section */}
-      <section className="pg-halcyon-hero">
-        <div className="pg-halcyon-hero-content">
-          <Image
-            src="/halcyon-header-WHITE.png"
-            alt="Halcyon Development"
-            width={361}
-            height={54}
-            className="pg-halcyon-logo"
-          />
-          <h1 className="pg-halcyon-headline">
-            As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders.
-          </h1>
-        </div>
+      <section className="pg-page-hero pg-halcyon-hero">
+        <Image
+          src="/halcyon-header-WHITE.png"
+          alt="Halcyon Development"
+          width={361}
+          height={54}
+          className="pg-halcyon-logo"
+        />
+        {/* <h1>Halcyon Development</h1> */}
+        <p>
+          As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders.
+        </p>
       </section>
 
       {/* About Section */}

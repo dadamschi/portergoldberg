@@ -36,6 +36,21 @@ export const newsletter = defineType({
       description: "Brief description for SEO and archive list (this text is crawlable)",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "thumbnail",
+      title: "Thumbnail",
+      type: "image",
+      options: { hotspot: true },
+      description: "Cover image for the newsletter archive list",
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description: "Describe the image for accessibility",
+        }),
+      ],
+    }),
 
     // Image sections - the visual newsletter
     defineField({
