@@ -253,3 +253,23 @@ export type PressItem = {
   articleTitle?: string
   date?: string
 }
+
+// =============================================================================
+// HALCYON PAGE TYPES
+// =============================================================================
+
+export type HalcyonPageData = {
+  title: string
+  heroLogo?: SanityImage
+  heroHeadline?: string
+  aboutHeadline?: string
+  aboutImage?: SanityImage
+  aboutContent?: PortableTextBlock[]
+  quote?: {
+    text?: string
+    attribution?: string
+  }
+  aerialImage?: SanityImage
+  videoUrl?: string
+  partnerWebsite?: string
+}

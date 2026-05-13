@@ -35,6 +35,7 @@ Porter Goldberg Residential serves as the exclusive representatives for Halcyon 
 - /testimonials - Client reviews
 - /events - Upcoming webinars and workshops
 - /newsletters - Weekly newsletter archive
+- /press - Media coverage and press features
 - /client-resources - Vendor list and school guidance
 
 ## Social

@@ -1,24 +1,25 @@
 'use client'
 
-import type { Agent } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { openContactForm as openForm } from '@/lib/utils/contact'
 
 type NewsletterBannerProps = {
-  agent: Agent
   href?: string
   title?: string
   cta?: string
+  image?: string
+  imageAlt?: string
   openContactForm?: boolean
   contactMessage?: string
 }
 
 export function NewsletterBanner({
-  agent,
   href,
-  title = 'Contact Us about listings',
+  title = 'Contact Us',
   cta = 'Send Message',
+  image = '/PorterGoldberg-Residential.webp',
+  imageAlt = 'Porter Goldberg',
   openContactForm = false,
   contactMessage,
 }: NewsletterBannerProps) {
@@ -34,8 +35,8 @@ export function NewsletterBanner({
     <div className="pg-newsletter-banner">
       <div className="pg-newsletter-banner-photo" style={{ position: 'relative' }}>
         <Image
-          src={agent.photo?.asset?.url ?? '/PorterGoldberg-Residential.webp'}
-          alt={agent.photo?.alt ?? agent.name}
+          src={image}
+          alt={imageAlt}
           className="pg-newsletter-banner-img"
           fill
           sizes="75vw"

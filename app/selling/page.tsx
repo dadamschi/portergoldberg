@@ -7,6 +7,7 @@ import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { BeforeAfterGallery } from '@/components'
+import { NewsletterBanner } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Selling',
@@ -72,6 +73,15 @@ export default async function SellingPage() {
             </ul>
           )}
         </section>
+
+        <div className="pg-listings-cta-section">
+          <NewsletterBanner
+            title="Find out how Lauren and Samantha can help you get the highest value for your property."
+            cta="Reach Out"
+            openContactForm
+            contactMessage="Yes! I would like to get more information about your listing services."
+          />
+        </div>
 
         {/* Property Preparation Section */}
         <section className="pg-selling-column pg-selling-property-prep">

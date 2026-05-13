@@ -243,6 +243,24 @@ export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
   }
 }`)
 
+export const HALCYON_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "halcyonPage"][0] {
+    title,
+    "heroLogo": heroLogo { ${imageFragment} },
+    heroHeadline,
+    aboutHeadline,
+    "aboutImage": aboutImage { ${imageFragment} },
+    aboutContent,
+    quote {
+      text,
+      attribution
+    },
+    "aerialImage": aerialImage { ${imageFragment} },
+    videoUrl,
+    partnerWebsite
+  }
+`)
+
 // =============================================================================
 // COMBINED HOME PAGE QUERY
 // =============================================================================

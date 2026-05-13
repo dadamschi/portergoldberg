@@ -1,8 +1,8 @@
 import { NewsletterBanner } from '@/components'
 import { client } from '@/lib/client'
-import { ALL_LISTINGS_QUERY, AGENTS_QUERY } from '@/lib/queries'
+import { ALL_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
-import { Listing, Agent } from "@/types"
+import { Listing } from "@/types"
 import { ListingCard } from '@/components/ListingCard'
 
 type InventoryData = {
@@ -20,20 +20,8 @@ async function getInventoryData(): Promise<InventoryData> {
   }
 }
 
-async function getAgents(): Promise<Agent[]> {
-  try {
-    return await client.fetch<Agent[]>(AGENTS_QUERY)
-  } catch (error) {
-    console.error('Failed to fetch agents:', error)
-    return []
-  }
-}
-
 export default async function InventoryPage() {
-  const [{ available, sold }, agents] = await Promise.all([
-    getInventoryData(),
-    getAgents(),
-  ])
+  const { available, sold } = await getInventoryData()
   const availableDisplayed = available.slice(0, 4);
   const availableColumnCount = Math.min(availableDisplayed.length, 4);
   const soldDisplayed = sold.slice(0, 4);
@@ -55,7 +43,6 @@ export default async function InventoryPage() {
 
       <div className="pg-listings-cta-section">
         <NewsletterBanner
-          agent={agents[0]}
           title="Have questions about our available or upcoming listings?"
           cta="Reach Out"
           openContactForm

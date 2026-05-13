@@ -44,7 +44,7 @@ export function ListingCard({ listing }: ListingCardProps) {
           {image?.asset?.url ? (
             <Image
               src={`${image.asset.url}`}
-              alt={address}
+              alt={image.alt || `${address}, ${neighborhood} - ${statusText}`}
               fill
               sizes="400px"
               style={{ objectFit: 'contain' }}

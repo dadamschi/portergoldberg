@@ -4,7 +4,7 @@ import { client } from '@/lib/client'
 import { HALCYON_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { Listing } from '@/types'
-import { HalcyonProjects } from './components'
+import { ListingCard } from '@/components/ListingCard'
 
 export const metadata: Metadata = {
   title: 'Halcyon Development',
@@ -29,13 +29,13 @@ export default async function HalcyonDevelopmentPage() {
       {/* Hero Section */}
       <section className="pg-halcyon-hero">
         <div className="pg-halcyon-hero-content">
-          {/* <Image
-            src="https://portergoldberg.com/wp-content/uploads/2026/01/halcyon-header-WHITE.png"
+          <Image
+            src="/halcyon-header-WHITE.png"
             alt="Halcyon Development"
             width={361}
             height={54}
             className="pg-halcyon-logo"
-          /> */}
+          />
           <h1 className="pg-halcyon-headline">
             As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders.
           </h1>
@@ -46,13 +46,16 @@ export default async function HalcyonDevelopmentPage() {
       <section className="pg-halcyon-about">
         <div className="pg-halcyon-about-inner">
           <div className="pg-halcyon-about-image">
-            {/* <Image
-              src="https://portergoldberg.com/wp-content/uploads/2025/09/Halcyon-Group-Shot.jpeg"
-              alt="Halcyon Development Team"
-              width={853}
+            <Image
+              src="/Halcyon-Group-Shot.jpeg"
+              alt="About The Developer: Halcyon Development"
+              title="Halcyon Group Shot"
+              width={900}
               height={1280}
+              sizes="(max-width: 480px) 480px, 853px"
+              priority
               className="pg-halcyon-group-photo"
-            /> */}
+            />
           </div>
           <div className="pg-halcyon-about-text">
             <h2>Introducing Halcyon Development</h2>
@@ -119,22 +122,27 @@ export default async function HalcyonDevelopmentPage() {
       </section>
 
 
-      <section className="pg-halcyon-projects" style={{ marginTop: '40px'  }}>
-      {/* Featured Listings from Sanity */}
-        {available.length > 0 && (
-          <HalcyonProjects listings={available} />
-        )}
-      </section>
-
-    <section className="pg-halcyon-projects" style={{ marginLeft: '40px', marginTop: '40px'  }}>
-      {/* Sold Projects from Sanity */}
-      {sold.length > 0 && (
-        <>
-        <h2 style={{ textAlign: 'center' }}>Sold Projects</h2>
-        <HalcyonProjects listings={sold} />
-        </>
+      {available.length > 0 && (
+        <section className="pg-halcyon-projects">
+          <h2>Available & Coming Soon</h2>
+          <div className="pg-halcyon-listings-grid">
+            {available.map((listing) => (
+              <ListingCard key={listing._id} listing={listing} />
+            ))}
+          </div>
+        </section>
       )}
-      </section>
+
+      {sold.length > 0 && (
+        <section className="pg-halcyon-projects">
+          <h2>Sold Projects</h2>
+          <div className="pg-halcyon-listings-grid">
+            {sold.map((listing) => (
+              <ListingCard key={listing._id} listing={listing} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }
