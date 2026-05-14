@@ -23,11 +23,13 @@ export function ListingCard({ listing }: ListingCardProps) {
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
   const finalPrice = price ?? 'Inquire for pricing'
+  console.log('units', units)
 
   // Build amenities string (e.g., "6 Beds  5/1 Baths  25,000 ft²")
   const amenities = [
-    beds ? `${beds} Bed${beds !== 1 ? 's' : ''} |` : null,
-    baths ? `${baths} Bath${baths !== '1' ? 's' : ''}` : null,
+    beds ? `${beds} Bed${beds !== 1 ? 's' : ''}` : null,
+    baths ? ` | ${baths} Bath${baths !== '1' ? 's' : ''}` : null,
+    units ? ` | ${units} Total Unit${units !== 1 ? 's' : ''}` : null,
     sqft,
   ].filter(Boolean).join(' ')
 
@@ -67,11 +69,11 @@ export function ListingCard({ listing }: ListingCardProps) {
               {statusText}
             </span>
           )}
-          {units && (
+          {/* {units && (
             <span className="pg-listing-units">
               {units} Unit{units !== 1 ? 's' : ''}
             </span>
-          )}
+          )} */}
         </div>
         <div className="pg-listing-actions">
           {brochureUrl && (

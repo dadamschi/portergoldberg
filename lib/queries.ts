@@ -29,6 +29,7 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
     sqft,
     status,
     statusType,
+    units,
     "image": image { ${imageFragment} },
     brochureUrl
   }
@@ -46,6 +47,7 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           sqft,
           status,
           statusType,
+          units,
           "image": image { ${imageFragment} },
           brochureUrl
         },
@@ -60,6 +62,7 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           sqft,
           status,
           statusType,
+          units,
           "image": image { ${imageFragment} },
           brochureUrl
         }
@@ -304,6 +307,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     sqft,
     status,
     statusType,
+    units,
     "image": image { ${imageFragment} },
     brochureUrl
   },
