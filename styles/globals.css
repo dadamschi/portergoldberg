@@ -1094,7 +1094,7 @@ body {
   width: 80%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 10px 0 40px;
+  padding: 0px 0 40px;
   color: var(--pg-navy);
 }
 
@@ -1279,7 +1279,16 @@ body {
 
 @media (max-width: 650px) {
   .pg-listings-grid {
-    grid-template-columns: 300px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .pg-listing-card {
+    width: 100%;
+  }
+
+  .pg-listing-image-wrapper {
+    height: auto;
+    aspect-ratio: 300 / 260;
   }
 }
 
@@ -1289,6 +1298,7 @@ body {
   flex-direction: column;
   width: 300px;
   height: 380px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
