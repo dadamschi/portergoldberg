@@ -32,22 +32,50 @@ async function getNewsletters(): Promise<NewsletterPreview[]> {
   }
 }
 
+function NewsletterCard({ newsletter }: { newsletter: NewsletterPreview }) {
+  return (
+    <Link
+      href={`/newsletters/${newsletter.slug.current}`}
+      className="pg-newsletter-card"
+    >
+      <div className="pg-newsletter-card-image">
+        {newsletter.thumbnail?.asset?.url ? (
+          <Image
+            src={newsletter.thumbnail.asset.url}
+            alt={newsletter.thumbnail.alt || newsletter.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 400px"
+            style={{ objectFit: 'cover' }}
+          />
+        ) : (
+          <div className="pg-newsletter-card-placeholder">
+            <span>YWWT</span>
+          </div>
+        )}
+      </div>
+      <div className="pg-newsletter-card-content">
+        <time className="pg-newsletter-card-date" dateTime={newsletter.publishedAt}>
+          {formatDateOnly(newsletter.publishedAt)}
+        </time>
+        <h2 className="pg-newsletter-card-title">{newsletter.title}</h2>
+        <p className="pg-newsletter-card-summary">{newsletter.summary}</p>
+      </div>
+    </Link>
+  )
+}
+
 export default async function NewslettersPage() {
   const newsletters = await getNewsletters()
+
+  // Insert banner after 9 cards (3 rows of 3)
+  const BANNER_AFTER = 9
+  const firstBatch = newsletters.slice(0, BANNER_AFTER)
+  const secondBatch = newsletters.slice(BANNER_AFTER)
 
   return (
     <main className="pg-page">
       <section className="pg-page-hero">
-        <div className="pg-newsletter-header-image">
-          <Image
-            src="/ywwt.svg"
-            alt="Your Weekly Walk-Through"
-            width={800}
-            height={200}
-            priority
-            style={{ width: '100%', height: 'auto', maxWidth: '600px' }}
-          />
-        </div>
+        <h1>Newsletter Archive</h1>
         <p>Market updates, tips, and insights from PorterGoldberg Residential.</p>
       </section>
 
@@ -55,35 +83,24 @@ export default async function NewslettersPage() {
         <div className="pg-newsletters-inner">
           {newsletters.length > 0 ? (
             <div className="pg-newsletter-blog-grid">
-              {newsletters.map((newsletter) => (
-                <Link
-                  key={newsletter._id}
-                  href={`/newsletters/${newsletter.slug.current}`}
-                  className="pg-newsletter-card"
-                >
-                  <div className="pg-newsletter-card-image">
-                    {newsletter.thumbnail?.asset?.url ? (
-                      <Image
-                        src={newsletter.thumbnail.asset.url}
-                        alt={newsletter.thumbnail.alt || newsletter.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 400px"
-                        style={{ objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <div className="pg-newsletter-card-placeholder">
-                        <span>YWWT</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="pg-newsletter-card-content">
-                    <time className="pg-newsletter-card-date" dateTime={newsletter.publishedAt}>
-                      {formatDateOnly(newsletter.publishedAt)}
-                    </time>
-                    <h2 className="pg-newsletter-card-title">{newsletter.title}</h2>
-                    <p className="pg-newsletter-card-summary">{newsletter.summary}</p>
-                  </div>
-                </Link>
+              {firstBatch.map((newsletter) => (
+                <NewsletterCard key={newsletter._id} newsletter={newsletter} />
+              ))}
+
+              {newsletters.length > BANNER_AFTER && (
+                <div className="pg-newsletter-banner">
+                  <Image
+                    src="/ywwt.svg"
+                    alt="Your Weekly Walk-Through"
+                    width={800}
+                    height={200}
+                    style={{ width: '100%', height: 'auto', maxWidth: '600px' }}
+                  />
+                </div>
+              )}
+
+              {secondBatch.map((newsletter) => (
+                <NewsletterCard key={newsletter._id} newsletter={newsletter} />
               ))}
             </div>
           ) : (

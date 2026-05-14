@@ -25,13 +25,13 @@ export function ListingCard({ listing }: ListingCardProps) {
   const finalPrice = price ?? 'Inquire for pricing'
   console.log('units', units)
 
-  // Build amenities string (e.g., "6 Beds  5/1 Baths  25,000 ft²")
+  // Build amenities string (e.g., "6 Beds | 5/1 Baths | 25,000 ft²")
   const amenities = [
     beds ? `${beds} Bed${beds !== 1 ? 's' : ''}` : null,
-    baths ? ` | ${baths} Bath${baths !== '1' ? 's' : ''}` : null,
-    units ? ` | ${units} Total Unit${units !== 1 ? 's' : ''}` : null,
+    baths ? `${baths} Bath${baths !== '1' ? 's' : ''}` : null,
+    (units && units >= 2) ? `${units} Unit${units !== 1 ? 's' : ''}` : null,
     sqft,
-  ].filter(Boolean).join(' ')
+  ].filter(Boolean).join(' | ')
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Only toggle on touch devices (no hover capability)
