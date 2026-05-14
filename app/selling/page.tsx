@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
-import { PortableText } from '@portabletext/react'
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
-import { portableTextComponents } from '@/lib/portableText'
+import { PortableTextClient } from '@/components/PortableTextClient'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
@@ -49,7 +48,7 @@ export default async function SellingPage() {
           {data.marketingHeadline && <h2>{data.marketingHeadline}</h2>}
           {data.marketingIntro && data.marketingIntro.length > 0 && (
             <div className="pg-selling-column-intro">
-              <PortableText value={data.marketingIntro} components={portableTextComponents} />
+              <PortableTextClient value={data.marketingIntro} />
             </div>
           )}
 
@@ -88,7 +87,7 @@ export default async function SellingPage() {
           {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>}
           {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
             <div className="pg-selling-column-intro">
-              <PortableText value={data.propertyPrepIntro} components={portableTextComponents} />
+              <PortableTextClient value={data.propertyPrepIntro} />
             </div>
           )}
 
@@ -103,7 +102,7 @@ export default async function SellingPage() {
           {data.stagingIntro && data.stagingIntro.length > 0 && (
             <>
             <div className="pg-selling-column-intro">
-              <PortableText value={data.stagingIntro} components={portableTextComponents} />
+              <PortableTextClient value={data.stagingIntro} />
             </div>
             <div>
               <a

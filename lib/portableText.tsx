@@ -23,14 +23,23 @@ export const portableTextComponents: PortableTextComponents = {
         )
       }
 
-      const isExternal = href.startsWith('http://') || href.startsWith('https://')
+      const isInternal = href.startsWith('/') || href.startsWith('#')
 
-      return isExternal ? (
-        <a href={addUtmParams(href, { campaign: 'content' })} target="_blank" rel="noopener noreferrer">
+      // Internal links stay in same tab
+      if (isInternal) {
+        return <a href={href}>{children}</a>
+      }
+
+      // External links always open in new tab
+      const finalHref = href.startsWith('http') ? href : `https://${href}`
+      return (
+        <a
+          href={addUtmParams(finalHref, { campaign: 'content' })}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {children}
         </a>
-      ) : (
-        <a href={href}>{children}</a>
       )
     },
   },

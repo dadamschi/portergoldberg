@@ -4588,10 +4588,11 @@ body {
   margin: 0 auto;
 }
 
-.pg-newsletter-banner {
+.pg-newsletter-blog-grid .pg-newsletter-banner {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 32px 0;
 }
 

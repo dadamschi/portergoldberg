@@ -15,7 +15,13 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Testimonials', href: '/testimonials' },
   { label: 'Properties', href: '/inventory' },
   { label: 'Buying', href: '/buying' },
-  { label: 'Selling', href: '/selling' },
+  { label: 'Selling',
+    children: [
+      { label: 'Marketing', href: '/selling-marketing' },
+      { label: 'Property Preparation', href: '/selling-property-prep' },
+      { label: 'Staging', href: '/selling-staging' },
+    ], 
+  },
   { label: 'Halcyon Development', href: '/halcyon-development' },
   {
     label: 'Resources',
