@@ -75,7 +75,16 @@ export default async function NewslettersPage() {
   return (
     <main className="pg-page">
       <section className="pg-page-hero">
-        <h1>Newsletter Archive</h1>
+        <div className="pg-newsletter-header-image">
+          <Image
+            src="/ywwt.svg"
+            alt="Your Weekly Walk-Through"
+            width={800}
+            height={200}
+            priority
+            style={{ width: '100%', height: 'auto', maxWidth: '600px' }}
+          />
+        </div>
         <p>Market updates, tips, and insights from PorterGoldberg Residential.</p>
       </section>
 
