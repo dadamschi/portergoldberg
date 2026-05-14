@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import type { NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
-import { formatDateOnly } from '@/lib/utils/dateTime'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -32,51 +31,65 @@ async function getNewsletters(): Promise<NewsletterPreview[]> {
   }
 }
 
-function NewsletterTeaser({ newsletter }: { newsletter: NewsletterPreview }) {
-  const thumbnailAlt = newsletter.thumbnail?.alt || `${newsletter.title} - ${formatDateOnly(newsletter.publishedAt)}`
+function formatShortDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
 
-  return (
-    <Link href={`/newsletters/${newsletter.slug.current}`} className="pg-newsletter-teaser" title={newsletter.summary}>
-      {newsletter.thumbnail?.asset?.url && (
-        <div className="pg-newsletter-teaser-image">
-          <Image
-            src={newsletter.thumbnail.asset.url}
-            alt={thumbnailAlt}
-            width={400}
-            height={300}
-            style={{ width: '100%', height: 'auto' }}
-          />
-        </div>
-      )}
-      <div className="pg-newsletter-teaser-content">
-        <time className="pg-newsletter-teaser-date" dateTime={newsletter.publishedAt}>
-          {formatDateOnly(newsletter.publishedAt)}
-        </time>
-        <h2 className="pg-newsletter-teaser-title">{newsletter.title}</h2>
-        <p className="pg-newsletter-teaser-summary">{newsletter.summary}</p>
-        <span className="pg-newsletter-teaser-link">Read more →</span>
-      </div>
-    </Link>
-  )
+function groupByYear(newsletters: NewsletterPreview[]) {
+  const groups: Record<string, NewsletterPreview[]> = {}
+  for (const newsletter of newsletters) {
+    const year = new Date(newsletter.publishedAt).getFullYear().toString()
+    if (!groups[year]) groups[year] = []
+    groups[year].push(newsletter)
+  }
+  return Object.entries(groups).sort(([a], [b]) => Number(b) - Number(a))
 }
 
 export default async function NewslettersPage() {
   const newsletters = await getNewsletters()
+  const groupedNewsletters = groupByYear(newsletters)
 
   return (
     <main className="pg-page">
       <section className="pg-page-hero">
         <h1>Newsletter Archive</h1>
-        <p>Market updates, tips, and insights from PorteGoldberg Residential.</p>
+        <p>Market updates, tips, and insights from PorterGoldberg Residential.</p>
       </section>
 
       <section className="pg-newsletters-section">
         <div className="pg-newsletters-inner">
-
-          {newsletters.length > 0 ? (
-            <div className="pg-newsletters-grid">
-              {newsletters.map((newsletter) => (
-                <NewsletterTeaser key={newsletter._id} newsletter={newsletter} />
+          {groupedNewsletters.length > 0 ? (
+            <div className="pg-newsletter-archive">
+              <div className="pg-newsletter-header-image">
+                <Image
+                  src="/ywwt.svg"
+                  alt="Your Weekly Walk-Through"
+                  width={800}
+                  height={200}
+                  priority
+                  style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
+                />
+              </div>
+              {groupedNewsletters.map(([year, items]) => (
+                <div key={year} className="pg-newsletter-year-group">
+                  <h2 className="pg-newsletter-year">{year}</h2>
+                  <ul className="pg-newsletter-list">
+                    {items.map((newsletter) => (
+                      <li key={newsletter._id} className="pg-newsletter-item">
+                        <span className="pg-newsletter-item-date">
+                          {formatShortDate(newsletter.publishedAt)}
+                        </span>
+                        <Link
+                          href={`/newsletters/${newsletter.slug.current}`}
+                          className="pg-newsletter-item-link"
+                        >
+                          {newsletter.summary}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
           ) : (

@@ -193,7 +193,7 @@ export default async function NewsletterPage({ params }: Props) {
                 ))}
               </ul>
               <Link href="/newsletters" className="pg-newsletter-sidebar-archive-link">
-                View all newsletters →
+                ← View All Newsletters
               </Link>
             </aside>
           )}
