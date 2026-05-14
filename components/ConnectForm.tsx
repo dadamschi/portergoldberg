@@ -38,6 +38,25 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     }
   }, [searchParams])
 
+  // Check URL hash for #contact:message on mount and hash changes
+  useEffect(() => {
+    function handleContactHash() {
+      const hash = window.location.hash
+      if (hash.startsWith('#contact:')) {
+        const contactMessage = decodeURIComponent(hash.replace('#contact:', ''))
+        setMessage(contactMessage)
+        setOpen(true)
+        // Clean up hash without reload
+        window.history.replaceState({}, '', window.location.pathname + window.location.search)
+      }
+    }
+    // Check on mount
+    handleContactHash()
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleContactHash)
+    return () => window.removeEventListener('hashchange', handleContactHash)
+  }, [])
+
   // Lock body scroll when open
   useEffect(() => {
     if (open) {
