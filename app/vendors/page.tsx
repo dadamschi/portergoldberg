@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { VENDORS } from '@/lib/data'
+import { fetchVendors } from '@/lib/hubspot'
 import { VendorSearch } from '@/components/VendorSearch'
 
 export const metadata: Metadata = {
@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description: 'A curated list of trusted vendors and service providers recommended by PorterGoldberg Residential.',
 }
 
-export default function VendorsPage() {
+export const revalidate = 86400 // 24 hours - or use webhook for on-demand
+
+export default async function VendorsPage() {
+  const vendors = await fetchVendors()
+
   return (
     <main className="pg-page">
       <section className="pg-page-hero">
@@ -18,7 +22,7 @@ export default function VendorsPage() {
         </p>
       </section>
 
-      <VendorSearch vendors={VENDORS} />
+      <VendorSearch vendors={vendors} />
     </main>
   )
 }

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import type { Vendor } from '@/lib/data'
+import type { HubSpotVendor } from '@/lib/hubspot'
 import { addUtmParams } from '@/lib/utils/utm'
+
+type Vendor = HubSpotVendor
 
 interface VendorSearchProps {
   vendors: Vendor[]
@@ -190,14 +192,6 @@ export function VendorSearch({ vendors }: VendorSearchProps) {
                               {vendor.phone}
                             </a>
                           )}
-                          {vendor.altPhone && (
-                            <a
-                              href={`tel:${vendor.altPhone.replace(/[^0-9]/g, '')}`}
-                              className="pg-vendor-phone pg-vendor-alt"
-                            >
-                              {vendor.altPhone}
-                            </a>
-                          )}
                           {vendor.email && (
                             <a href={`mailto:${vendor.email}`} className="pg-vendor-email">
                               {vendor.email}
@@ -215,7 +209,7 @@ export function VendorSearch({ vendors }: VendorSearchProps) {
                           )}
                         </div>
 
-                        {(vendor.address || vendor.city) && (
+                        {!vendor.isPersonalContact && (vendor.address || vendor.city) && (
                           <p className="pg-vendor-location">
                             {[vendor.address, vendor.city].filter(Boolean).join(', ')}
                           </p>

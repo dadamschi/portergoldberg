@@ -3732,9 +3732,13 @@ body {
 
 /* Vendor Search */
 .pg-vendors-search {
+  position: sticky;
+  top: 80px;
+  z-index: 50;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px 16px;
+  padding: 0px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pg-vendors-search-input-wrapper {
@@ -3861,11 +3865,10 @@ body {
   width: 220px;
   flex-shrink: 0;
   position: sticky;
-  top: 20px;
+  top: 168px;
   align-self: flex-start;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
-  scroll-margin-top: 100px;
 }
 
 /* Mobile collapsible nav - hidden on desktop */
@@ -3910,7 +3913,7 @@ body {
 
 .pg-vendors-category {
   margin-bottom: 48px;
-  scroll-margin-top: 120px;
+  scroll-margin-top: 180px;
 }
 
 .pg-vendors-category h2 {
@@ -4002,16 +4005,11 @@ body {
 
 /* Responsive */
 @media (max-width: 900px) {
-  /* Sticky search bar on mobile */
+  /* Adjust search bar padding on mobile */
   .pg-vendors-search {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: #fff;
     padding: 12px 16px;
     margin: 0 -16px;
     width: calc(100% + 32px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .pg-vendors-search-input {
@@ -4608,6 +4606,7 @@ body {
   text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
 }
 
 .pg-newsletter-card:hover {
