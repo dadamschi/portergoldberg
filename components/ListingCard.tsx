@@ -18,16 +18,15 @@ type ListingCardProps = {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const [isActive, setIsActive] = useState(false)
-  const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units } = listing
+  const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units, featured } = listing
 
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
   const finalPrice = price ?? 'Inquire for pricing'
-  console.log('units', units)
 
   // Build amenities string (e.g., "6 Beds | 5/1 Baths | 25,000 ft²")
   const amenities = [
-    beds ? `${beds} Bed${beds !== 1 ? 's' : ''}` : null,
+    beds ? `${beds} Bed${beds !== '1' ? 's' : ''}` : null,
     baths ? `${baths} Bath${baths !== '1' ? 's' : ''}` : null,
     (units && units >= 2) ? `${units} Unit${units !== 1 ? 's' : ''}` : null,
     sqft,
@@ -97,7 +96,9 @@ export function ListingCard({ listing }: ListingCardProps) {
       </div>
       <div className="pg-listing-info">
         <div className="pg-listing-price">{finalPrice || '\u00A0'}</div>
-        <div className="pg-listing-amenities">{amenities || '\u00A0'}</div>
+        {amenities && (
+          <div className="pg-listing-amenities">{amenities || '\u00A0'}</div>
+        )}
         <div className="pg-listing-address">{address}, {city || 'Chicago'}</div>
       </div>
     </div>

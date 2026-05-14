@@ -21,7 +21,7 @@ export type Listing = {
   neighborhood: string
   city?: string
   price?: string
-  beds?: number
+  beds?: string
   baths?: string
   sqft?: string
   status: string
@@ -30,6 +30,7 @@ export type Listing = {
   brochureUrl?: string
   isHalcyonProject?: boolean
   units?: number
+  featured?: boolean
 }
 
 export type FlipbookImage = {

@@ -49,7 +49,8 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           statusType,
           units,
           "image": image { ${imageFragment} },
-          brochureUrl
+          brochureUrl,
+          featured
         },
     "sold": *[_type == "listing" && statusType == "sold"] |
       order(order asc) {
@@ -64,7 +65,8 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           statusType,
           units,
           "image": image { ${imageFragment} },
-          brochureUrl
+          brochureUrl,
+          featured
         }
   }
   `) 
@@ -309,7 +311,8 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     statusType,
     units,
     "image": image { ${imageFragment} },
-    brochureUrl
+    brochureUrl,
+    featured
   },
   "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(_createdAt desc) {
     _id,

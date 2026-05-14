@@ -41,7 +41,8 @@ export const listing = defineType({
     defineField({
       name: "beds",
       title: "Bedrooms",
-      type: "number",
+      type: "string",
+      description: "e.g., 3, 3+, 2-4",
     }),
     defineField({
       name: "baths",
