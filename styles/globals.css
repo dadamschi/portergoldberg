@@ -1345,7 +1345,7 @@ body {
   flex: 1;
   padding: 12px 12px;
   color: var(--pg-navy);
-  background-color: rgba(170, 170, 170, 0.1);
+  background-color: rgba(170, 170, 170, 0.2);
 }
 
 .pg-listing-actions {
