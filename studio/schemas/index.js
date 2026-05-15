@@ -9,6 +9,7 @@ import { schoolGuidancePage } from "./schoolGuidancePage";
 import { newsletter } from "./newsletter";
 import { press } from "./press";
 import { halcyonPage } from "./halcyonPage";
+import { clientPage } from "./clientPage";
 
 export const schemaTypes = [
   listing,
@@ -22,4 +23,5 @@ export const schemaTypes = [
   newsletter,
   press,
   halcyonPage,
+  clientPage,
 ];

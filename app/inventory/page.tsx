@@ -1,4 +1,4 @@
-import { NewsletterBanner } from '@/components'
+import { ContactBanner } from '@/components'
 import { client } from '@/lib/client'
 import { ALL_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
@@ -48,7 +48,7 @@ export default async function InventoryPage() {
       </div>
 
       <div className="pg-listings-cta-section">
-        <NewsletterBanner
+        <ContactBanner
           title="Have questions about our available or upcoming listings?"
           cta="Reach Out"
           openContactForm

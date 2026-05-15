@@ -3,7 +3,7 @@ import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SellingPageData } from '@/types'
-import { BeforeAfterGallery, NewsletterBanner } from '@/components'
+import { BeforeAfterGallery, ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default async function SellingPropertyPrepPage() {
       <div className="pg-selling-columns">
         {/* Property Preparation Section */}
         <section className="pg-selling-column pg-selling-property-prep">
-          {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>}
+          {/* {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>} */}
           {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
             <div className="pg-selling-column-intro">
               <PortableTextClient value={data.propertyPrepIntro} />
@@ -56,7 +56,7 @@ export default async function SellingPropertyPrepPage() {
         </section>
 
         <div className="pg-listings-cta-section--selling">
-          <NewsletterBanner
+          <ContactBanner
             title="Find out how Lauren and Samantha can help you get the highest value for your property."
             cta="Reach Out"
             openContactForm

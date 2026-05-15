@@ -77,7 +77,7 @@ export default async function NewslettersPage() {
       <section className="pg-page-hero">
         <div className="pg-newsletter-header-image">
           <Image
-            src="/ywwt.svg"
+            src="/ywwt2.svg"
             alt="Your Weekly Walk-Through"
             width={800}
             height={200}
@@ -97,9 +97,9 @@ export default async function NewslettersPage() {
               ))}
 
               {newsletters.length > BANNER_AFTER && (
-                <div className="pg-newsletter-banner">
+                <div className="pg-contact-banner">
                   <Image
-                    src="/ywwt.svg"
+                    src="/ywwt2.svg"
                     alt="Your Weekly Walk-Through"
                     width={800}
                     height={200}

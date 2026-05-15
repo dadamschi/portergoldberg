@@ -5,7 +5,7 @@ import { PortableTextClient } from '@/components/PortableTextClient'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
-import { NewsletterBanner } from '@/components'
+import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export default async function SellingStagingPage() {
       <div className="pg-selling-columns">
         {/* Staging Section */}
         <section className="pg-selling-column pg-selling-staging">
-          {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>}
+          {/* {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>} */}
           {data.stagingIntro && data.stagingIntro.length > 0 && (
             <>
               <div className="pg-selling-column-intro">
@@ -92,7 +92,7 @@ export default async function SellingStagingPage() {
         </section>
 
         <div className="pg-listings-cta-section--selling">
-          <NewsletterBanner
+          <ContactBanner
             title="We can help you get your property ready with a staging consultation."
             cta="Stage my property"
             openContactForm

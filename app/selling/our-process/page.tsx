@@ -4,7 +4,7 @@ import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
-import { NewsletterBanner } from '@/components'
+import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 
 export const metadata: Metadata = {
@@ -44,7 +44,7 @@ export default async function SellingMarketingPage() {
       <div className="pg-selling-columns">
         {/* Marketing Section */}
         <section className="pg-selling-column pg-selling-marketing">
-          {data.marketingHeadline && <h2>{data.marketingHeadline}</h2>}
+          {/* {data.marketingHeadline && <h2>{data.marketingHeadline}</h2>} */}
           {data.marketingIntro && data.marketingIntro.length > 0 && (
             <div className="pg-selling-column-intro">
               <PortableTextClient value={data.marketingIntro} />
@@ -73,7 +73,7 @@ export default async function SellingMarketingPage() {
         </section>
 
         <div className="pg-listings-cta-section--selling">
-          <NewsletterBanner
+          <ContactBanner
             title="Connect with us today to build your customized marketing plan."
             cta="Connect"
             openContactForm

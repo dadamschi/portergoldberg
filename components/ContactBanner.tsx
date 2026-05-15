@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { openContactForm as openForm } from '@/lib/utils/contact'
 
-type NewsletterBannerProps = {
+type ContactBannerProps = {
   href?: string
   title?: string
   cta?: string
@@ -14,7 +14,7 @@ type NewsletterBannerProps = {
   contactMessage?: string
 }
 
-export function NewsletterBanner({
+export function ContactBanner({
   href,
   title = 'Contact Us',
   cta = 'Send Message',
@@ -22,7 +22,7 @@ export function NewsletterBanner({
   imageAlt = 'PorterGoldberg',
   openContactForm = false,
   contactMessage,
-}: NewsletterBannerProps) {
+}: ContactBannerProps) {
 
   function handleClick(e: React.MouseEvent) {
     if (openContactForm) {
@@ -32,19 +32,19 @@ export function NewsletterBanner({
   }
 
   const content = (
-    <div className="pg-newsletter-banner">
-      <div className="pg-newsletter-banner-photo" style={{ position: 'relative' }}>
+    <div className="pg-contact-banner">
+      <div className="pg-contact-banner-photo" style={{ position: 'relative' }}>
         <Image
           src={image}
           alt={imageAlt}
-          className="pg-newsletter-banner-img"
+          className="pg-contact-banner-img"
           fill
           sizes="75vw"
         />
       </div>
-      <div className="pg-newsletter-banner-info">
-        <span className="pg-newsletter-banner-name">{title}</span>
-        <span className="pg-newsletter-banner-cta">
+      <div className="pg-contact-banner-info">
+        <span className="pg-contact-banner-name">{title}</span>
+        <span className="pg-contact-banner-cta">
           {cta}
           <svg
             width="20"
@@ -52,7 +52,7 @@ export function NewsletterBanner({
             viewBox="0 0 20 12"
             fill="none"
             aria-hidden="true"
-            className="pg-newsletter-banner-arrow"
+            className="pg-contact-banner-arrow"
           >
             <path
               d="M1 6h17M13 1l5 5-5 5"
@@ -69,14 +69,14 @@ export function NewsletterBanner({
 
   if (openContactForm) {
     return (
-      <button className="pg-newsletter-banner-link" onClick={handleClick} type="button">
+      <button className="pg-contact-banner-link" onClick={handleClick} type="button">
         {content}
       </button>
     )
   }
 
   return (
-    <Link href={href ?? '/contact'} className="pg-newsletter-banner-link">
+    <Link href={href ?? '/contact'} className="pg-contact-banner-link">
       {content}
     </Link>
   )

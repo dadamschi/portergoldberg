@@ -279,3 +279,16 @@ export type HalcyonPageData = {
   videoUrl?: string
   partnerWebsite?: string
 }
+
+// =============================================================================
+// CLIENT PAGE TYPES
+// =============================================================================
+
+export type ClientPage = {
+  _id: string
+  title: string
+  slug: { current: string }
+  pageTitle?: string
+  markdownContent?: string
+  noIndex?: boolean
+}

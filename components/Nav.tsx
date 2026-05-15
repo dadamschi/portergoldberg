@@ -13,6 +13,7 @@ type NavProps = {
 export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: NavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [expandedMobileItems, setExpandedMobileItems] = useState<string[]>([])
 
   return (
     <>
@@ -71,16 +72,55 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
 
       {mobileOpen && (
         <div className="pg-mobile-menu" role="navigation" aria-label="Mobile navigation">
-          {items.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href ?? '#'}
-              className="pg-mobile-link"
-              onClick={() => setMobileOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {items.map((item) => {
+            const isExpanded = expandedMobileItems.includes(item.label)
+
+            if (item.children) {
+              return (
+                <div key={item.label} className="pg-mobile-item">
+                  <button
+                    className="pg-mobile-link pg-mobile-expandable"
+                    onClick={() => {
+                      setExpandedMobileItems((prev) =>
+                        isExpanded
+                          ? prev.filter((i) => i !== item.label)
+                          : [...prev, item.label]
+                      )
+                    }}
+                    aria-expanded={isExpanded}
+                  >
+                    {item.label}
+                    <span className={`pg-mobile-arrow ${isExpanded ? 'pg-mobile-arrow-expanded' : ''}`}>▾</span>
+                  </button>
+                  {isExpanded && (
+                    <div className="pg-mobile-subnav">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.label}
+                          href={child.href ?? '#'}
+                          className="pg-mobile-sublink"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            }
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href ?? '#'}
+                className="pg-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
         </div>
       )}
     </>

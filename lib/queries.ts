@@ -447,3 +447,18 @@ export const PRESS_QUERY = defineQuery(/* groq */ `
     date
   }
 `)
+
+// =============================================================================
+// CLIENT PAGES
+// =============================================================================
+
+export const CLIENT_PAGE_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "clientPage" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    pageTitle,
+    markdownContent,
+    noIndex
+  }
+`)

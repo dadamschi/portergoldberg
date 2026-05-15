@@ -103,6 +103,17 @@ Studio is standalone in `/studio` with separate `package.json`.
 - `listing.isHalcyonProject`: boolean - shows on Halcyon page
 - `testimonial.pinOnHomePage`: boolean - prioritized on homepage
 
+## HubSpot
+
+**NEVER make changes to HubSpot (create properties, update contacts, create associations, etc.) without explicitly asking first.** Read-only operations (fetching contacts, listing properties) are fine.
+
+Scripts in `scripts/` for HubSpot operations:
+- `export-hubspot-contacts.ts` - Export all contacts to JSON
+- `find-duplicate-contacts.ts` - Analyze contacts for duplicates
+- `generate-duplicate-report.ts` - Create client-friendly duplicate report
+- `hubspot-associations.ts` - Manage contact associations
+- `create-team-property.ts` - Create team/household properties
+
 ## Environment Variables
 
 ```env
@@ -110,4 +121,5 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=mw8duas2
 NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_READ_TOKEN=       # Server-side fetches
 SANITY_REVALIDATE_SECRET=    # Webhook auth
+HUBSPOT_API_KEY=             # HubSpot API access
 ```
