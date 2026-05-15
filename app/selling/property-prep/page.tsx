@@ -38,6 +38,8 @@ export default async function SellingPropertyPrepPage() {
         {data.heroIntro && <p>{data.heroIntro}</p>}
       </section>
 
+      <SellingSectionNav currentSection="property preparation" />
+
       <div className="pg-selling-columns">
         {/* Property Preparation Section */}
         <section className="pg-selling-column pg-selling-property-prep">
@@ -53,7 +55,7 @@ export default async function SellingPropertyPrepPage() {
           )}
         </section>
 
-        <div className="pg-listings-cta-section">
+        <div className="pg-listings-cta-section--selling">
           <NewsletterBanner
             title="Find out how Lauren and Samantha can help you get the highest value for your property."
             cta="Reach Out"
@@ -62,8 +64,6 @@ export default async function SellingPropertyPrepPage() {
           />
         </div>
       </div>
-
-      <SellingSectionNav currentSection="property preparation" />
     </main>
   )
 }

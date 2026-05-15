@@ -39,6 +39,8 @@ export default async function SellingMarketingPage() {
         {data.heroIntro && <p>{data.heroIntro}</p>}
       </section>
 
+      <SellingSectionNav currentSection="our process" />
+
       <div className="pg-selling-columns">
         {/* Marketing Section */}
         <section className="pg-selling-column pg-selling-marketing">
@@ -70,17 +72,15 @@ export default async function SellingMarketingPage() {
           )}
         </section>
 
-        <div className="pg-listings-cta-section">
+        <div className="pg-listings-cta-section--selling">
           <NewsletterBanner
-            title="Find out how Lauren and Samantha can help you get the highest value for your property."
-            cta="Reach Out"
+            title="Connect with us today to build your customized marketing plan."
+            cta="Connect"
             openContactForm
-            contactMessage="Yes! I would like to get more information about your listing services."
+            contactMessage="Yes! I would like to get more information about your listing services and discuss a marketing plan."
           />
         </div>
       </div>
-
-      <SellingSectionNav currentSection="our process" />
     </main>
   )
 }

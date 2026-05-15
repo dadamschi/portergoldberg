@@ -40,6 +40,8 @@ export default async function SellingStagingPage() {
         {data.heroIntro && <p>{data.heroIntro}</p>}
       </section>
 
+      <SellingSectionNav currentSection="staging services" />
+
       <div className="pg-selling-columns">
         {/* Staging Section */}
         <section className="pg-selling-column pg-selling-staging">
@@ -89,17 +91,15 @@ export default async function SellingStagingPage() {
           )}
         </section>
 
-        <div className="pg-listings-cta-section pg-selling-subpage">
+        <div className="pg-listings-cta-section--selling">
           <NewsletterBanner
-            title="Find out how Lauren and Samantha can help you get the highest value for your property."
-            cta="Reach Out"
+            title="We can help you get your property ready with a staging consultation."
+            cta="Stage my property"
             openContactForm
-            contactMessage="Yes! I would like to get more information about your listing services."
+            contactMessage="Yes! I would like to get more information about your property staging services."
           />
         </div>
       </div>
-
-      <SellingSectionNav currentSection="staging services" />
     </main>
   )
 }
