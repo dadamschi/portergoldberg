@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Script from 'next/script'
-import { Nav, FooterNew, ConnectForm, NewsletterToast } from '@/components'
+import { Nav, Footer, ConnectForm, NewsletterToast } from '@/components'
 import { LocalBusinessJsonLd, WebsiteJsonLd } from '@/components/JsonLd'
 import { NAV_ITEMS } from '@/lib/data'
 import { client } from '@/lib/client'
@@ -106,7 +106,7 @@ export default async function RootLayout({
           <main className="pg-main">
             {children}
           </main>
-          <FooterNew agents={agents} />
+          <Footer agents={agents} />
         </div>
         <Suspense fallback={null}>
           <ConnectForm agents={agents} />

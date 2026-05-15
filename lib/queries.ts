@@ -355,6 +355,11 @@ export const SELLING_PAGE_QUERY = defineQuery(/* groq */ `
     marketingIntro,
     marketingTypes,
     "marketingImage": marketingImage { ${imageFragment} },
+    marketingGallery[] {
+      "image": image { ${imageFragment} },
+      alt,
+      linkUrl
+    },
     propertyPrepHeadline,
     propertyPrepIntro,
     beforeAfterGallery[] {

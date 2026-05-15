@@ -4,17 +4,74 @@ import { useEffect, useRef } from 'react'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { openContactForm } from '@/lib/utils/contact'
-import { addUtmParams } from '@/lib/utils/utm'
+import { isContactLink, isExternalLink, getContactMessage, getLinkProps } from '@/lib/utils/links'
 import type { PortableTextComponents } from '@portabletext/react'
+import Image from 'next/image'
+
+type ImageValue = {
+  asset?: {
+    _id?: string
+    url?: string
+  }
+  alt?: string
+  linkUrl?: string
+}
+
+function LinkedImage({ value }: { value: ImageValue }) {
+  if (!value?.asset?.url) return null
+
+  const imageElement = (
+    <Image
+      src={value.asset.url}
+      alt={value.alt || ''}
+      width={800}
+      height={450}
+      style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+    />
+  )
+
+  const linkUrl = value.linkUrl
+
+  if (!linkUrl) {
+    return <div className="pg-portable-image">{imageElement}</div>
+  }
+
+  if (isContactLink(linkUrl)) {
+    const message = getContactMessage(linkUrl)
+    return (
+      <div className="pg-portable-image">
+        <button
+          type="button"
+          onClick={() => openContactForm(message)}
+          className="pg-portable-image-link"
+        >
+          {imageElement}
+        </button>
+      </div>
+    )
+  }
+
+  const linkProps = getLinkProps(linkUrl, 'content')
+
+  return (
+    <div className="pg-portable-image">
+      <a {...linkProps} className="pg-portable-image-link">
+        {imageElement}
+      </a>
+    </div>
+  )
+}
 
 const components: PortableTextComponents = {
+  types: {
+    image: LinkedImage,
+  },
   marks: {
     link: ({ children, value }) => {
       const href = value?.href || ''
 
-      // Handle #contact: pattern - open contact slider
-      if (href.startsWith('#contact:')) {
-        const message = decodeURIComponent(href.replace('#contact:', ''))
+      if (isContactLink(href)) {
+        const message = getContactMessage(href)
         return (
           <button
             type="button"
@@ -26,15 +83,12 @@ const components: PortableTextComponents = {
         )
       }
 
-      const isExternal = href.startsWith('http://') || href.startsWith('https://')
+      if (isExternalLink(href)) {
+        const linkProps = getLinkProps(href, 'content')
+        return <a {...linkProps}>{children}</a>
+      }
 
-      return isExternal ? (
-        <a href={addUtmParams(href, { campaign: 'content' })} target="_blank" rel="noopener noreferrer">
-          {children}
-        </a>
-      ) : (
-        <a href={href}>{children}</a>
-      )
+      return <a href={href}>{children}</a>
     },
   },
 }
@@ -58,7 +112,7 @@ export function PortableTextClient({ value, className }: PortableTextClientProps
       if (link) {
         e.preventDefault()
         const href = link.getAttribute('href') || ''
-        const message = decodeURIComponent(href.replace('#contact:', ''))
+        const message = getContactMessage(href)
         openContactForm(message)
       }
     }

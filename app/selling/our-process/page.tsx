@@ -6,6 +6,7 @@ import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
+import { MarketingGallery } from '@/components/MarketingGallery'
 
 export const metadata: Metadata = {
   title: 'Marketing | Selling',
@@ -70,6 +71,8 @@ export default async function SellingMarketingPage() {
               ))}
             </ul>
           )}
+
+          <MarketingGallery />
         </section>
 
         <div className="pg-listings-cta-section--selling">

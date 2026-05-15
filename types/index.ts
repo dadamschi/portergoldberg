@@ -185,6 +185,12 @@ export type StagingPartner = {
   logo?: SanityImage
 }
 
+export type MarketingGalleryItem = {
+  image: SanityImage
+  alt?: string
+  linkUrl?: string
+}
+
 export type SellingPageData = {
   title: string
   heroHeadline?: string
@@ -193,6 +199,7 @@ export type SellingPageData = {
   marketingIntro?: PortableTextBlock[]
   marketingTypes?: string[]
   marketingImage?: SanityImage
+  marketingGallery?: MarketingGalleryItem[]
   propertyPrepHeadline?: string
   propertyPrepIntro?: PortableTextBlock[]
   beforeAfterGallery?: BeforeAfterItem[]

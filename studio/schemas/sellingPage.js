@@ -75,6 +75,52 @@ export const sellingPage = defineType({
       group: "marketing",
     }),
     defineField({
+      name: "marketingGallery",
+      title: "Marketing Gallery",
+      type: "array",
+      group: "marketing",
+      description: "Images displayed at the bottom of the marketing section. Each can link somewhere.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "alt",
+              title: "Alt Text",
+              type: "string",
+            }),
+            defineField({
+              name: "linkUrl",
+              title: "Link URL",
+              type: "string",
+              description: "Optional: Use full URL (https://...) for external, relative path (/page) for internal, or #contact:Message for contact form",
+            }),
+          ],
+          preview: {
+            select: {
+              media: "image",
+              alt: "alt",
+              link: "linkUrl",
+            },
+            prepare({ media, alt, link }) {
+              return {
+                title: alt || "Image",
+                subtitle: link ? `Links to: ${link}` : "No link",
+                media,
+              };
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
       name: "marketingTypes",
       title: "Marketing Types",
       type: "array",

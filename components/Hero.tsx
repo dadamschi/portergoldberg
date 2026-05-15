@@ -5,7 +5,7 @@ import { Newsletter } from './Newsletter'
 import { formatNumber } from '@/lib/utils/numbers'
 import { addUtmParams } from '@/lib/utils/utm'
 import { openContactForm } from '@/lib/utils/contact'
-import { FacebookIcon, InstagramIcon, SOCIAL_URLS } from './SocialLinks'
+import { FacebookIcon, InstagramIcon, YouTubeIcon, SOCIAL_URLS } from './SocialLinks'
 import Image from 'next/image'
 
 type HeroCard = {
@@ -186,6 +186,15 @@ export function Hero() {
               aria-label="Instagram"
             >
               <InstagramIcon size={48} />
+            </a>
+            <a
+              href={addUtmParams(SOCIAL_URLS.youtube, { campaign: 'social' })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pg-hero-bio-social"
+              aria-label="YouTube"
+            >
+              <YouTubeIcon size={48} />
             </a>
             <button onClick={() => openContactForm()} className="pg-hero-bio-btn" type="button">LET&apos;S CONNECT</button>
           </div>
