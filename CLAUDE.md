@@ -23,6 +23,11 @@ npm run test:screenshots # Screenshot tests only
 cd studio && npm run deploy
 ```
 
+## Before Pushing
+
+- **Check `public/sitemap.xml`** - update if routes were added/removed/renamed
+- **Check `public/llms.txt`** - update if site structure or content changed significantly
+
 ## Code Standards
 
 - **NEVER use `any` type** - look up types rather than guessing
@@ -108,6 +113,7 @@ Studio is standalone in `/studio` with separate `package.json`.
 **NEVER make changes to HubSpot (create properties, update contacts, create associations, etc.) without explicitly asking first.** Read-only operations (fetching contacts, listing properties) are fine.
 
 Scripts in `scripts/` for HubSpot operations:
+
 - `export-hubspot-contacts.ts` - Export all contacts to JSON
 - `find-duplicate-contacts.ts` - Analyze contacts for duplicates
 - `generate-duplicate-report.ts` - Create client-friendly duplicate report

@@ -42,25 +42,25 @@ export function ImageLightbox({ src, alt, children }: ImageLightboxProps) {
       </button>
 
       {isOpen && (
-        <div className="pg-lightbox-overlay" onClick={close} style={{ position: 'relative' }}>
-          <button
-            className="pg-lightbox-close"
-            onClick={close}
-            aria-label="Close"
-          >
-            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-          <Image
-            src={src}
-            alt={alt}
-            className="pg-lightbox-image"
-            onClick={(e) => e.stopPropagation()}
-            fill
-            sizes="90vw"
-            style={{ objectFit: 'contain' }}
-          />
+        <div className="pg-lightbox-overlay" onClick={close}>
+          <div className="pg-lightbox-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="pg-lightbox-close"
+              onClick={close}
+              aria-label="Close"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+            <Image
+              src={src}
+              alt={alt}
+              className="pg-lightbox-image"
+              width={1200}
+              height={800}
+            />
+          </div>
         </div>
       )}
     </>

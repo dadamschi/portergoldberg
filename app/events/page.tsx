@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import type { EventItem } from '@/types'
 import type { PortableTextBlock } from '@portabletext/types'
 import { PortableText } from '@portabletext/react'
@@ -7,7 +8,7 @@ import { formatDate, formatTime } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
 import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
-import { ImageModal } from '@/components/ImageModal'
+import { ImageLightbox } from '@/components/ImageLightbox'
 import { portableTextComponents } from '@/lib/portableText'
 
 function toPlainText(blocks: PortableTextBlock[]): string {
@@ -132,7 +133,15 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
           <div className="pg-event-header-right">
             {event.image && (
               <div className="pg-event-image-wrapper">
-                <ImageModal image={event.image} />
+                <ImageLightbox src={event.image.asset.url} alt={event.title}>
+                  <Image
+                    src={event.image.asset.url}
+                    alt={event.title}
+                    fill
+                    sizes="300px"
+                    style={{ objectFit: 'cover', borderRadius: '4px' }}
+                  />
+                </ImageLightbox>
               </div>
             )}
           </div>

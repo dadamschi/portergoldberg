@@ -132,6 +132,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     setTimeout(() => {
       setStatus('idle')
       setFeedback('')
+      setMessage('')
       captcha.reset()
     }, 300)
   }

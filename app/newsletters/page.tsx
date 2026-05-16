@@ -77,12 +77,13 @@ export default async function NewslettersPage() {
       <section className="pg-page-hero">
         <div className="pg-newsletter-header-image">
           <Image
-            src="/ywwt2.svg"
+            src="/ywwt2.png"
             alt="Your Weekly Walk-Through"
-            width={800}
-            height={200}
+            width={1500}
+            height={500}
             priority
-            style={{ width: '100%', height: 'auto', maxWidth: '600px' }}
+            unoptimized
+            style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
           />
         </div>
         <p>Market updates, tips, and insights from PorterGoldberg Residential.</p>
@@ -99,11 +100,12 @@ export default async function NewslettersPage() {
               {newsletters.length > BANNER_AFTER && (
                 <div className="pg-contact-banner">
                   <Image
-                    src="/ywwt2.svg"
+                    src="/ywwt2.png"
                     alt="Your Weekly Walk-Through"
-                    width={800}
-                    height={200}
-                    style={{ width: '100%', height: 'auto', maxWidth: '600px' }}
+                    width={1500}
+                    height={500}
+                    unoptimized
+                    style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
                   />
                 </div>
               )}
