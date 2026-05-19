@@ -22,10 +22,8 @@ async function getInventoryData(): Promise<InventoryData> {
 
 export default async function InventoryPage() {
   const { available, sold } = await getInventoryData()
-  const availableDisplayed = available.slice(0, 4);
-  const availableColumnCount = Math.min(availableDisplayed.length, 4);
-  const soldDisplayed = sold.slice(0, 4);
-  const soldColumnCount = Math.min(soldDisplayed.length, 4);
+  const availableDisplayed = available.slice(0, 6);
+  const soldDisplayed = sold.slice(0, 6);
 
   return (
     <main className="pg-page pg-inventory-page">
@@ -37,10 +35,7 @@ export default async function InventoryPage() {
       <section className="pg-listings">
         <div className="pg-listings-inner">
           <h2>Available & Coming Soon</h2>
-        <div
-            className="pg-listings-grid"
-            style={{ gridTemplateColumns: `repeat(${availableColumnCount}, 1fr)` }}
-          >
+        <div className="pg-listings-grid pg-listings-grid--3col">
             {availableDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}
@@ -66,10 +61,7 @@ export default async function InventoryPage() {
         >
           See more closed properties →
         </a>
-        <div
-            className="pg-listings-grid"
-            style={{ gridTemplateColumns: `repeat(${soldColumnCount}, 1fr)` }}
-          >
+        <div className="pg-listings-grid pg-listings-grid--3col">
             {soldDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}

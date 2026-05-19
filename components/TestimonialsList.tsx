@@ -4,18 +4,14 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import type { Testimonial } from '@/types'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/lib/portableText'
-import { ContactBanner } from '@/components/ContactBanner'
 
 type TestimonialsListProps = {
   testimonials: Testimonial[]
 }
 
-const MOBILE_INITIAL_COUNT = 3
 const DESKTOP_INITIAL_COUNT = 4 // 2 rows × 2 columns
 const MOBILE_LOAD_MORE = 5
 const DESKTOP_LOAD_MORE = 6 // 3 rows × 2 columns
-const MOBILE_BANNER_INTERVAL = 5
-const DESKTOP_BANNER_INTERVAL = 6 // 3 rows × 2 columns
 const LOAD_DELAY_MS = 800
 
 function getInitials(name: string): string {
@@ -36,7 +32,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       <div className="pg-testimonial-header">
         <div className="pg-testimonial-avatar">{initials}</div>
         <div className="pg-testimonial-user-info">
-          <span className="pg-testimonial-name">{initials}</span>
+          <span className="pg-testimonial-name">{testimonial.clientName}</span>
           {testimonial.clientTitle && (
             <span className="pg-testimonial-handle">{testimonial.clientTitle}</span>
           )}
@@ -96,30 +92,9 @@ export function TestimonialsList({ testimonials }: TestimonialsListProps) {
   const displayedTestimonials = testimonials.slice(0, visibleCount)
 
   const renderItems = () => {
-    const items: React.ReactNode[] = []
-
-    displayedTestimonials.forEach((testimonial, index) => {
-      items.push(
-        <TestimonialCard key={testimonial._id} testimonial={testimonial} />
-      )
-
-      const position = index + 1
-      const bannerInterval = isMobile ? MOBILE_BANNER_INTERVAL : DESKTOP_BANNER_INTERVAL
-      if (position % bannerInterval === 0) {
-        items.push(
-          <div key={`newsletter-${position}`} className="pg-testimonials-newsletter-insert">
-            <ContactBanner
-              title="Send us a testimonial on you experience!"
-              cta="Get in Touch"
-              contactMessage="I loved my experience and would love to share my testimonial with you."
-              openContactForm
-            />
-          </div>
-        )
-      }
-    })
-
-    return items
+    return displayedTestimonials.map((testimonial) => (
+      <TestimonialCard key={testimonial._id} testimonial={testimonial} />
+    ))
   }
 
   return (

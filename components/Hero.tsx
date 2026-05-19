@@ -61,7 +61,7 @@ function HeroStat({
       <div className="pg-hero-stat-value">
         {prefix && <span className="pg-hero-stat-symbol">{prefix}</span>}
         {displayValue}
-        {suffix && <span className="pg-hero-stat-symbol"> {suffix}</span>}
+        {suffix && <span className="pg-hero-stat-symbol">{suffix}</span>}
         {label && <span className="pg-hero-stat-label"> {label}</span>}
       </div>
 
@@ -104,7 +104,8 @@ export function Hero() {
 
         <div className="pg-hero-stats" ref={statsRef}>
           <HeroStat
-            suffix="85%"
+            value={85}
+            suffix="%"
             label="Referral"
             description="Client base that confidently recommends our personal service and advocacy"
             animate={animate}

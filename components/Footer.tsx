@@ -65,7 +65,7 @@ export function Footer({ agents }: FooterProps) {
               className="pg-footer-social-link"
             >
               <FacebookIcon size={20} mono />
-              Porter Goldberg Residential
+              PorterGoldberg Residential
             </Link>
             <Link
               href={SOCIAL_URLS.youtube}

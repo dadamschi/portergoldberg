@@ -86,7 +86,7 @@ export default async function NewslettersPage() {
             style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
           />
         </div>
-        <p>Market updates, tips, and insights from PorterGoldberg Residential.</p>
+        <p>Market updates, tips, and insights from Lauren and Samantha</p>
       </section>
 
       <section className="pg-newsletters-section">

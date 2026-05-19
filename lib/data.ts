@@ -7,6 +7,7 @@ import type { NavItem, Stat, AboutContent, HeroContent } from '@/types'
 export const NAV_ITEMS: NavItem[] = [
   {
     label: 'About',
+    href: '/about-us',
     children: [
       { label: 'Our Team', href: '/about-us' },
       { label: 'Press', href: '/press' },
@@ -16,15 +17,17 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Properties', href: '/inventory' },
   { label: 'Buying', href: '/buying' },
   { label: 'Selling',
+    href: '/selling/our-process',
     children: [
       { label: 'Our Process', href: '/selling/our-process' },
       { label: 'Property Preparation', href: '/selling/property-prep' },
       { label: 'Staging Services', href: '/selling/staging-services' },
-    ], 
+    ],
   },
   { label: 'Halcyon Development', href: '/halcyon-development' },
   {
     label: 'Resources',
+    href: '/vendors',
     children: [
       { label: 'Vendor List', href: '/vendors' },
       { label: 'Local School Guidance', href: '/school-guidance' },

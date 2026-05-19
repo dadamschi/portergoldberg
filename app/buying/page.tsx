@@ -16,6 +16,7 @@ async function getBuyPageData(): Promise<BuyPageData | null> {
 
 export default async function BuyPage() {
   const data = await getBuyPageData()
+  console.log('BuyPage data:', data)
 
   if (!data) {
     return (

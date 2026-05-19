@@ -72,7 +72,7 @@ export function Newsletter() {
         )}
 
         <Link href="/newsletters" className="pg-newsletter-archive-link">
-          Browse past newsletters →
+          Browse newsletters →
         </Link>
       </div>
     </section>
