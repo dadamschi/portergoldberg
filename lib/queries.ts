@@ -223,9 +223,8 @@ export const BUY_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "buyPage"][0] {
     title,
     headline,
-    "flipbookImages": flipbookImages[] | order(order asc) {
-      ${imageFragment},
-      order
+    "flipbookImages": flipbookImages[] {
+      ${imageFragment}
     }
   }
 `)

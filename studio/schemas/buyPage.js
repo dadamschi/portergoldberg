@@ -34,23 +34,15 @@ export const buyPage = defineType({
               type: "string",
               validation: (rule) => rule.required(),
             }),
-            defineField({
-              name: "order",
-              title: "Page Order",
-              type: "number",
-              validation: (rule) => rule.required().min(1),
-            }),
           ],
           preview: {
             select: {
-              order: "order",
               alt: "alt",
               media: "asset",
             },
-            prepare({ order, alt, media }) {
+            prepare({ alt, media }) {
               return {
                 title: alt || "No alt text",
-                subtitle: `Page ${order || "?"}`,
                 media,
               };
             },

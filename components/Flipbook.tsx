@@ -130,7 +130,7 @@ export function Flipbook({ images }: FlipbookProps) {
           </button>
 
           <span className="pg-flipbook-pagination">
-            {currentPage === 0 ? 'Cover' : `Page ${currentPage}`} / {totalPages}
+            {currentPage === 0 ? 'Cover' : `Page ${currentPage + 1}`} / {totalPages}
           </span>
 
           <button

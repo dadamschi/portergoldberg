@@ -1,5 +1,5 @@
 import '@/styles/globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
 import Script from 'next/script'
 import { Nav, Footer, ConnectForm, NewsletterToast } from '@/components'
@@ -10,6 +10,12 @@ import { AGENTS_QUERY, RECENT_NEWSLETTER_QUERY } from '@/lib/queries'
 import type { Agent } from '@/types'
 
 const siteUrl = 'https://portergoldberg.com'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

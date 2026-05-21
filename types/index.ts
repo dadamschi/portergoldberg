@@ -39,7 +39,6 @@ export type FlipbookImage = {
     url: string
   }
   alt: string
-  order: number
 }
 
 export type BuyPageData = {
