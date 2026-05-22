@@ -98,3 +98,60 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
 
   return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }
 }
+
+type TestFormData = {
+  name: string
+  email: string
+  message: string
+}
+
+type TestResult = {
+  success: boolean
+  message: string
+  sentTo?: string
+}
+
+export async function submitTestForm(data: TestFormData): Promise<TestResult> {
+  const { name, email, message } = data
+
+  if (!name || !name.trim()) {
+    return { success: false, message: 'Please enter your name.' }
+  }
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, message: 'Please enter a valid email address.' }
+  }
+
+  if (!message || !message.trim()) {
+    return { success: false, message: 'Please enter a message.' }
+  }
+
+  const testRecipient = process.env.TEST_EMAIL_RECIPIENT
+  if (!testRecipient) {
+    throw new Error('Missing TEST_EMAIL_RECIPIENT environment variable')
+  }
+
+  // Send email via Resend to TEST recipient only (no portergoldberg addresses)
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: testRecipient,
+    replyTo: email,
+    subject: `[TEST] New inquiry from ${name}`,
+    html: `
+      <h2>Test Contact Form Submission</h2>
+      <p><em>This is a test email from the /client page.</em></p>
+      <hr>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+    `,
+  })
+
+  if (error) {
+    console.error('[TestForm] Failed to send email:', error)
+    return { success: false, message: `Failed to send message: ${error.message}` }
+  }
+
+  return { success: true, message: 'Test email sent!', sentTo: testRecipient }
+}
