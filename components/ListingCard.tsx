@@ -18,7 +18,7 @@ type ListingCardProps = {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const [isActive, setIsActive] = useState(false)
-  const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units, featured } = listing
+  const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units } = listing
 
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
