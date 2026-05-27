@@ -28,7 +28,10 @@ export function ContactPageForm() {
     setStatus('loading')
 
     try {
-      const result = await submitConnectForm(formData)
+      const result = await submitConnectForm({
+        ...formData,
+        pageUrl: window.location.href,
+      })
 
       if (result.success) {
         setStatus('success')

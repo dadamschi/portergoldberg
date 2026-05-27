@@ -105,6 +105,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
         message,
         subscribeNewsletter,
         addToVendorList,
+        pageUrl: window.location.href,
       })
 
       if (result.success) {

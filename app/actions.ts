@@ -1,14 +1,12 @@
 'use server'
 
-import { resend, FROM_EMAIL } from '@/lib/resend'
-import { client } from '@/lib/client'
-
 type ConnectFormData = {
   name: string
   email: string
   message: string
   subscribeNewsletter?: boolean
   addToVendorList?: boolean
+  pageUrl?: string
 }
 
 type ConnectResult = {
@@ -17,7 +15,7 @@ type ConnectResult = {
 }
 
 export async function submitConnectForm(data: ConnectFormData): Promise<ConnectResult> {
-  const { name, email, message, subscribeNewsletter, addToVendorList } = data
+  const { name, email, message, subscribeNewsletter, addToVendorList, pageUrl } = data
 
   if (!name || !name.trim()) {
     return { success: false, message: 'Please enter your name.' }
@@ -31,26 +29,22 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
     return { success: false, message: 'Please enter a message.' }
   }
 
-  // Fetch agent emails from Sanity
-  const agents = await client.fetch<{ email: string }[]>(
-    `*[_type == "agent"]{ email }`
-  )
-  const agentEmails = agents.map(a => a.email).filter(Boolean)
+  const { sendEmail } = await import('@/lib/email')
 
-  if (agentEmails.length === 0) {
-    throw new Error('No agent emails found in Sanity')
-  }
+  // Send to info@ and artplexity
+  const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
+  const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+  const fromEmail = `"Porter Goldberg Website" <${fromAddress}>`
 
-  // Send email via Resend
-  const ccEmail = process.env.CONTACT_CC_EMAIL || 'dadams.chi+portergoldbergcc@gmail.com'
-  const { error } = await resend.emails.send({
-    from: FROM_EMAIL,
-    to: agentEmails,
-    cc: ccEmail,
+  const { error } = await sendEmail({
+    from: fromEmail,
+    to: recipients,
     replyTo: email,
     subject: `New inquiry from ${name}`,
     html: `
       <h2>New Contact Form Submission</h2>
+      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
+      <hr>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Message:</strong></p>
@@ -103,6 +97,9 @@ type TestFormData = {
   name: string
   email: string
   message: string
+  pageUrl?: string
+  subscribeNewsletter?: boolean
+  addToVendorList?: boolean
 }
 
 type TestResult = {
@@ -113,7 +110,7 @@ type TestResult = {
 
 export async function submitTestForm(data: TestFormData): Promise<TestResult> {
   const { sendEmail } = await import('@/lib/email')
-  const { name, email, message } = data
+  const { name, email, message, pageUrl, subscribeNewsletter, addToVendorList } = data
 
   if (!name || !name.trim()) {
     return { success: false, message: 'Please enter your name.' }
@@ -132,22 +129,26 @@ export async function submitTestForm(data: TestFormData): Promise<TestResult> {
     throw new Error('Missing TEST_EMAIL_RECIPIENT environment variable')
   }
 
-  const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+  const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+  const fromEmail = `"Porter Goldberg" <${fromAddress}>`
 
   // Send email via SMTP to TEST recipient only (no portergoldberg addresses)
   const { error } = await sendEmail({
     from: fromEmail,
     to: testRecipient,
     replyTo: email,
-    subject: `[TEST] New inquiry from ${name}`,
+    subject: `New inquiry from ${name}`,
     html: `
-      <h2>Test Contact Form Submission</h2>
-      <p><em>This is a test email from the /client page.</em></p>
+      <h2>New Contact Form Submission</h2>
+      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
       <hr>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Message:</strong></p>
       <p>${message.replace(/\n/g, '<br>')}</p>
+      <hr>
+      <p><strong>Subscribe to newsletter:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
+      <p><strong>Add to vendor list:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
     `,
   })
 

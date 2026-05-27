@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { submitTestForm } from '@/app/actions'
+import { submitConnectForm } from '@/app/actions'
 import { useCaptcha } from '@/lib/useCaptcha'
 
 export default function TestEmailPage() {
@@ -9,9 +9,11 @@ export default function TestEmailPage() {
     name: '',
     email: '',
     message: '',
+    subscribeNewsletter: true,
+    addToVendorList: false,
   })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [result, setResult] = useState<{ message: string; sentTo?: string } | null>(null)
+  const [result, setResult] = useState<{ message: string } | null>(null)
   const captcha = useCaptcha()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,12 +28,15 @@ export default function TestEmailPage() {
     setStatus('loading')
 
     try {
-      const response = await submitTestForm(formData)
+      const response = await submitConnectForm({
+        ...formData,
+        pageUrl: window.location.href,
+      })
 
       if (response.success) {
         setStatus('success')
-        setResult({ message: response.message, sentTo: response.sentTo })
-        setFormData({ name: '', email: '', message: '' })
+        setResult({ message: response.message })
+        setFormData({ name: '', email: '', message: '', subscribeNewsletter: false, addToVendorList: false })
         captcha.reset()
       } else {
         setStatus('error')
@@ -82,6 +87,27 @@ export default function TestEmailPage() {
             className="pg-contact-textarea"
           />
 
+          <div className="pg-contact-checkboxes">
+            <label className="pg-contact-checkbox">
+              <input
+                type="checkbox"
+                name="subscribeNewsletter"
+                checked={formData.subscribeNewsletter}
+                onChange={(e) => setFormData({ ...formData, subscribeNewsletter: e.target.checked })}
+              />
+              <span>Subscribe to our newsletter</span>
+            </label>
+            <label className="pg-contact-checkbox">
+              <input
+                type="checkbox"
+                name="addToVendorList"
+                checked={formData.addToVendorList}
+                onChange={(e) => setFormData({ ...formData, addToVendorList: e.target.checked })}
+              />
+              <span>Add me to your vendor list</span>
+            </label>
+          </div>
+
           <div className="pg-contact-captcha">
             <label htmlFor="test-captcha">{captcha.question}</label>
             <input
@@ -106,14 +132,7 @@ export default function TestEmailPage() {
           </button>
 
           {status === 'success' && result && (
-            <div className="pg-contact-success">
-              <p>{result.message}</p>
-              {result.sentTo && (
-                <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-                  Sent to: {result.sentTo}
-                </p>
-              )}
-            </div>
+            <p className="pg-contact-success">{result.message}</p>
           )}
           {status === 'error' && result && (
             <p className="pg-contact-error">{result.message}</p>
