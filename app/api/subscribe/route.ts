@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { resend, FROM_EMAIL, NOTIFY_EMAILS } from '@/lib/resend'
+import { sendEmail } from '@/lib/email'
 import {
   searchContactByEmail,
   updateContactTier,
@@ -60,16 +60,15 @@ export async function POST(request: Request) {
     hubspotResult = { success: false, error: errorMessage }
   }
 
-  // Send notification email as backup/notification
-  const isProduction = process.env.VERCEL_ENV === 'production'
-  const subject = isProduction
-    ? 'New Newsletter Subscriber - PorterGoldberg'
-    : 'PREVIEW - New Newsletter Subscriber - PorterGoldberg'
+  // Send notification email to info@
+  const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+  const fromEmail = `"Porter Goldberg Website" <${fromAddress}>`
+  const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
 
-  const { error } = await resend.emails.send({
-    from: FROM_EMAIL,
-    to: NOTIFY_EMAILS,
-    subject: `${subject}`,
+  const { error } = await sendEmail({
+    from: fromEmail,
+    to: recipients,
+    subject: 'New Newsletter Subscriber',
     html: `
       <h2>New Newsletter Subscriber</h2>
       <p><strong>Name:</strong> ${name || 'Not provided'}</p>

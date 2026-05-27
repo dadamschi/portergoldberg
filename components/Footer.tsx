@@ -17,7 +17,9 @@ function AgentCard({ agent, align }: { agent: Agent; align: 'left' | 'right' }) 
       <div className={`pg-footer-agent-info ${isLeft ? 'pg-footer-agent-info--left' : 'pg-footer-agent-info--right'}`}>
         <h3 className="pg-footer-agent-name">{agent.name.toUpperCase()}</h3>
         <p className="pg-footer-agent-title">Vice President, Sales</p>
-        <p className="pg-footer-agent-phone">{agent.phone}</p>
+        <a href={`tel:${agent.phone.replace(/\D/g, '')}`} className="pg-footer-agent-phone">
+          {agent.phone}
+        </a>
         <a href={`mailto:${agent.email}`} className="pg-footer-agent-email">
           {agent.email}
         </a>

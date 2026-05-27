@@ -27,7 +27,7 @@ export default async function TestimonialsPage() {
     <main className="pg-page pg-testimonials-page">
       <section className="pg-page-hero">
         <h1>Testimonials</h1>
-        <p>Hear from our clients about their experience working with Porter Goldberg.</p>
+        <p>Hear from our clients about their experience working with Porter Goldberg</p>
       </section>
 
       <section className="pg-testimonials-section">

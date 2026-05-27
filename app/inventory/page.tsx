@@ -29,12 +29,12 @@ export default async function InventoryPage() {
     <main className="pg-page pg-inventory-page">
       <section className="pg-page-hero">
         <h1>Properties</h1>
-        <p>Explore our current listings and recently sold properties in Chicago.</p>
+        <p>Explore our current listings and recently sold properties in Chicago</p>
       </section>
 
       <section className="pg-listings">
         <div className="pg-listings-inner">
-          <h2>Available & Coming Soon</h2>
+          {/* <h2>Available & Coming Soon</h2> */}
         <div className="pg-listings-grid pg-listings-grid--3col">
             {availableDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
@@ -52,15 +52,15 @@ export default async function InventoryPage() {
       </div>
 
       <div className="pg-listings-inner">
-        <h2>Sold</h2>
-        <a
+        {/* <h2>Sold</h2> */}
+        {/* <a
           href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
           target="_blank"
           rel="noopener noreferrer"
           className="pg-listings-more-link"
         >
           See more closed properties →
-        </a>
+        </a> */}
         <div className="pg-listings-grid pg-listings-grid--3col">
             {soldDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />

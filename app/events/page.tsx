@@ -230,7 +230,7 @@ export default async function EventsPage() {
 
       <section className="pg-page-hero">
         <h1>Events</h1>
-        <p>Webinars, workshops, and community events to help you navigate Chicago real estate.</p>
+        <p>Webinars, workshops, and community events to help you navigate Chicago real estate</p>
       </section>
 
       <section className="pg-events-section">

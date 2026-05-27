@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { submitConnectForm } from '@/app/actions'
 
 export function Newsletter() {
   const [email, setEmail] = useState('')
@@ -14,21 +15,22 @@ export function Newsletter() {
 
     setStatus('loading')
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+      const result = await submitConnectForm({
+        name: 'Newsletter Subscriber',
+        email,
+        message: 'Newsletter subscription request',
+        subscribeNewsletter: true,
+        addToVendorList: false,
+        pageUrl: window.location.href,
       })
 
-      const data: { message: string } = await res.json()
-
-      if (res.ok) {
+      if (result.success) {
         setStatus('success')
-        setMessage(data.message)
+        setMessage("You're in! Thanks for subscribing.")
         setEmail('')
       } else {
         setStatus('error')
-        setMessage(data.message)
+        setMessage(result.message)
       }
     } catch {
       setStatus('error')
