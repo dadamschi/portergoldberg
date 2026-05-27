@@ -112,6 +112,7 @@ type TestResult = {
 }
 
 export async function submitTestForm(data: TestFormData): Promise<TestResult> {
+  const { sendEmail } = await import('@/lib/email')
   const { name, email, message } = data
 
   if (!name || !name.trim()) {
@@ -131,9 +132,11 @@ export async function submitTestForm(data: TestFormData): Promise<TestResult> {
     throw new Error('Missing TEST_EMAIL_RECIPIENT environment variable')
   }
 
-  // Send email via Resend to TEST recipient only (no portergoldberg addresses)
-  const { error } = await resend.emails.send({
-    from: FROM_EMAIL,
+  const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+
+  // Send email via SMTP to TEST recipient only (no portergoldberg addresses)
+  const { error } = await sendEmail({
+    from: fromEmail,
     to: testRecipient,
     replyTo: email,
     subject: `[TEST] New inquiry from ${name}`,
