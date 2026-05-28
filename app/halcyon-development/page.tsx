@@ -89,7 +89,8 @@ export default async function HalcyonDevelopmentPage() {
             </p>
 
             <p>
-              To learn more about Halcyon Development, please visit them at{' '}
+              To learn more about Halcyon Development, please visit 
+              <br />
               <a href={addUtmParams('https://halcyon-development.com/', { campaign: 'halcyon-partnership' })} target="_blank" rel="noopener noreferrer">
                 halcyon-development.com
               </a>
