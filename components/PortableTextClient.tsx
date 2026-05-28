@@ -23,7 +23,7 @@ function LinkedImage({ value }: { value: ImageValue }) {
   const imageElement = (
     <Image
       src={value.asset.url}
-      alt={value.alt || ''}
+      alt={value.alt || 'Image'}
       width={800}
       height={450}
       style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
