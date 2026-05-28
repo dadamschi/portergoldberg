@@ -5,11 +5,11 @@ import { createIssue, findExistingIssue, addCommentToIssue, isGitHubConfigured }
 export default async function NotFound() {
   const headersList = await headers()
   const referer = headersList.get('referer')
-  const url = headersList.get('x-url') || headersList.get('x-invoke-path') || 'unknown'
+  const pathname = headersList.get('x-pathname') || 'unknown'
 
   // Create GitHub issue for 404 (only if configured)
   if (isGitHubConfigured()) {
-    const title = `404: ${url}`
+    const title = `404: ${pathname}`
     const existingIssue = await findExistingIssue(title)
 
     if (existingIssue) {
@@ -20,7 +20,7 @@ export default async function NotFound() {
     } else {
       await createIssue({
         title,
-        body: `## Page Not Found (404)\n\n| Field | Value |\n|-------|-------|\n| **URL** | ${url} |\n| **Referer** | ${referer || 'none'} |\n| **Timestamp** | ${new Date().toISOString()} |`,
+        body: `## Page Not Found (404)\n\n| Field | Value |\n|-------|-------|\n| **URL** | ${pathname} |\n| **Referer** | ${referer || 'none'} |\n| **Timestamp** | ${new Date().toISOString()} |`,
         labels: ['bug/404'],
       }).catch((err) => {
         console.error('[NotFound] Failed to create issue:', err)
