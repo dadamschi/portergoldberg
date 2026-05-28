@@ -9,7 +9,7 @@ import { client } from '@/lib/client'
 import { AGENTS_QUERY, RECENT_NEWSLETTER_QUERY } from '@/lib/queries'
 import type { Agent } from '@/types'
 
-const siteUrl = 'https://portergoldberg.com'
+const siteUrl = 'https://www.portergoldberg.com'
 
 export const viewport: Viewport = {
   width: 'device-width',

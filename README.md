@@ -31,10 +31,18 @@ Required environment variables:
 | `NEXT_PUBLIC_SANITY_DATASET` | Dataset name (`production`) |
 | `SANITY_API_READ_TOKEN` | API token for server-side fetches |
 | `SANITY_REVALIDATE_SECRET` | Secret for webhook revalidation |
-| `RESEND_API_KEY` | Resend API key for transactional emails |
-| `RESEND_FROM_EMAIL` | Verified sender email (or `onboarding@resend.dev` for testing) |
+| `HUBSPOT_API_KEY` | HubSpot API key for contact management |
+
+Optional environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `GITHUB_TOKEN` | Fine-grained PAT for error tracking via GitHub Issues |
+| `RESEND_API_KEY` | Resend API key (optional, for transactional emails) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | SMTP config for contact form emails |
+| `SMTP_FROM_EMAIL` | Sender email for SMTP |
+| `CONTACT_EMAIL` | Primary recipient for contact form |
 | `CONTACT_CC_EMAIL` | CC recipient for contact form submissions |
-| `ERROR_NOTIFY_EMAIL` | Where error notifications are sent |
 
 ### 3. Run Locally
 
@@ -57,7 +65,9 @@ cd studio && npm run dev
 | **Framework** | Next.js 15 (App Router) |
 | **UI** | React 19, TypeScript 5.7 |
 | **CMS** | Sanity v5 (standalone studio) |
-| **Email** | Resend |
+| **Email** | Nodemailer/SMTP (contact forms), Resend (optional) |
+| **Error Tracking** | GitHub Issues (automatic) |
+| **CRM** | HubSpot (contact/newsletter management) |
 | **Styling** | Plain CSS with CSS variables |
 | **Testing** | Playwright (screenshot tests) |
 | **Linting** | ESLint 9 (flat config) |
@@ -70,9 +80,9 @@ portergoldberg/
 │   ├── layout.tsx                  # Root layout
 │   ├── page.tsx                    # Homepage
 │   ├── sitemap.ts                  # Dynamic sitemap
-│   ├── not-found.tsx               # 404 page (sends notification)
-│   ├── error.tsx                   # Error page (sends notification)
-│   ├── global-error.tsx            # Root error page (sends notification)
+│   ├── not-found.tsx               # 404 page (creates GitHub issue)
+│   ├── error.tsx                   # Error page
+│   ├── global-error.tsx            # Root error page
 │   ├── about-us/page.tsx
 │   ├── buying/page.tsx
 │   ├── client-resources/page.tsx
@@ -85,47 +95,41 @@ portergoldberg/
 │   ├── newsletters/
 │   │   ├── page.tsx                # Newsletter archive
 │   │   └── [slug]/page.tsx         # Newsletter detail
+│   ├── press/page.tsx
 │   ├── selling/page.tsx
 │   ├── testimonials/page.tsx
 │   ├── vendors/page.tsx
 │   ├── actions.ts                  # Server Actions (contact form)
 │   └── api/
-│       ├── error-notify/route.ts   # Error notification emails
+│       ├── error-notify/route.ts   # Error → GitHub Issues
 │       ├── revalidate/route.ts     # Sanity webhook revalidation
 │       ├── subscribe/route.ts      # Newsletter signup
+│       ├── unsubscribe/route.ts    # Newsletter unsubscribe
 │       └── vendor-list/route.ts    # Vendor list signup
 │
 ├── components/
-│   ├── NewsletterBanner.tsx         # Reusable CTA banner
-│   ├── About.tsx                   # About section
 │   ├── ConnectForm.tsx             # Flyout contact form
-│   ├── Contact.tsx                 # Contact section
-│   ├── ContactForm.tsx             # Contact form component
-│   ├── ContactPageForm.tsx         # Contact page form
-│   ├── Flipbook.tsx                # Interactive flipbook viewer
 │   ├── Footer.tsx                  # Site footer
 │   ├── Hero.tsx                    # Homepage hero
-│   ├── ImageLightbox.tsx           # Image gallery lightbox
-│   ├── ImageModal.tsx              # Image modal
-│   ├── JsonLd.tsx                  # Schema.org markup
 │   ├── ListingCard.tsx             # Property listing card
 │   ├── Nav.tsx                     # Main navigation
 │   ├── Newsletter.tsx              # Newsletter signup section
-│   ├── SocialLinks.tsx             # Social media links
-│   ├── Stats.tsx                   # Animated statistics
 │   ├── Testimonials.tsx            # Testimonial carousel
-│   ├── home/Listings.tsx           # Homepage listings
-│   └── index.ts                    # Component exports
+│   ├── TestimonialsList.tsx        # Testimonials page list
+│   └── ...                         # Other components
 │
 ├── lib/
 │   ├── client.ts                   # Sanity client config
 │   ├── queries.ts                  # GROQ queries
-│   ├── data.ts                     # Navigation & fallback data
+│   ├── data.ts                     # Navigation & static data
+│   ├── email.ts                    # SMTP email sending
+│   ├── github.ts                   # GitHub Issues API
+│   ├── hubspot.ts                  # HubSpot API client
 │   ├── portableText.tsx            # Portable Text config
-│   ├── resend.ts                   # Resend email client
-│   └── utils/
-│       ├── dateTime.tsx            # Date formatting
-│       └── numbers.tsx             # Number formatting
+│   ├── resend.ts                   # Resend client (optional)
+│   └── utils/                      # Utility functions
+│
+├── middleware.ts                   # Captures URL for 404 tracking
 │
 ├── studio/                         # Standalone Sanity Studio
 │   ├── schemas/                    # Content type definitions
@@ -136,13 +140,16 @@ portergoldberg/
 ├── styles/
 │   └── globals.css                 # All site styling
 │
-├── tests/
-│   └── screenshots.spec.ts         # Playwright screenshot tests
-│
 ├── types/
 │   └── index.ts                    # TypeScript types
 │
+├── scripts/                        # Utility scripts
+│   └── update-testimonial-order.ts # Bulk update testimonial order
+│
 ├── public/                         # Static assets
+│   ├── sitemap.xml                 # SEO sitemap
+│   └── llms.txt                    # AI crawler directives
+│
 ├── next.config.ts                  # Next.js config & redirects
 ├── tsconfig.json                   # TypeScript config
 ├── eslint.config.mjs               # ESLint flat config
@@ -166,7 +173,7 @@ https://portergoldberg.sanity.studio/
 | `home` | Homepage-specific content |
 | `buyPage` | Buying page title, headline, flipbook images |
 | `sellingPage` | Selling page sections (hero, marketing, prep, staging) |
-| `aboutPage` | About page content |
+| `halcyonPage` | Halcyon Development page content |
 | `schoolGuidancePage` | School guidance content |
 
 **Collection Documents** (multiple instances):
@@ -174,11 +181,18 @@ https://portergoldberg.sanity.studio/
 | Type | Description |
 |------|-------------|
 | `listing` | Property listings with address, price, status, images, brochure |
-| `testimonial` | Client quotes with optional homepage pin |
+| `testimonial` | Client quotes with `order` field for custom sorting |
 | `agent` | Team member profiles with bio |
 | `event` | Events with dates, speakers, sessions, replay URLs |
 | `newsletter` | Newsletter archives with flipbook images |
-| `vendor` | Trusted vendor directory |
+| `press` | Press mentions with logos and links |
+
+### Testimonial Ordering
+
+Testimonials use an `order` field for custom sorting:
+- Lower numbers appear first
+- New testimonials without an `order` appear at the TOP (sorted by creation date)
+- Set `order` in Sanity Studio to position testimonials permanently
 
 ### Deploying Studio Changes
 
@@ -190,28 +204,40 @@ cd studio && npm run deploy
 
 | Route | Method | Purpose |
 |-------|--------|---------|
-| `/api/error-notify` | POST | Error notification emails (404s, runtime errors) |
+| `/api/error-notify` | POST | Creates GitHub Issue for errors |
 | `/api/revalidate` | POST | Sanity webhook for ISR cache revalidation |
-| `/api/subscribe` | POST | Newsletter subscription signup |
+| `/api/subscribe` | POST | Newsletter subscription (HubSpot) |
+| `/api/unsubscribe` | POST | Newsletter unsubscribe (HubSpot) |
 | `/api/vendor-list` | POST | Vendor list signup request |
 
-The revalidate endpoint requires a `SANITY_REVALIDATE_SECRET` header for authentication.
+The revalidate endpoint requires `x-revalidate-secret` header matching `SANITY_REVALIDATE_SECRET`.
 
-## Email & Error Notifications
+## Error Tracking (GitHub Issues)
 
-Email is handled via [Resend](https://resend.com).
+Errors are automatically tracked as GitHub Issues instead of email notifications.
 
-**Contact Form:** Uses a Server Action (`submitConnectForm` in `app/actions.ts`) to send HTML email to all agent emails fetched from Sanity. Includes visitor's name, email, message, and newsletter/vendor list preferences. Server Actions keep the endpoint hidden from browser dev tools.
+**Setup:** Create a fine-grained PAT with `issues:write` permission on this repo, add as `GITHUB_TOKEN` env var.
 
-**Error Notifications:** The following pages automatically email `ERROR_NOTIFY_EMAIL`:
+**How it works:**
+- 404 errors create issues titled `404: /path` with `bug/404` label
+- Runtime errors create issues with `bug/runtime` label
+- Global errors create issues with `bug/global-error` label
+- Duplicate errors add comments to existing open issues instead of creating new ones
+- Closing an issue resets tracking (new occurrence = new issue)
 
-| Page | Triggers |
-|------|----------|
-| `app/not-found.tsx` | 404 errors |
-| `app/error.tsx` | Runtime errors in pages |
-| `app/global-error.tsx` | Root layout errors |
+**Labels used:**
+- `bug/404` - Page not found errors
+- `bug/runtime` - Runtime errors in pages
+- `bug/global-error` - Root layout errors
 
-Emails include URL, referer, error message, and stack trace (for runtime errors).
+## Contact Form & HubSpot
+
+Contact form submissions:
+1. Send HTML email via SMTP to agent emails
+2. Create/update contact in HubSpot with tier tracking
+3. Optionally subscribe to newsletter and/or vendor list
+
+HubSpot tiers track engagement level: `Newsletter`, `Warm`, `VendorList`, etc.
 
 ## URL Redirects
 
@@ -244,14 +270,21 @@ npm run test              # Run all Playwright tests
 npm run test:screenshots  # Run screenshot tests only
 ```
 
-Screenshot tests capture all major pages and save to `/screenshots/`.
-
 ### Sanity Studio (from /studio)
 
 ```bash
 npm run dev          # Local studio (localhost:3333)
 npm run build        # Build studio
 npm run deploy       # Deploy to portergoldberg.sanity.studio
+```
+
+### Cache Revalidation
+
+Trigger on-demand revalidation:
+
+```bash
+curl -X POST "https://www.portergoldberg.com/api/revalidate" \
+  -H "x-revalidate-secret: YOUR_SECRET"
 ```
 
 ## CSS Architecture
@@ -274,7 +307,7 @@ Styling uses plain CSS with CSS variables in `styles/globals.css`:
 |----------|-------|
 | Project ID | `mw8duas2` |
 | Dataset | `production` |
-| API Version | `2026-02-01` |
+| API Version | `2024-01-01` |
 | Studio URL | https://portergoldberg.sanity.studio/ |
 
 ## Code Standards

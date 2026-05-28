@@ -11,7 +11,7 @@ type NewsletterSitemapData = {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://portergoldberg.com'
+  const baseUrl = 'https://www.portergoldberg.com'
 
   // Static pages
   const staticPages = [

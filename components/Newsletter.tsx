@@ -51,6 +51,7 @@ export function Newsletter() {
         ) : (
           <form className="pg-newsletter-form" onSubmit={handleSubmit}>
             <input
+              name="email"
               type="email"
               required
               placeholder="Your email address"

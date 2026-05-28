@@ -90,6 +90,7 @@ export function Hero() {
 
   return (
     <section className="pg-hero">
+      <h1 className="sr-only">Chicago Luxury Real Estate - PorterGoldberg Residential</h1>
       <div className="pg-hero-video-wrap">
         <video
           src="/hero-video.mp4"
