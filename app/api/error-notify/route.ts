@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
-import { resend, FROM_EMAIL, NOTIFY_EMAILS } from '@/lib/resend'
+import {
+  createIssue,
+  findExistingIssue,
+  addCommentToIssue,
+  isGitHubConfigured
+} from '@/lib/github'
+
+type ErrorType = '404' | 'error' | 'global-error'
 
 type ErrorNotifyBody = {
-  type: '404' | 'error' | 'global-error'
+  type: ErrorType
   url: string
   message?: string
   stack?: string
@@ -10,42 +17,91 @@ type ErrorNotifyBody = {
   referer?: string
 }
 
+const labelMap: Record<ErrorType, 'bug/404' | 'bug/runtime' | 'bug/global-error'> = {
+  '404': 'bug/404',
+  'error': 'bug/runtime',
+  'global-error': 'bug/global-error',
+}
+
+function generateIssueTitle(type: ErrorType, url: string, message?: string): string {
+  if (type === '404') {
+    return `404: ${url}`
+  }
+  const shortMessage = message ? message.slice(0, 50) : 'Unknown error'
+  return `${type === 'global-error' ? 'Global Error' : 'Error'}: ${shortMessage}`
+}
+
+function generateIssueBody(body: ErrorNotifyBody): string {
+  const { type, url, message, stack, userAgent, referer } = body
+  const timestamp = new Date().toISOString()
+
+  let markdown = `## ${type === '404' ? 'Page Not Found' : 'Error Details'}\n\n`
+  markdown += `| Field | Value |\n|-------|-------|\n`
+  markdown += `| **Type** | \`${type}\` |\n`
+  markdown += `| **URL** | ${url} |\n`
+  markdown += `| **Timestamp** | ${timestamp} |\n`
+  if (referer) markdown += `| **Referer** | ${referer} |\n`
+  if (userAgent) markdown += `| **User Agent** | ${userAgent} |\n`
+
+  if (message) {
+    markdown += `\n### Error Message\n\`\`\`\n${message}\n\`\`\`\n`
+  }
+
+  if (stack) {
+    markdown += `\n### Stack Trace\n\`\`\`\n${stack}\n\`\`\`\n`
+  }
+
+  return markdown
+}
+
+function generateCommentBody(body: ErrorNotifyBody): string {
+  const timestamp = new Date().toISOString()
+  let comment = `**Occurred again at ${timestamp}**\n\n`
+  comment += `- URL: ${body.url}\n`
+  if (body.referer) comment += `- Referer: ${body.referer}\n`
+  if (body.userAgent) comment += `- User Agent: ${body.userAgent}\n`
+  return comment
+}
+
 export async function POST(request: Request) {
-  if (!resend) {
-    console.warn('[ErrorNotify] Resend not configured, skipping email')
-    return NextResponse.json({ success: false, reason: 'email not configured' }, { status: 200 })
+  if (!isGitHubConfigured()) {
+    console.warn('[ErrorNotify] GitHub not configured, skipping issue creation')
+    return NextResponse.json({ success: false, reason: 'github not configured' }, { status: 200 })
   }
 
   const body: ErrorNotifyBody = await request.json()
-  const { type, url, message, stack, userAgent, referer } = body
+  const { type, url, message } = body
 
-  const subjectMap = {
-    '404': `404 Not Found: ${url}`,
-    'error': `Runtime Error on ${url}`,
-    'global-error': `Global Error on ${url}`,
+  const title = generateIssueTitle(type, url, message)
+
+  // Check for existing open issue with same title
+  const existingIssue = await findExistingIssue(title)
+
+  if (existingIssue) {
+    // Add comment to existing issue instead of creating duplicate
+    const commented = await addCommentToIssue(existingIssue.number, generateCommentBody(body))
+    return NextResponse.json({
+      success: true,
+      action: 'commented',
+      issue: existingIssue.html_url,
+      commented
+    })
   }
 
-  const { error } = await resend.emails.send({
-    from: FROM_EMAIL,
-    to: NOTIFY_EMAILS,
-    subject: `[Porter Goldberg] ${subjectMap[type]}`,
-    html: `
-      <h2>${type === '404' ? 'Page Not Found' : 'Error Occurred'}</h2>
-      <p><strong>Type:</strong> ${type}</p>
-      <p><strong>URL:</strong> ${url}</p>
-      ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
-      ${referer ? `<p><strong>Referer:</strong> ${referer}</p>` : ''}
-      ${userAgent ? `<p><strong>User Agent:</strong> ${userAgent}</p>` : ''}
-      ${stack ? `<pre style="background:#f4f4f4;padding:12px;overflow:auto;font-size:12px;">${stack}</pre>` : ''}
-      <hr>
-      <p style="color:#666;font-size:12px;">Sent from Porter Goldberg error monitoring</p>
-    `,
+  // Create new issue
+  const issue = await createIssue({
+    title,
+    body: generateIssueBody(body),
+    labels: [labelMap[type]],
   })
 
-  if (error) {
-    console.error('[ErrorNotify] Failed to send:', error)
-    return NextResponse.json({ success: false }, { status: 500 })
+  if (!issue) {
+    return NextResponse.json({ success: false, reason: 'failed to create issue' }, { status: 500 })
   }
 
-  return NextResponse.json({ success: true })
+  return NextResponse.json({
+    success: true,
+    action: 'created',
+    issue: issue.html_url
+  })
 }
