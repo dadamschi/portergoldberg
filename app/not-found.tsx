@@ -9,21 +9,23 @@ export default async function NotFound() {
   const referer = headersList.get('referer')
   const url = headersList.get('x-url') || headersList.get('x-invoke-path') || 'unknown'
 
-  // Send notification email
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to: ERROR_NOTIFY_EMAIL,
-    subject: `[Porter Goldberg] 404 Not Found`,
-    html: `
-      <h2>Page Not Found (404)</h2>
-      <p><strong>URL:</strong> ${url}</p>
-      ${referer ? `<p><strong>Referer:</strong> ${referer}</p>` : ''}
-      <hr>
-      <p style="color:#666;font-size:12px;">Sent from Porter Goldberg error monitoring</p>
-    `,
-  }).catch((err) => {
-    console.error('[NotFound] Failed to send notification:', err)
-  })
+  // Send notification email (only if Resend is configured)
+  if (resend) {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ERROR_NOTIFY_EMAIL,
+      subject: `[Porter Goldberg] 404 Not Found`,
+      html: `
+        <h2>Page Not Found (404)</h2>
+        <p><strong>URL:</strong> ${url}</p>
+        ${referer ? `<p><strong>Referer:</strong> ${referer}</p>` : ''}
+        <hr>
+        <p style="color:#666;font-size:12px;">Sent from Porter Goldberg error monitoring</p>
+      `,
+    }).catch((err) => {
+      console.error('[NotFound] Failed to send notification:', err)
+    })
+  }
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4">

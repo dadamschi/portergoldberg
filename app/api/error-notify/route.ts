@@ -11,6 +11,11 @@ type ErrorNotifyBody = {
 }
 
 export async function POST(request: Request) {
+  if (!resend) {
+    console.warn('[ErrorNotify] Resend not configured, skipping email')
+    return NextResponse.json({ success: false, reason: 'email not configured' }, { status: 200 })
+  }
+
   const body: ErrorNotifyBody = await request.json()
   const { type, url, message, stack, userAgent, referer } = body
 
