@@ -67,6 +67,9 @@ const components: PortableTextComponents = {
     image: LinkedImage,
   },
   marks: {
+    highlight: ({ children }) => (
+      <span className="pg-text-highlight">{children}</span>
+    ),
     link: ({ children, value }) => {
       const href = value?.href || ''
 

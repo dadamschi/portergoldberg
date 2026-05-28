@@ -1016,6 +1016,10 @@ body {
   color: var(--pg-sage);
 }
 
+.pg-text-highlight {
+  color: var(--pg-gold);
+}
+
 .pg-btn-gold:hover {
   background: var(--pg-sage-l);
 }
@@ -3316,7 +3320,7 @@ body {
    ============================================================================= */
 
 .pg-halcyon-hero.pg-page-hero {
-  background: #666;
+  background: #000;
 }
 
 .pg-halcyon-logo {
@@ -3361,7 +3365,7 @@ body {
 }
 
 .pg-halcyon-about-text p {
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.8;
   margin-bottom: 16px;
 }

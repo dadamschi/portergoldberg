@@ -37,7 +37,7 @@ export default async function HalcyonDevelopmentPage() {
         />
         {/* <h1>Halcyon Development</h1> */}
         <p>
-          As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders.
+          As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders
         </p>
       </section>
 

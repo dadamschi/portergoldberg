@@ -49,7 +49,18 @@ export const halcyonPage = defineType({
       name: "aboutContent",
       title: "About Content",
       type: "array",
-      of: [{ type: "block" }],
+      of: [
+        {
+          type: "block",
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+              { title: "Highlight", value: "highlight" },
+            ],
+          },
+        },
+      ],
       description: "Main content for the about section",
     }),
     defineField({
