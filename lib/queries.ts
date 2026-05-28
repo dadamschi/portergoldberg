@@ -76,13 +76,14 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
 // =============================================================================
 
 export const ALL_TESTIMONIALS_QUERY = defineQuery(/* groq */ `
-  *[_type == "testimonial"] | order(_createdAt desc) {
+  *[_type == "testimonial"] | order(defined(order) asc, order asc, _createdAt desc) {
     _id,
     clientName,
     clientTitle,
     date,
     quote,
-    pinOnHomePage
+    pinOnHomePage,
+    order
   }
 `)
 
@@ -313,13 +314,13 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     brochureUrl,
     featured
   },
-  "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(_createdAt desc) {
+  "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(defined(order) asc, order asc, _createdAt desc) {
     _id,
     clientName,
     clientTitle,
     date,
     quote
-  } + *[_type == "testimonial" && pinOnHomePage != true] | order(_createdAt desc) [0...4] {
+  } + *[_type == "testimonial" && pinOnHomePage != true] | order(defined(order) asc, order asc, _createdAt desc) [0...4] {
     _id,
     clientName,
     clientTitle,
