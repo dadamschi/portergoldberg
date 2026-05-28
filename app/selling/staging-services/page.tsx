@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
+import { FAQJsonLd } from '@/components/JsonLd'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
@@ -9,9 +10,24 @@ import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 
 export const metadata: Metadata = {
-  title: 'Staging | Selling',
-  description: 'Professional staging services to transform your property and attract buyers.',
+  title: 'Staging Services | Selling Your Chicago Home',
+  description: 'Professional home staging services from PorterGoldberg help Chicago sellers present their properties beautifully and sell faster for top dollar.',
 }
+
+const STAGING_FAQS = [
+  {
+    question: 'Does PorterGoldberg offer home staging services?',
+    answer: 'Yes. PorterGoldberg provides staging consultation and coordinates professional staging services through trusted partners like Haven Home Stagers. Staging helps buyers visualize living in the space and typically results in faster sales at higher prices.',
+  },
+  {
+    question: 'How much does home staging cost in Chicago?',
+    answer: 'Staging costs vary based on home size and scope, typically ranging from $2,000-$8,000 for a 3-month staging period. PorterGoldberg helps you determine the right level of staging investment based on your property and target buyer demographic.',
+  },
+  {
+    question: 'Is home staging worth it when selling a house?',
+    answer: 'Studies show staged homes sell 73% faster and for 5-10% more than non-staged homes. In Chicago\'s competitive market, staging helps your listing stand out in photos and showings, attracting more qualified buyers and stronger offers.',
+  },
+]
 
 async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)
@@ -32,15 +48,17 @@ export default async function SellingStagingPage() {
   }
 
   return (
-    <main className="pg-page pg-selling-page pg-selling-subpage">
-      {/* Hero Section */}
-      <section className="pg-page-hero">
-        <h1>{data.title}</h1>
-        {data.heroHeadline && <p>{data.heroHeadline}</p>}
-        {data.heroIntro && <p>{data.heroIntro}</p>}
-      </section>
+    <>
+      <FAQJsonLd faqs={STAGING_FAQS} />
+      <main className="pg-page pg-selling-page pg-selling-subpage">
+        {/* Hero Section */}
+        <section className="pg-page-hero">
+          <h1>{data.title}</h1>
+          {data.heroHeadline && <p>{data.heroHeadline}</p>}
+          {data.heroIntro && <p>{data.heroIntro}</p>}
+        </section>
 
-      <SellingSectionNav currentSection="staging services" />
+        <SellingSectionNav currentSection="staging services" />
 
       <div className="pg-selling-columns">
         {/* Staging Section */}
@@ -101,5 +119,6 @@ export default async function SellingStagingPage() {
         </div>
       </div>
     </main>
+    </>
   )
 }
