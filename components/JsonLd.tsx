@@ -1,12 +1,14 @@
+const SITE_URL = 'https://www.portergoldberg.com'
+
 export function LocalBusinessJsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
     name: 'PorterGoldberg Residential',
     description: 'Boutique Chicago real estate expertise for buying, selling, and building homes. Samantha Porter & Lauren Goldberg at Jameson Sotheby\'s International Realty.',
-    url: 'https://portergoldberg.com',
-    logo: 'https://portergoldberg.com/PorterGoldberg-Residential.webp',
-    image: 'https://portergoldberg.com/Lauren-and-Samantha-Oval.webp',
+    url: SITE_URL,
+    logo: `${SITE_URL}/PorterGoldberg-Residential.webp`,
+    image: `${SITE_URL}/Lauren-and-Samantha-Oval.webp`,
     telephone: '+1-312-944-8900',
     email: 'info@portergoldberg.com',
     address: {
@@ -78,16 +80,43 @@ export function WebsiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'PorterGoldberg Residential',
-    url: 'https://portergoldberg.com',
+    url: SITE_URL,
     description: 'Chicago real estate expertise for buying, selling, and building homes.',
     publisher: {
       '@type': 'Organization',
       name: 'PorterGoldberg Residential',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://portergoldberg.com/PorterGoldberg-Residential.webp',
+        url: `${SITE_URL}/PorterGoldberg-Residential.webp`,
       },
     },
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
+type FAQItem = {
+  question: string
+  answer: string
+}
+
+export function FAQJsonLd({ faqs }: { faqs: FAQItem[] }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
   }
 
   return (

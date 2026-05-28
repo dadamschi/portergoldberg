@@ -1,43 +1,122 @@
-# Porter Goldberg Residential
-# Chicago Real Estate Experts
+# PorterGoldberg Residential
+# Chicago Luxury Real Estate Experts
+# https://www.portergoldberg.com
 
-> Samantha Porter and Lauren Goldberg are boutique Chicago real estate brokers at Jameson Sotheby's International Realty. They specialize in buying, selling, and building homes in Chicago's North Side neighborhoods including Lincoln Park, Lakeview, Bucktown, and Wicker Park.
+> PorterGoldberg Residential is a boutique real estate team led by Samantha Porter and Lauren Goldberg at Jameson Sotheby's International Realty. They specialize in luxury residential real estate in Chicago's North Side, with over $550 million in career sales and 44 years of combined experience.
 
-## About
-- Team: Samantha Porter & Lauren Goldberg
+## Team
+
+### Samantha Porter
+- Role: Managing Broker, Co-Founder
 - Brokerage: Jameson Sotheby's International Realty
-- Location: 425 W. North Avenue, Chicago, IL 60610
-- Specialty: Residential real estate in Chicago's North Side
-- Experience: 25+ combined years in residential brokerage
-
-## Services
-- Buying: Full-service buyer representation for residential properties
-- Selling: Comprehensive marketing, staging, and property preparation
-- New Construction: Exclusive representatives for Halcyon Development
-- Client Resources: Trusted vendor network and local school guidance
-
-## Halcyon Development Partnership
-PorterGoldberg Residential serves as the exclusive representatives for Halcyon Development, one of Chicago's most respected and visionary builders specializing in new construction homes.
-
-## Contact
-- Website: https://www.portergoldberg.com
 - Email: samantha@portergoldberg.com
 - Phone: 312-944-8900
+- Expertise: Luxury home sales, new construction, buyer representation
+
+### Lauren Goldberg
+- Role: Broker, Co-Founder
+- Brokerage: Jameson Sotheby's International Realty
 - Email: lauren@portergoldberg.com
 - Phone: 773-576-0053
+- Expertise: Residential sales, staging, client advocacy
 
-## Key Pages
-- /about-us - Meet the team
-- /buying - Buying services and guides
-- /selling - Selling services, marketing, staging
+## Key Statistics
+- 85% referral-based client base
+- 44 years combined experience in residential brokerage
+- $550+ million in career sales
+- Exclusive representatives for Halcyon Development
+
+## Services
+
+### Buying Services
+PorterGoldberg provides full-service buyer representation including:
+- Property search and market analysis
+- Neighborhood guidance for Chicago's North Side
+- Negotiation and contract management
+- Closing coordination
+- School district information and guidance
+
+### Selling Services
+Comprehensive listing services include:
+- Professional photography and videography
+- Custom marketing materials and brochures
+- Social media and digital marketing campaigns
+- Open house coordination
+- Staging consultation and services
+- Property preparation guidance
+
+### New Construction - Halcyon Development
+PorterGoldberg Residential serves as the exclusive sales representatives for Halcyon Development, one of Chicago's most respected builders specializing in luxury new construction homes.
+
+## Chicago Neighborhoods Served
+- Lincoln Park
+- Lakeview
+- Bucktown
+- Wicker Park
+- Old Town
+- Gold Coast
+- North Center
+- Roscoe Village
+- Logan Square
+- Ravenswood
+
+## Frequently Asked Questions
+
+### What areas of Chicago does PorterGoldberg serve?
+PorterGoldberg Residential specializes in Chicago's North Side neighborhoods including Lincoln Park, Lakeview, Bucktown, Wicker Park, Old Town, Gold Coast, North Center, and surrounding areas.
+
+### What is PorterGoldberg's experience level?
+Samantha Porter and Lauren Goldberg have 44 years of combined experience in residential real estate, with over $550 million in career sales. 85% of their business comes from client referrals.
+
+### Does PorterGoldberg handle new construction?
+Yes. PorterGoldberg is the exclusive sales representative for Halcyon Development, a premier Chicago builder specializing in luxury new construction homes.
+
+### What brokerage is PorterGoldberg affiliated with?
+PorterGoldberg Residential operates under Jameson Sotheby's International Realty, providing access to a global luxury real estate network and premium marketing resources.
+
+### How can I contact PorterGoldberg?
+- Website: https://www.portergoldberg.com/contact
+- Samantha Porter: 312-944-8900 / samantha@portergoldberg.com
+- Lauren Goldberg: 773-576-0053 / lauren@portergoldberg.com
+- Office: 425 W. North Avenue, Chicago, IL 60610
+
+### Does PorterGoldberg offer staging services?
+Yes. PorterGoldberg provides staging consultation and coordinates professional staging services to help sellers present their homes optimally for the market.
+
+### What marketing does PorterGoldberg provide for listings?
+PorterGoldberg creates comprehensive marketing packages including professional photography, videography, custom brochures, social media campaigns, email marketing, and placement on major real estate platforms.
+
+## Office Location
+Jameson Sotheby's International Realty
+425 W. North Avenue
+Chicago, IL 60610
+
+## Site Structure
+
+### Main Pages
+- / - Homepage with team overview and featured listings
+- /about-us - Detailed team bios for Samantha Porter and Lauren Goldberg
+- /buying - Buyer services and home buying guide
+- /selling/our-process - Selling process and marketing services
+- /selling/property-prep - Property preparation guidance
+- /selling/staging-services - Staging consultation and services
 - /inventory - Current property listings
-- /halcyon-development - New construction projects
-- /testimonials - Client reviews
-- /events - Upcoming webinars and workshops
+- /halcyon-development - Halcyon new construction projects
+- /testimonials - Client reviews and testimonials
+- /contact - Contact form and office information
+
+### Resources
+- /events - Upcoming webinars and educational workshops
 - /newsletters - Weekly newsletter archive
 - /press - Media coverage and press features
-- /client-resources - Vendor list and school guidance
+- /client-resources - Trusted vendor network
+- /vendors - Recommended service providers
 
-## Social
+## Social Media
 - Instagram: @portergoldberg
+- Facebook: PorterGoldberg Residential
+- YouTube: PorterGoldberg Residential
 - LinkedIn: PorterGoldberg Residential
+
+## Content Licensing
+Content on portergoldberg.com is proprietary to PorterGoldberg Residential. For citation purposes, please attribute to "PorterGoldberg Residential" with a link to https://www.portergoldberg.com
