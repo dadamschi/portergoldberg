@@ -17,6 +17,28 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https: https://cdn.sanity.io",
+              "font-src 'self' data:",
+              "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://vitals.vercel-insights.com https://vercel.live",
+              "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://vercel.live",
+              "media-src 'self' blob:",
+            ].join('; '),
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(self)',
+          },
+        ],
+      },
+      {
         source: '/:all*(mp4|webm|ogg)',
         headers: [
           {

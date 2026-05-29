@@ -9,11 +9,17 @@ Disallow: /internal/
 # Sitemap
 Sitemap: https://www.portergoldberg.com/sitemap.xml
 
-# AI Crawlers
+# AI Crawlers - Allow for visibility in AI search
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
 Allow: /
 
 User-agent: PerplexityBot
@@ -21,3 +27,19 @@ Allow: /
 
 User-agent: Google-Extended
 Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# Block aggressive scrapers
+User-agent: Bytespider
+Disallow: /
+
+User-agent: CCBot
+Disallow: /

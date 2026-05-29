@@ -94,29 +94,29 @@ Chicago, IL 60610
 ## Site Structure
 
 ### Main Pages
-- / - Homepage with team overview and featured listings
-- /about-us - Detailed team bios for Samantha Porter and Lauren Goldberg
-- /buying - Buyer services and home buying guide
-- /selling/our-process - Selling process and marketing services
-- /selling/property-prep - Property preparation guidance
-- /selling/staging-services - Staging consultation and services
-- /inventory - Current property listings
-- /halcyon-development - Halcyon new construction projects
-- /testimonials - Client reviews and testimonials
-- /contact - Contact form and office information
+- [Homepage](https://www.portergoldberg.com/): Team overview and featured listings
+- [About Us](https://www.portergoldberg.com/about-us): Detailed team bios for Samantha Porter and Lauren Goldberg
+- [Buying](https://www.portergoldberg.com/buying): Buyer services and home buying guide
+- [Selling Process](https://www.portergoldberg.com/selling/our-process): Selling process and marketing services
+- [Property Preparation](https://www.portergoldberg.com/selling/property-prep): Property preparation guidance
+- [Staging Services](https://www.portergoldberg.com/selling/staging-services): Staging consultation and services
+- [Properties](https://www.portergoldberg.com/inventory): Current property listings
+- [Halcyon Development](https://www.portergoldberg.com/halcyon-development): Halcyon new construction projects
+- [Testimonials](https://www.portergoldberg.com/testimonials): Client reviews and testimonials
+- [Contact](https://www.portergoldberg.com/contact): Contact form and office information
 
 ### Resources
-- /events - Upcoming webinars and educational workshops
-- /newsletters - Weekly newsletter archive
-- /press - Media coverage and press features
-- /client-resources - Trusted vendor network
-- /vendors - Recommended service providers
+- [Events](https://www.portergoldberg.com/events): Upcoming webinars and educational workshops
+- [Newsletters](https://www.portergoldberg.com/newsletters): Weekly newsletter archive
+- [Press](https://www.portergoldberg.com/press): Media coverage and press features
+- [Client Resources](https://www.portergoldberg.com/client-resources): Trusted vendor network
+- [Vendors](https://www.portergoldberg.com/vendors): Recommended service providers
 
 ## Social Media
-- Instagram: @portergoldberg
-- Facebook: PorterGoldberg Residential
-- YouTube: PorterGoldberg Residential
-- LinkedIn: PorterGoldberg Residential
+- [Instagram](https://www.instagram.com/portergoldbergchicago/): @portergoldbergchicago
+- [Facebook](https://www.facebook.com/portergoldbergresidential/): PorterGoldberg Residential
+- [YouTube](https://www.youtube.com/@PorterGoldbergResidential): @PorterGoldbergResidential
+- [LinkedIn](https://www.linkedin.com/company/porter-goldberg-residential/): PorterGoldberg Residential
 
 ## Content Licensing
 Content on portergoldberg.com is proprietary to PorterGoldberg Residential. For citation purposes, please attribute to "PorterGoldberg Residential" with a link to https://www.portergoldberg.com

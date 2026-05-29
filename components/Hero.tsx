@@ -135,7 +135,12 @@ export function Hero() {
         </h2>
         <div className="pg-starts-here-grid" style={{ fontWeight: 600 }}>
           {HERO_CARDS.map((card) => (
-            <a key={card.href} href={card.href} className="pg-starts-here-card">
+            <a
+              key={card.href}
+              href={card.href}
+              className="pg-starts-here-card"
+              aria-label={`${card.label} - Learn more about our ${card.label.toLowerCase()} services`}
+            >
               <Image
                 src={card.image}
                 alt={card.label}
@@ -143,7 +148,6 @@ export function Hero() {
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
               />
-
             </a>
           ))}
         </div>
@@ -164,11 +168,10 @@ export function Hero() {
             and connect you to the resources that matter.
           </p>
           <p>
-            Experience the extraordinary with <em><strong>Jameson Sotheby&apos;s International Realty</strong></em>—Anchored
-            in the trusted integrity of our iconic global brand, Jameson Sotheby&apos;s International
-            Realty offers luxury home sellers a potent combination of peerless client service,
-            technology-forward resources, industry-leading marketing exposure, and a powerful
-            global referral network that work in concert to deliver the best results.
+            Experience the extraordinary with <em><strong>Jameson Sotheby&apos;s International Realty</strong></em>. Our
+            global brand delivers peerless client service, cutting-edge technology, world-class
+            marketing, and an international referral network—all working together to achieve the
+            best results.
           </p>
           <div className="pg-hero-bio-links">
             <a

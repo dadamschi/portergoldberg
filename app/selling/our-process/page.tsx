@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
-import { FAQJsonLd } from '@/components/JsonLd'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { ContactBanner } from '@/components'
@@ -13,21 +12,6 @@ export const metadata: Metadata = {
   title: 'Marketing | Selling Your Chicago Home',
   description: 'PorterGoldberg\'s comprehensive marketing services include professional photography, videography, custom brochures, and targeted digital campaigns to sell your Chicago home.',
 }
-
-const MARKETING_FAQS = [
-  {
-    question: 'What marketing does PorterGoldberg provide when selling a home?',
-    answer: 'PorterGoldberg creates comprehensive marketing packages including professional photography, videography, drone footage, custom brochures, social media campaigns, email marketing, and placement on major real estate platforms like Zillow, Realtor.com, and the MLS.',
-  },
-  {
-    question: 'How does PorterGoldberg market luxury homes in Chicago?',
-    answer: 'Through Jameson Sotheby\'s International Realty, PorterGoldberg provides access to the global Sotheby\'s network, premium print advertising, targeted digital campaigns, and exclusive luxury real estate platforms that reach qualified high-net-worth buyers.',
-  },
-  {
-    question: 'Does PorterGoldberg use professional photography for listings?',
-    answer: 'Yes. Every PorterGoldberg listing receives professional photography, including HDR interior shots, twilight exteriors, and drone aerial photography when appropriate. High-quality visuals are essential for attracting buyers in Chicago\'s competitive market.',
-  },
-]
 
 async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)
@@ -48,8 +32,6 @@ export default async function SellingMarketingPage() {
   }
 
   return (
-    <>
-    <FAQJsonLd faqs={MARKETING_FAQS} />
     <main className="pg-page pg-selling-page pg-selling-subpage">
       {/* Hero Section */}
       <section className="pg-page-hero">
@@ -103,6 +85,5 @@ export default async function SellingMarketingPage() {
         </div>
       </div>
     </main>
-    </>
   )
 }

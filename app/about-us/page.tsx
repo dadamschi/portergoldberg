@@ -3,28 +3,12 @@ import Image from 'next/image'
 import { client } from '@/lib/client'
 import { AGENTS_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
-import { FAQJsonLd } from '@/components/JsonLd'
 import type { Agent } from '@/types'
 
 export const metadata: Metadata = {
   title: 'About Us',
   description: 'Meet Samantha Porter and Lauren Goldberg — Chicago real estate experts at Jameson Sotheby\'s International Realty with 44 years combined experience and $550M+ in career sales.',
 }
-
-const ABOUT_FAQS = [
-  {
-    question: 'Who are Samantha Porter and Lauren Goldberg?',
-    answer: 'Samantha Porter and Lauren Goldberg are the co-founders of PorterGoldberg Residential, a boutique real estate team at Jameson Sotheby\'s International Realty specializing in Chicago\'s North Side neighborhoods. They have 44 years of combined experience and over $550 million in career sales.',
-  },
-  {
-    question: 'What makes PorterGoldberg different from other Chicago realtors?',
-    answer: 'PorterGoldberg takes a personalized, collaborative approach to real estate. With 85% of their business coming from referrals, they focus on building lasting relationships. Both agents are Chicago natives with deep local knowledge, and as mothers with children in local schools, they offer unique insights into neighborhoods and communities.',
-  },
-  {
-    question: 'What is PorterGoldberg\'s connection to Jameson Sotheby\'s International Realty?',
-    answer: 'PorterGoldberg Residential operates under Jameson Sotheby\'s International Realty, which provides access to the prestigious Sotheby\'s global network, premium marketing resources, and luxury real estate expertise.',
-  },
-]
 
 export const revalidate = 86400
 
@@ -97,9 +81,7 @@ export default async function AboutPage() {
   const agents = await getAgents()
 
   return (
-    <>
-      <FAQJsonLd faqs={ABOUT_FAQS} />
-      <main className="pg-page pg-about-page">
+    <main className="pg-page pg-about-page">
         <section className="pg-page-hero">
           <h1>About Us</h1>
           <p>Meet the team behind PorterGoldberg Residential.</p>
@@ -112,6 +94,5 @@ export default async function AboutPage() {
           </div>
         ))}
       </main>
-    </>
   )
 }
