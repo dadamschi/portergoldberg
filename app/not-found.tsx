@@ -8,7 +8,29 @@ export default async function NotFound() {
   const pathname = headersList.get('x-pathname') || 'unknown'
 
   // Create GitHub issue for 404 (only if configured)
-  if (isGitHubConfigured()) {
+  // Skip protocol links (tel:, mailto:, etc.) and common bot probes
+  const skipPatterns = [
+    /^tel:/,
+    /^mailto:/,
+    /^javascript:/,
+    /\.php$/,
+    /wp-admin/,
+    /wp-login/,
+    /\.env/,
+    /^\/terms$/,
+    /^\/privacy$/,
+    /^\/invest$/,
+    /^\/robots\.txt$/,
+    /^\/ads\.txt$/,
+    /^\/\.well-known/,
+    /^\/sitemap/,
+    /^\/feed/,
+    /^\/rss/,
+    /^\/newsletters\//,
+  ]
+  const shouldSkip = skipPatterns.some((pattern) => pattern.test(pathname))
+
+  if (isGitHubConfigured() && !shouldSkip) {
     const title = `404: ${pathname}`
     const existingIssue = await findExistingIssue(title)
 

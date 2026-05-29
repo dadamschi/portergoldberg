@@ -63,6 +63,15 @@ function generateCommentBody(body: ErrorNotifyBody): string {
   return comment
 }
 
+// Errors to ignore (not actionable)
+const IGNORED_ERRORS = [
+  /Loading chunk \d+ failed/i,           // Deployment cache invalidation
+  /ChunkLoadError/i,                      // Same as above
+  /Failed to fetch dynamically imported/, // Dynamic import during deploy
+  /Network Error/i,                       // Transient network issues
+  /Load failed/i,                         // Generic load failures
+]
+
 export async function POST(request: Request) {
   if (!isGitHubConfigured()) {
     console.warn('[ErrorNotify] GitHub not configured, skipping issue creation')
@@ -71,6 +80,12 @@ export async function POST(request: Request) {
 
   const body: ErrorNotifyBody = await request.json()
   const { type, url, message } = body
+
+  // Skip non-actionable errors
+  if (message && IGNORED_ERRORS.some((pattern) => pattern.test(message))) {
+    console.log('[ErrorNotify] Ignoring non-actionable error:', message.slice(0, 50))
+    return NextResponse.json({ success: false, reason: 'ignored error type' }, { status: 200 })
+  }
 
   const title = generateIssueTitle(type, url, message)
 

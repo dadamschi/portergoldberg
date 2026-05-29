@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
@@ -122,7 +122,7 @@ export default async function NewsletterPage({ params }: Props) {
   ])
 
   if (!newsletter) {
-    notFound()
+    redirect('/newsletters')
   }
 
   // Filter out current newsletter from sidebar list

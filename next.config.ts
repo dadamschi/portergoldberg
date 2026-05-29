@@ -75,8 +75,22 @@ const nextConfig: NextConfig = {
         destination: '/client-resources',
         permanent: true,
       },
-
-      
+      // Old URL redirects
+      {
+        source: '/eblasts',
+        destination: '/newsletters',
+        permanent: true,
+      },
+      {
+        source: '/active-listings',
+        destination: '/inventory',
+        permanent: true,
+      },
+      {
+        source: '/schools',
+        destination: '/school-guidance',
+        permanent: true,
+      },
     ]
   },
 }
