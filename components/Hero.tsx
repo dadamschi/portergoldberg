@@ -15,9 +15,9 @@ type HeroCard = {
 }
 
 const HERO_CARDS: HeroCard[] = [
-  { href: '/selling', label: 'Sell', image: '/sell-home.png' },
-  { href: '/buying', label: 'Buying', image: '/buy-home.png' },
-  { href: '/about-us', label: 'About Us', image: '/about-home.png' },
+  { href: '/selling', label: 'Sell', image: '/home-sell.jpg' },
+  { href: '/buying', label: 'Buying', image: '/home-buy.jpg' },
+  { href: '/about-us', label: 'About Us', image: '/home-about.jpg' },
 ]
 
 function useCountUp(target: number, duration = 1200, trigger = false) {

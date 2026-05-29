@@ -28,6 +28,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: '/contact', priority: 0.7, changeFrequency: 'monthly' as const },
     { route: '/client-resources', priority: 0.6, changeFrequency: 'monthly' as const },
     { route: '/vendors', priority: 0.6, changeFrequency: 'monthly' as const },
+    { route: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
+    { route: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
   ]
 
   const staticEntries = staticPages.map(({ route, priority, changeFrequency }) => ({
