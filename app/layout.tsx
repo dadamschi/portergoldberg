@@ -120,9 +120,14 @@ export default async function RootLayout({
 
         {recentNewsletter && <NewsletterToast newsletter={recentNewsletter} />}
 
-        {/* Google Analytics */}
+        {/* Google Analytics (GA4)
+            Property: PorterGoldberg Residential
+            Owner: dadams.chi@gmail.com
+            Created: May 2026
+            Dashboard: analytics.google.com
+        */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-JXKWK4V7GW"
+          src="https://www.googletagmanager.com/gtag/js?id=G-JX5PSVD7FM"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -130,7 +135,7 @@ export default async function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-JXKWK4V7GW');
+            gtag('config', 'G-JX5PSVD7FM');
           `}
         </Script>
       </body>
