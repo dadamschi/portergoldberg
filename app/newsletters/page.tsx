@@ -97,7 +97,7 @@ export default async function NewslettersPage() {
                 <NewsletterCard key={newsletter._id} newsletter={newsletter} />
               ))}
 
-              {newsletters.length > BANNER_AFTER && (
+              {/* {newsletters.length > BANNER_AFTER && (
                 <div className="pg-contact-banner">
                   <Image
                     src="/ywwt2.png"
@@ -108,7 +108,7 @@ export default async function NewslettersPage() {
                     style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
                   />
                 </div>
-              )}
+              )} */}
 
               {secondBatch.map((newsletter) => (
                 <NewsletterCard key={newsletter._id} newsletter={newsletter} />
