@@ -6,7 +6,7 @@ import { TestimonialsList } from '@/components/TestimonialsList'
 
 export const metadata: Metadata = {
   title: 'Testimonials',
-  description: 'Read what our clients say about working with Porter Goldberg Residential.',
+  description: 'Read what our clients say about working with PorterGoldberg Residential.',
 }
 
 export const revalidate = 86400
@@ -27,7 +27,7 @@ export default async function TestimonialsPage() {
     <main className="pg-page pg-testimonials-page">
       <section className="pg-page-hero">
         <h1>Testimonials</h1>
-        <p>Hear from our clients about their experience working with Porter Goldberg</p>
+        <p>Hear from our clients about their experience working with PorterGoldberg</p>
       </section>
 
       <section className="pg-testimonials-section">

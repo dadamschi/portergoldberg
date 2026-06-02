@@ -3,6 +3,7 @@ import { Hero, Listings, Testimonials } from '@/components'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial, Agent } from '@/types'
+import type { PortableTextBlock } from '@portabletext/types'
 
 export const metadata: Metadata = {
   title: 'Chicago Real Estate | PorterGoldberg Residential',
@@ -18,6 +19,7 @@ export const revalidate = 86400
 type HomePageData = {
   settings: {
     hero?: { headline: string; subheadline: string }
+    heroBio?: PortableTextBlock[]
   } | null
   listings: Listing[]
   testimonials: Testimonial[]
@@ -40,10 +42,11 @@ export default async function HomePage() {
   // Use Sanity data if available, otherwise fall back to static data
   const listings = data.listings
   const testimonials = data.testimonials
+  const heroBio = data.settings?.heroBio
 
   return (
     <>
-      <Hero />
+      <Hero heroBio={heroBio} />
       <Listings listings={listings} />
       <Testimonials testimonials={testimonials} />
     </>

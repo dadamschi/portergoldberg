@@ -70,6 +70,9 @@ const components: PortableTextComponents = {
     highlight: ({ children }) => (
       <span className="pg-text-highlight">{children}</span>
     ),
+    cursive: ({ children }) => (
+      <span className="pg-text-cursive">{children}</span>
+    ),
     link: ({ children, value }) => {
       const href = value?.href || ''
 

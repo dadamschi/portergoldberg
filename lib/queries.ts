@@ -294,6 +294,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     companyName,
     affiliation,
     hero { headline, subheadline },
+    heroBio,
     stats[] { display, value, label, description },
     about { sectionLabel, headline, introParagraphs, tagline },
     social[] { platform, url }

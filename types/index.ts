@@ -104,6 +104,7 @@ export type SiteSettings = {
   companyName: string
   affiliation: string
   hero: HeroContent
+  heroBio?: PortableTextBlock[]
   stats: Stat[]
   about: AboutContent
   social: SocialLink[]

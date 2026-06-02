@@ -1,4 +1,4 @@
-# Porter Goldberg - Sanity Studio
+# PorterGoldberg - Sanity Studio
 
 Content management for [portergoldberg.com](https://portergoldberg.com)
 

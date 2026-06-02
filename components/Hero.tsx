@@ -7,6 +7,8 @@ import { addUtmParams } from '@/lib/utils/utm'
 import { openContactForm } from '@/lib/utils/contact'
 import { FacebookIcon, InstagramIcon, YouTubeIcon, SOCIAL_URLS } from './SocialLinks'
 import Image from 'next/image'
+import type { PortableTextBlock } from '@portabletext/types'
+import { PortableTextClient } from './PortableTextClient'
 
 type HeroCard = {
   href: string
@@ -70,7 +72,11 @@ function HeroStat({
   )
 }
 
-export function Hero() {
+type HeroProps = {
+  heroBio?: PortableTextBlock[]
+}
+
+export function Hero({ heroBio }: HeroProps) {
   const statsRef = useRef<HTMLDivElement>(null)
   const [animate, setAnimate] = useState(false)
 
@@ -157,22 +163,28 @@ export function Hero() {
       <div className="pg-hero-bio-wrap">
       <div className="pg-hero-bio">
         <div className="pg-hero-bio-text">
-          <p>
-            <em><strong>Real estate is personal</strong></em>—and so is our approach. We don&apos;t simply advise; we
-            collaborate, advocate, and help shape the lifestyle you&apos;re building. The process—buying,
-            selling, or creating something new—should feel seamless and smart.
-          </p>
-          <p>
-            With complementary perspectives and a deep understanding of Chicago real estate,{' '}
-            <em><strong>Samantha Porter and Lauren Goldberg</strong></em> anticipate challenges, identify opportunities,
-            and connect you to the resources that matter.
-          </p>
-          <p>
-            Experience the extraordinary with <em><strong>Jameson Sotheby&apos;s International Realty</strong></em>. Our
-            global brand delivers peerless client service, cutting-edge technology, world-class
-            marketing, and an international referral network—all working together to achieve the
-            best results.
-          </p>
+          {heroBio ? (
+            <PortableTextClient value={heroBio} />
+          ) : (
+            <>
+              <p>
+                <em><strong>Real estate is personal</strong></em>—and so is our approach. We don&apos;t simply advise; we
+                collaborate, advocate, and help shape the lifestyle you&apos;re building. The process—buying,
+                selling, or creating something new—should feel seamless and smart.
+              </p>
+              <p>
+                With complementary perspectives and a deep understanding of Chicago real estate,{' '}
+                <em><strong>Samantha Porter and Lauren Goldberg</strong></em> anticipate challenges, identify opportunities,
+                and connect you to the resources that matter.
+              </p>
+              <p>
+                Experience the extraordinary with <em><strong>Jameson Sotheby&apos;s International Realty</strong></em>. Our
+                global brand delivers peerless client service, cutting-edge technology, world-class
+                marketing, and an international referral network—all working together to achieve the
+                best results.
+              </p>
+            </>
+          )}
           <div className="pg-hero-bio-links">
             <a
               href={addUtmParams(SOCIAL_URLS.facebook, { campaign: 'social' })}

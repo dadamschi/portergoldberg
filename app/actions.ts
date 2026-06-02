@@ -34,7 +34,7 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
   // Send to info@ and artplexity
   const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
   const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  const fromEmail = `"Porter Goldberg Website" <${fromAddress}>`
+  const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
 
   const { error } = await sendEmail({
     from: fromEmail,
@@ -130,7 +130,7 @@ export async function submitTestForm(data: TestFormData): Promise<TestResult> {
   }
 
   const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  const fromEmail = `"Porter Goldberg" <${fromAddress}>`
+  const fromEmail = `"PorterGoldberg" <${fromAddress}>`
 
   // Send email via SMTP to TEST recipient only (no portergoldberg addresses)
   const { error } = await sendEmail({

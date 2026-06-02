@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 
   // Send notification email to info@
   const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  const fromEmail = `"Porter Goldberg Website" <${fromAddress}>`
+  const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
   const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
 
   const { error } = await sendEmail({

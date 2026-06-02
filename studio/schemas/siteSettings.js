@@ -79,6 +79,46 @@ export const siteSettings = defineType({
       validation: (rule) => rule.max(4),
     }),
     defineField({
+      name: "heroBio",
+      title: "Hero Bio Section",
+      description: "Rich text content for the hero bio section on the homepage",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+              { title: "Gold Highlight", value: "highlight" },
+              { title: "Cursive", value: "cursive" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  {
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                    validation: (rule) =>
+                      rule.uri({
+                        scheme: ["http", "https", "mailto", "tel"],
+                        allowRelative: true,
+                      }),
+                  },
+                ],
+              },
+            ],
+          },
+        }),
+      ],
+    }),
+    defineField({
       name: "about",
       title: "About Us Section",
       type: "object",

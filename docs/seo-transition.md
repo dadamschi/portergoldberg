@@ -73,7 +73,7 @@ Rich snippets in search results: property photos, price, availability status.
 
 ### 1. Dynamic Metadata Per Listing
 ```
-Title: "2129 N. Damen | $965,000 | Bucktown | Porter Goldberg"
+Title: "2129 N. Damen | $965,000 | Bucktown | PorterGoldberg"
 Description: "3BR/2BA in Bucktown. 50% Sold. Contact Samantha Porter..."
 ```
 

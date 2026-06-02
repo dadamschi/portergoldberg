@@ -9,6 +9,31 @@
 /* Adobe Typekit - Proxima Nova (fallback) */
 @import url("https://use.typekit.net/mpm8jzz.css");
 
+/* PP Eiko - Cursive font */
+@font-face {
+  font-family: 'PP Eiko';
+  src: url('/fonts/ppeiko-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Eiko';
+  src: url('/fonts/ppeiko-thin.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Eiko';
+  src: url('/fonts/ppeiko-heavy.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -1052,6 +1077,13 @@ body {
 
 .pg-text-highlight {
   color: var(--pg-gold);
+  font-family: 'PP Eiko', Georgia, serif;
+  font-weight: 500;
+}
+
+.pg-text-cursive {
+  font-family: 'PP Eiko', Georgia, serif;
+  font-weight: 500;
 }
 
 .pg-btn-gold:hover {
@@ -1554,6 +1586,7 @@ body {
 
 .pg-listing-status {
   position: absolute;
+  border-radius: 4px;
   top: 16px;
   right: 16px;
   z-index: 2;
