@@ -56,7 +56,8 @@ export const halcyonPage = defineType({
             decorators: [
               { title: "Bold", value: "strong" },
               { title: "Italic", value: "em" },
-              { title: "Highlight", value: "highlight" },
+              { title: "Gold Highlight", value: "highlight" },
+              { title: "Cursive", value: "cursive" },
             ],
           },
         },

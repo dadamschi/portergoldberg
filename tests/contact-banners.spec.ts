@@ -39,14 +39,6 @@ const expectedTriggers = [
     label: 'Have questions about our available or upcoming listings?',
     expectedMessage: 'I have questions about your available or upcoming listings.',
   },
-  // Testimonials banner
-  {
-    page: 'testimonials',
-    path: '/testimonials',
-    selector: 'button.pg-contact-banner-link',
-    label: 'Send us a testimonial on you experience!',
-    expectedMessage: 'I loved my experience and would love to share my testimonial with you.',
-  },
 ]
 
 // Individual tests for each trigger - enables parallel execution

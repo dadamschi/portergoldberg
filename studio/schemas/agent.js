@@ -60,6 +60,8 @@ export const agent = defineType({
                 decorators: [
                   { title: "Bold", value: "strong" },
                   { title: "Italic", value: "em" },
+                  { title: "Gold Highlight", value: "highlight" },
+                  { title: "Cursive", value: "cursive" },
                 ],
                 annotations: [
                   {
