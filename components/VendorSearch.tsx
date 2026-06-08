@@ -209,7 +209,7 @@ export function VendorSearch({ vendors }: VendorSearchProps) {
                           )}
                           {vendor.instagram && (
                             <a
-                              href={`https://instagram.com/${vendor.instagram.replace('@', '')}`}
+                              href={addUtmParams(`https://instagram.com/${vendor.instagram.replace('@', '')}`, { campaign: 'vendor-referral' })}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="pg-vendor-instagram"

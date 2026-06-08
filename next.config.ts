@@ -24,9 +24,9 @@ const nextConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live",
-              "style-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net",
               "img-src 'self' data: blob: https: https://cdn.sanity.io",
-              "font-src 'self' data:",
+              "font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net",
               "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://vitals.vercel-insights.com https://vercel.live",
               "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://vercel.live",
               "media-src 'self' blob:",

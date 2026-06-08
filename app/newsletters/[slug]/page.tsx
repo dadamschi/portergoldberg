@@ -19,11 +19,15 @@ type Props = {
 
 // Cached to deduplicate requests between generateMetadata and page component
 const getNewsletter = cache(async (slug: string, preview = false): Promise<Newsletter | null> => {
-  return client.fetch<Newsletter | null>(
-    NEWSLETTER_BY_SLUG_QUERY,
-    { slug },
-    preview ? { perspective: 'previewDrafts' } : undefined
-  )
+  if (preview) {
+    // Skip Next.js cache for preview requests
+    return client.fetch<Newsletter | null>(
+      NEWSLETTER_BY_SLUG_QUERY,
+      { slug },
+      { perspective: 'previewDrafts', next: { revalidate: 0 } }
+    )
+  }
+  return client.fetch<Newsletter | null>(NEWSLETTER_BY_SLUG_QUERY, { slug })
 })
 
 const getAllNewsletters = cache(async (): Promise<NewsletterPreview[]> => {
@@ -120,7 +124,7 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
   const instagramHandle = section.instagram?.replace('@', '')
   const instagramLink = instagramHandle ? (
     <a
-      href={`https://instagram.com/${instagramHandle}`}
+      href={addUtmParams(`https://instagram.com/${instagramHandle}`, { campaign: 'newsletter' })}
       target="_blank"
       rel="noreferrer"
       className="pg-newsletter-instagram-link"
