@@ -123,6 +123,7 @@ export type HubSpotVendor = {
   phone?: string
   email?: string
   website?: string
+  instagram?: string
   isPersonalContact?: boolean
 }
 

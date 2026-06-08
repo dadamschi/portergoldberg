@@ -229,6 +229,7 @@ export type NewsletterImageSection = {
   image: SanityImage
   alt?: string
   linkUrl?: string
+  instagram?: string
 }
 
 // Preview for list page

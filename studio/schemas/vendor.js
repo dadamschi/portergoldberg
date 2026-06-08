@@ -56,6 +56,12 @@ export const vendor = defineType({
       title: "Website",
       type: "url",
     }),
+    defineField({
+      name: "instagram",
+      title: "Instagram",
+      type: "string",
+      description: "Instagram handle (without @)",
+    }),
   ],
   orderings: [
     {

@@ -431,7 +431,8 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
       heading,
       "image": image { ${imageFragment} },
       alt,
-      linkUrl
+      linkUrl,
+      instagram
     },
     hubspotUrl
   }

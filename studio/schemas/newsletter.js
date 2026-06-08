@@ -89,7 +89,20 @@ export const newsletter = defineType({
               type: "string",
               description: "Use full URL (https://...) for external links, relative path (/contact) for internal links, or #contact:Your message to open the contact form with a pre-filled message",
             }),
+            defineField({
+              name: "instagram",
+              title: "Instagram Handle",
+              type: "string",
+              description: "Instagram handle (with or without @) - displays as clickable link",
+            }),
           ],
+          validation: (rule) =>
+            rule.custom((section) => {
+              if (!section?.linkUrl && !section?.instagram) {
+                return "Either a Link URL or Instagram handle is required";
+              }
+              return true;
+            }),
           preview: {
             select: {
               media: "image",

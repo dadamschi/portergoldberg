@@ -14,11 +14,16 @@ export const revalidate = 604800 // 1 week - webhook handles on-demand revalidat
 
 type Props = {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ preview?: string }>
 }
 
 // Cached to deduplicate requests between generateMetadata and page component
-const getNewsletter = cache(async (slug: string): Promise<Newsletter | null> => {
-  return client.fetch<Newsletter | null>(NEWSLETTER_BY_SLUG_QUERY, { slug })
+const getNewsletter = cache(async (slug: string, preview = false): Promise<Newsletter | null> => {
+  return client.fetch<Newsletter | null>(
+    NEWSLETTER_BY_SLUG_QUERY,
+    { slug },
+    preview ? { perspective: 'previewDrafts' } : undefined
+  )
 })
 
 const getAllNewsletters = cache(async (): Promise<NewsletterPreview[]> => {
@@ -78,46 +83,67 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
     />
   )
 
+  // Render the image with optional link
+  let linkedImage = imageElement
   if (section.linkUrl) {
     // Contact form trigger: #contact:Your message here
     if (section.linkUrl.startsWith('#contact:')) {
       const message = section.linkUrl.replace('#contact:', '')
-      return (
+      linkedImage = (
         <ContactLink message={message} className="pg-newsletter-section-link">
           {imageElement}
         </ContactLink>
       )
-    }
-
-    // Internal links use Next.js Link for client-side navigation
-    if (section.linkUrl.startsWith('/')) {
-      return (
+    } else if (section.linkUrl.startsWith('/')) {
+      // Internal links use Next.js Link for client-side navigation
+      linkedImage = (
         <Link href={section.linkUrl} className="pg-newsletter-section-link">
           {imageElement}
         </Link>
       )
+    } else {
+      // External links open in new tab with UTM params
+      linkedImage = (
+        <a
+          href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
+          target="_blank"
+          rel="noreferrer"
+          className="pg-newsletter-section-link"
+        >
+          {imageElement}
+        </a>
+      )
     }
-
-    // External links open in new tab with UTM params
-    return (
-      <a
-        href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
-        target="_blank"
-        rel="noreferrer"
-        className="pg-newsletter-section-link"
-      >
-        {imageElement}
-      </a>
-    )
   }
 
-  return imageElement
+  // Render Instagram handle as clickable link if present
+  const instagramHandle = section.instagram?.replace('@', '')
+  const instagramLink = instagramHandle ? (
+    <a
+      href={`https://instagram.com/${instagramHandle}`}
+      target="_blank"
+      rel="noreferrer"
+      className="pg-newsletter-instagram-link"
+    >
+      @{instagramHandle}
+    </a>
+  ) : null
+
+  return (
+    <>
+      {linkedImage}
+      {instagramLink}
+    </>
+  )
 }
 
-export default async function NewsletterPage({ params }: Props) {
+export default async function NewsletterPage({ params, searchParams }: Props) {
   const { slug } = await params
+  const { preview } = await searchParams
+  const isPreview = preview === 'true'
+
   const [newsletter, allNewsletters] = await Promise.all([
-    getNewsletter(slug),
+    getNewsletter(slug, isPreview),
     getAllNewsletters()
   ])
 
@@ -132,6 +158,11 @@ export default async function NewsletterPage({ params }: Props) {
 
   return (
     <main className="pg-page">
+      {isPreview && (
+        <div className="pg-preview-banner">
+          Preview Mode — This is a draft
+        </div>
+      )}
       <section className="pg-newsletter-detail-section">
         <div className="pg-newsletter-detail-layout">
           <div className="pg-newsletter-detail-main">

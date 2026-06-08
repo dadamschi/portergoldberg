@@ -207,6 +207,16 @@ export function VendorSearch({ vendors }: VendorSearchProps) {
                               Website
                             </a>
                           )}
+                          {vendor.instagram && (
+                            <a
+                              href={`https://instagram.com/${vendor.instagram.replace('@', '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="pg-vendor-instagram"
+                            >
+                              Instagram
+                            </a>
+                          )}
                         </div>
 
                         {!vendor.isPersonalContact && (vendor.address || vendor.city) && (

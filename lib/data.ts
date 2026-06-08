@@ -100,5 +100,6 @@ export type Vendor = {
   altPhone?: string
   email?: string
   website?: string
+  instagram?: string
 }
 
