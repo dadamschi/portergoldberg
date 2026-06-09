@@ -1,6 +1,5 @@
 import { headers } from 'next/headers'
 import Link from 'next/link'
-import { createIssue, findExistingIssue, addCommentToIssue, isGitHubConfigured } from '@/lib/github'
 import { notify404 } from '@/lib/slack'
 
 export default async function NotFound() {
@@ -8,7 +7,6 @@ export default async function NotFound() {
   const referer = headersList.get('referer')
   const pathname = headersList.get('x-pathname') || 'unknown'
 
-  // Create GitHub issue for 404 (only if configured)
   // Skip protocol links (tel:, mailto:, etc.) and common bot probes
   const skipPatterns = [
     /^tel:/,
@@ -28,35 +26,13 @@ export default async function NotFound() {
     /^\/feed/,
     /^\/rss/,
     /^\/newsletters\//,
+    /^\/$/, // Root path edge cases (prefetch/hydration)
   ]
   const shouldSkip = skipPatterns.some((pattern) => pattern.test(pathname))
 
   // Send Slack notification (non-blocking)
-  console.log('[NotFound] pathname:', pathname, 'shouldSkip:', shouldSkip, 'referer:', referer)
   if (!shouldSkip) {
-    notify404(pathname, referer).catch((err) => {
-      console.error('[NotFound] Slack notification failed:', err)
-    })
-  }
-
-  if (isGitHubConfigured() && !shouldSkip) {
-    const title = `404: ${pathname}`
-    const existingIssue = await findExistingIssue(title)
-
-    if (existingIssue) {
-      await addCommentToIssue(
-        existingIssue.number,
-        `**Occurred again at ${new Date().toISOString()}**\n\n- Referer: ${referer || 'none'}`
-      )
-    } else {
-      await createIssue({
-        title,
-        body: `## Page Not Found (404)\n\n| Field | Value |\n|-------|-------|\n| **URL** | ${pathname} |\n| **Referer** | ${referer || 'none'} |\n| **Timestamp** | ${new Date().toISOString()} |`,
-        labels: ['bug/404'],
-      }).catch((err) => {
-        console.error('[NotFound] Failed to create issue:', err)
-      })
-    }
+    notify404(pathname, referer).catch(() => {})
   }
 
   return (

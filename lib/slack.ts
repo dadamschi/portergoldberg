@@ -24,19 +24,17 @@ export async function notifySlack(message: SlackMessage): Promise<void> {
   if (!SLACK_WEBHOOK_URL) return
 
   try {
-    const response = await fetch(SLACK_WEBHOOK_URL, {
+    await fetch(SLACK_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(message),
     })
-    console.log('[Slack] Notification sent, status:', response.status)
   } catch (err) {
     console.error('[Slack] Failed to send notification:', err)
   }
 }
 
 export async function notify404(pathname: string, referer: string | null): Promise<void> {
-  console.log('[Slack] notify404 called, webhook configured:', !!SLACK_WEBHOOK_URL)
   if (!SLACK_WEBHOOK_URL) return
 
   await notifySlack({
@@ -58,5 +56,59 @@ export async function notify404(pathname: string, referer: string | null): Promi
         elements: [{ type: 'mrkdwn', text: `_${new Date().toISOString()}_` }],
       },
     ],
+  })
+}
+
+type ErrorNotification = {
+  type: 'error' | 'global-error'
+  url: string
+  message?: string
+  stack?: string
+  userAgent?: string
+  referer?: string
+}
+
+export async function notifyError(error: ErrorNotification): Promise<void> {
+  if (!SLACK_WEBHOOK_URL) return
+
+  const emoji = error.type === 'global-error' ? '💥' : '⚠️'
+  const title = error.type === 'global-error' ? 'Global Error' : 'Runtime Error'
+
+  const blocks: SlackBlock[] = [
+    {
+      type: 'header',
+      text: { type: 'plain_text', text: `${emoji} ${title}` },
+    },
+    {
+      type: 'section',
+      fields: [
+        { type: 'mrkdwn', text: `*URL:*\n${error.url}` },
+        { type: 'mrkdwn', text: `*Referer:*\n${error.referer || 'Direct/None'}` },
+      ],
+    },
+  ]
+
+  if (error.message) {
+    blocks.push({
+      type: 'section',
+      text: { type: 'mrkdwn', text: `*Message:*\n\`\`\`${error.message.slice(0, 500)}\`\`\`` },
+    })
+  }
+
+  if (error.stack) {
+    blocks.push({
+      type: 'section',
+      text: { type: 'mrkdwn', text: `*Stack:*\n\`\`\`${error.stack.slice(0, 500)}\`\`\`` },
+    })
+  }
+
+  blocks.push({
+    type: 'context',
+    elements: [{ type: 'mrkdwn', text: `_${new Date().toISOString()}_` }],
+  })
+
+  await notifySlack({
+    text: `${title}: ${error.message?.slice(0, 50) || 'Unknown error'}`,
+    blocks,
   })
 }
