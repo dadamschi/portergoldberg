@@ -91,6 +91,11 @@ const nextConfig: NextConfig = {
         destination: '/school-guidance',
         permanent: true,
       },
+      {
+        source: '/halcyon-developement',
+        destination: '/halcyon-development',
+        permanent: true,
+      },
     ]
   },
 }
