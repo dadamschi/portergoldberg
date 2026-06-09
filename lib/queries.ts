@@ -315,13 +315,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     brochureUrl,
     featured
   },
-  "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(defined(order) asc, order asc, _createdAt desc) {
-    _id,
-    clientName,
-    clientTitle,
-    date,
-    quote
-  } + *[_type == "testimonial" && pinOnHomePage != true] | order(defined(order) asc, order asc, _createdAt desc) [0...4] {
+  "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(order asc, _createdAt desc) {
     _id,
     clientName,
     clientTitle,
