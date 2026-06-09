@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { createIssue, findExistingIssue, addCommentToIssue, isGitHubConfigured } from '@/lib/github'
+import { notify404 } from '@/lib/slack'
 
 export default async function NotFound() {
   const headersList = await headers()
@@ -29,6 +30,14 @@ export default async function NotFound() {
     /^\/newsletters\//,
   ]
   const shouldSkip = skipPatterns.some((pattern) => pattern.test(pathname))
+
+  // Send Slack notification (non-blocking)
+  console.log('[NotFound] pathname:', pathname, 'shouldSkip:', shouldSkip, 'referer:', referer)
+  if (!shouldSkip) {
+    notify404(pathname, referer).catch((err) => {
+      console.error('[NotFound] Slack notification failed:', err)
+    })
+  }
 
   if (isGitHubConfigured() && !shouldSkip) {
     const title = `404: ${pathname}`
