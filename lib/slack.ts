@@ -8,13 +8,16 @@ export function isSlackConfigured(): boolean {
   return !!SLACK_WEBHOOK_URL
 }
 
+type SlackBlock = {
+  type: string
+  text?: { type: string; text: string }
+  fields?: Array<{ type: string; text: string }>
+  elements?: Array<{ type: string; text: string }>
+}
+
 type SlackMessage = {
   text: string
-  blocks?: Array<{
-    type: string
-    text?: { type: string; text: string }
-    fields?: Array<{ type: string; text: string }>
-  }>
+  blocks?: SlackBlock[]
 }
 
 export async function notifySlack(message: SlackMessage): Promise<void> {
@@ -52,7 +55,7 @@ export async function notify404(pathname: string, referer: string | null): Promi
       },
       {
         type: 'context',
-        text: { type: 'mrkdwn', text: `_${new Date().toLocaleString()}_` },
+        elements: [{ type: 'mrkdwn', text: `_${new Date().toISOString()}_` }],
       },
     ],
   })
