@@ -10,6 +10,30 @@ type NavProps = {
   logoSrc?: string
 }
 
+// Helper to detect external links
+const isExternal = (href: string) => href.startsWith('http')
+
+// NavLink component that handles internal vs external links
+function NavLink({ href, className, children, onClick }: {
+  href: string
+  className: string
+  children: React.ReactNode
+  onClick?: () => void
+}) {
+  if (isExternal(href)) {
+    return (
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer" onClick={onClick}>
+        {children}
+      </a>
+    )
+  }
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {children}
+    </Link>
+  )
+}
+
 export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: NavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
@@ -46,9 +70,9 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
               {item.children && hoveredItem === item.label && (
                 <div className="pg-dropdown">
                   {item.children.map((child) => (
-                    <Link key={child.label} href={child.href ?? '#'} className="pg-dropdown-link">
+                    <NavLink key={child.label} href={child.href ?? '#'} className="pg-dropdown-link">
                       {child.label}
-                    </Link>
+                    </NavLink>
                   ))}
                 </div>
               )}
@@ -95,14 +119,14 @@ export function Nav({ items, logoSrc = '/PorterGoldberg-Residential.webp' }: Nav
                   {isExpanded && (
                     <div className="pg-mobile-subnav">
                       {item.children.map((child) => (
-                        <Link
+                        <NavLink
                           key={child.label}
                           href={child.href ?? '#'}
                           className="pg-mobile-sublink"
                           onClick={() => setMobileOpen(false)}
                         >
                           {child.label}
-                        </Link>
+                        </NavLink>
                       ))}
                     </div>
                   )}
