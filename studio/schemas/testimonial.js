@@ -71,15 +71,30 @@ export const testimonial = defineType({
       description: "Lower numbers appear first in carousel",
     }),
   ],
+  orderings: [
+    {
+      title: "Display Order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+    {
+      title: "Client Name",
+      name: "clientNameAsc",
+      by: [{ field: "clientName", direction: "asc" }],
+    },
+  ],
   preview: {
     select: {
       title: "clientName",
       quote: "quote",
+      order: "order",
+      pinned: "pinOnHomePage",
     },
-    prepare({ title, quote }) {
+    prepare({ title, quote, order, pinned }) {
       const text = quote?.[0]?.children?.[0]?.text || "";
+      const prefix = pinned ? `${order ?? "—"}. ` : "";
       return {
-        title,
+        title: `${prefix}${title}`,
         subtitle: text.slice(0, 80) + (text.length > 80 ? "..." : ""),
       };
     },

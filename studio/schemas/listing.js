@@ -110,6 +110,13 @@ export const listing = defineType({
       initialValue: false,
     }),
     defineField({
+      name: "halcyonOrder",
+      title: "Halcyon Page Order",
+      type: "number",
+      description: "Display order on the Halcyon Development page (lower numbers appear first)",
+      hidden: ({ document }) => !document?.isHalcyonProject,
+    }),
+    defineField({
       name: "units",
       title: "Units",
       type: "number",

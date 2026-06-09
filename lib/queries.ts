@@ -235,7 +235,7 @@ export const BUY_PAGE_QUERY = defineQuery(/* groq */ `
 // =============================================================================
 
 export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
-  "available": *[_type == "listing" && isHalcyonProject == true && statusType in ["active", "coming"]] | order(order asc) {
+  "available": *[_type == "listing" && isHalcyonProject == true && statusType in ["active", "coming"]] | order(halcyonOrder asc) {
     _id,
     address,
     neighborhood,
@@ -250,7 +250,7 @@ export const HALCYON_LISTINGS_QUERY = defineQuery(/* groq */ `{
     brochureUrl,
     units
   },
-  "sold": *[_type == "listing" && isHalcyonProject == true && statusType == "sold"] | order(order asc) {
+  "sold": *[_type == "listing" && isHalcyonProject == true && statusType == "sold"] | order(halcyonOrder asc) {
     _id,
     address,
     neighborhood,
