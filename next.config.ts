@@ -96,6 +96,11 @@ const nextConfig: NextConfig = {
         destination: '/halcyon-development',
         permanent: true,
       },
+      {
+        source: '/about',
+        destination: '/about-us',
+        permanent: true,
+      },
     ]
   },
 }
