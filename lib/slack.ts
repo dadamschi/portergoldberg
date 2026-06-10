@@ -34,8 +34,20 @@ export async function notifySlack(message: SlackMessage): Promise<void> {
   }
 }
 
-export async function notify404(pathname: string, referer: string | null): Promise<void> {
+type NotFound404 = {
+  pathname: string
+  fullUrl: string
+  referer: string | null
+  userAgent: string
+  isRSC: boolean
+  isPrefetch: boolean
+}
+
+export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch }: NotFound404): Promise<void> {
   if (!SLACK_WEBHOOK_URL) return
+
+  // Build request type label
+  const requestType = isPrefetch ? 'Prefetch' : isRSC ? 'RSC Navigation' : 'Direct'
 
   await notifySlack({
     text: `404: ${pathname}`,
@@ -47,13 +59,20 @@ export async function notify404(pathname: string, referer: string | null): Promi
       {
         type: 'section',
         fields: [
-          { type: 'mrkdwn', text: `*URL:*\n${pathname}` },
+          { type: 'mrkdwn', text: `*Path:*\n${pathname}` },
+          { type: 'mrkdwn', text: `*Request Type:*\n${requestType}` },
+        ],
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*Full URL:*\n${fullUrl}` },
           { type: 'mrkdwn', text: `*Referer:*\n${referer || 'Direct/None'}` },
         ],
       },
       {
         type: 'context',
-        elements: [{ type: 'mrkdwn', text: `_${new Date().toISOString()}_` }],
+        elements: [{ type: 'mrkdwn', text: `_${userAgent} • ${new Date().toISOString()}_` }],
       },
     ],
   })

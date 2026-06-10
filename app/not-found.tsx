@@ -6,6 +6,10 @@ export default async function NotFound() {
   const headersList = await headers()
   const referer = headersList.get('referer')
   const pathname = headersList.get('x-pathname') || 'unknown'
+  const fullUrl = headersList.get('x-url') || 'unknown'
+  const userAgent = headersList.get('user-agent') || 'unknown'
+  const isRSC = headersList.get('rsc') === '1'
+  const isPrefetch = headersList.get('next-router-prefetch') === '1'
 
   // Skip protocol links (tel:, mailto:, etc.) and common bot probes
   const skipPatterns = [
@@ -32,7 +36,7 @@ export default async function NotFound() {
 
   // Send Slack notification (non-blocking)
   if (!shouldSkip) {
-    notify404(pathname, referer).catch(() => {})
+    notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch }).catch(() => {})
   }
 
   return (
