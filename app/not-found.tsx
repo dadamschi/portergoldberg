@@ -32,7 +32,7 @@ export default async function NotFound() {
     /^\/newsletters\//,
     /^\/$/, // Root path edge cases (prefetch/hydration)
   ]
-  const shouldSkip = skipPatterns.some((pattern) => pattern.test(pathname))
+  const shouldSkip = pathname === 'unknown' || skipPatterns.some((pattern) => pattern.test(pathname))
 
   // Send Slack notification (non-blocking)
   if (!shouldSkip) {
