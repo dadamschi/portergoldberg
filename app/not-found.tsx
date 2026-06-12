@@ -11,11 +11,16 @@ export default async function NotFound() {
   const isRSC = headersList.get('rsc') === '1'
   const isPrefetch = headersList.get('next-router-prefetch') === '1'
 
+  // Edge cache debugging
+  const vercelId = headersList.get('x-vercel-id') || 'none'
+  const cacheStatus = headersList.get('x-vercel-cache') || 'none'
+  const forwardedFor = headersList.get('x-forwarded-for') || 'none'
+
   // Skip protocol links (tel:, mailto:, etc.) and common bot probes
   const skipPatterns = [
-    /^tel:/,
-    /^mailto:/,
-    /^javascript:/,
+    /\/tel:/,      // tel: links that got prefixed with /
+    /\/mailto:/,   // mailto: links that got prefixed with /
+    /javascript:/, // javascript: links
     /\.php$/,
     /wp-admin/,
     /wp-login/,
@@ -32,11 +37,25 @@ export default async function NotFound() {
     /^\/newsletters\//,
     /^\/$/, // Root path edge cases (prefetch/hydration)
   ]
-  const shouldSkip = pathname === 'unknown' || skipPatterns.some((pattern) => pattern.test(pathname))
+
+  // Skip notifications from bots (they still access the site, just no Slack spam)
+  const botPatterns = [/Slackbot/i, /facebookexternalhit/i, /Twitterbot/i, /LinkedInBot/i, /Discordbot/i]
+  const isBot = botPatterns.some((pattern) => pattern.test(userAgent))
+
+  const shouldSkip = pathname === 'unknown' || isBot || skipPatterns.some((pattern) => pattern.test(pathname))
 
   // Send Slack notification (non-blocking)
   if (!shouldSkip) {
-    notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch }).catch(() => {})
+    notify404({
+      pathname,
+      fullUrl,
+      referer,
+      userAgent,
+      isRSC,
+      isPrefetch,
+      vercelId,
+      cacheStatus,
+    }).catch(() => {})
   }
 
   return (

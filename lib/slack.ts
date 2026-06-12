@@ -41,13 +41,15 @@ type NotFound404 = {
   userAgent: string
   isRSC: boolean
   isPrefetch: boolean
+  vercelId: string
+  cacheStatus: string
 }
 
-export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch }: NotFound404): Promise<void> {
+export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch, vercelId, cacheStatus }: NotFound404): Promise<void> {
   if (!SLACK_WEBHOOK_URL) return
 
   // Build request type label
-  const requestType = isPrefetch ? 'Prefetch' : isRSC ? 'RSC Navigation' : 'Direct'
+  const requestType = isPrefetch ? 'Prefetch' : isRSC ? 'RSC' : 'Direct'
 
   await notifySlack({
     text: `404: ${pathname}`,
@@ -60,7 +62,7 @@ export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, 
         type: 'section',
         fields: [
           { type: 'mrkdwn', text: `*Path:*\n${pathname}` },
-          { type: 'mrkdwn', text: `*Request Type:*\n${requestType}` },
+          { type: 'mrkdwn', text: `*Type:*\n${requestType} | Cache: ${cacheStatus}` },
         ],
       },
       {
@@ -72,7 +74,7 @@ export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, 
       },
       {
         type: 'context',
-        elements: [{ type: 'mrkdwn', text: `_${userAgent} • ${new Date().toISOString()}_` }],
+        elements: [{ type: 'mrkdwn', text: `_${vercelId} • ${new Date().toISOString()}_` }],
       },
     ],
   })
