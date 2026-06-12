@@ -49,8 +49,7 @@ function NewsletterCard({ newsletter }: { newsletter: NewsletterPreview }) {
           />
         ) : (
           <div className="pg-newsletter-card-placeholder">
-            <span>YOUR WEEKLY</span>
-            <span>WALK-THROUGH</span>
+            <span>YWWT</span>
           </div>
         )}
       </div>
