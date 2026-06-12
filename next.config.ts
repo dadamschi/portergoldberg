@@ -101,6 +101,11 @@ const nextConfig: NextConfig = {
         destination: '/about-us',
         permanent: true,
       },
+      {
+        source: '/inventory-2',
+        destination: '/inventory',
+        permanent: true,
+      },
     ]
   },
 }
