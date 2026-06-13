@@ -5,8 +5,8 @@ import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
 import { TestimonialsList } from '@/components/TestimonialsList'
 
 export const metadata: Metadata = {
-  title: 'Testimonials',
-  description: 'Read what our clients say about working with PorterGoldberg Residential.',
+  title: 'Client Reviews & Testimonials',
+  description: 'Read reviews and testimonials from our clients about their experience buying and selling homes with PorterGoldberg Residential in Chicago.',
 }
 
 export const revalidate = 86400
@@ -26,8 +26,8 @@ export default async function TestimonialsPage() {
   return (
     <main className="pg-page pg-testimonials-page">
       <section className="pg-page-hero">
-        <h1>Testimonials</h1>
-        <p>Hear from our clients about their experience working with PorterGoldberg</p>
+        <h1>Client Reviews & Testimonials</h1>
+        <p>Hear from our clients about their experience buying and selling homes with PorterGoldberg</p>
       </section>
 
       <section className="pg-testimonials-section">
