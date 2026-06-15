@@ -70,6 +70,12 @@ export const testimonial = defineType({
       type: "number",
       description: "Lower numbers appear first in carousel",
     }),
+    defineField({
+      name: "hubspotContactId",
+      title: "HubSpot Contact ID",
+      type: "string",
+      description: "Links this testimonial to a HubSpot contact",
+    }),
   ],
   orderings: [
     {

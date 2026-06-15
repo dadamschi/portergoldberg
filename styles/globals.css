@@ -6121,3 +6121,198 @@ body {
 .pg-portable-image-link:hover {
   opacity: 0.9;
 }
+
+/* ============================================================
+   TESTIMONIAL SUBMISSION PAGE
+   ============================================================ */
+
+.pg-submit-review-page {
+  min-height: 100vh;
+}
+
+.pg-submit-review-section {
+  padding: 60px 20px;
+  background: #f9f9f9;
+}
+
+.pg-submit-review-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border: 1px solid #e0e0e0;
+}
+
+.pg-testimonial-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pg-testimonial-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pg-testimonial-field label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.pg-testimonial-field label span {
+  font-weight: 400;
+  color: #666;
+}
+
+.pg-testimonial-success {
+  text-align: center;
+}
+
+.pg-testimonial-success h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: var(--pg-black);
+}
+
+.pg-testimonial-success > p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.pg-testimonial-submitted {
+  background: #f5f5f5;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.pg-testimonial-submitted h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.pg-testimonial-submitted blockquote {
+  font-size: 16px;
+  line-height: 1.7;
+  font-style: italic;
+  margin: 0 0 12px;
+  color: #1a1a1a;
+}
+
+.pg-testimonial-attribution {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.pg-testimonial-google {
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pg-testimonial-google h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.pg-testimonial-google > p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.pg-testimonial-google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #4285f4;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pg-testimonial-google-btn:hover {
+  background: #3367d6;
+}
+
+.pg-testimonial-hint {
+  font-size: 12px;
+  color: #999;
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .pg-submit-review-inner {
+    padding: 24px;
+  }
+}
+
+/* Existing Testimonial (read-only view) */
+.pg-existing-testimonial {
+  text-align: center;
+}
+
+.pg-existing-testimonial-intro {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.pg-existing-testimonial-quote {
+  background: #f5f5f5;
+  padding: 32px;
+  margin: 0 0 24px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.8;
+  font-style: italic;
+  color: #1a1a1a;
+}
+
+.pg-existing-testimonial-quote p {
+  margin: 0 0 16px;
+}
+
+.pg-existing-testimonial-quote p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-existing-testimonial-meta {
+  margin-bottom: 32px;
+}
+
+.pg-existing-testimonial-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.pg-existing-testimonial-title {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 4px;
+}
+
+.pg-existing-testimonial-date {
+  font-size: 13px;
+  color: #999;
+  margin: 8px 0 0;
+}
+
+.pg-existing-testimonial-note {
+  font-size: 14px;
+  color: #999;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}

@@ -13,6 +13,13 @@ export type HubSpotContact = {
   tier: string
 }
 
+export type HubSpotContactDetails = {
+  id: string
+  firstname: string
+  lastname: string
+  email: string
+}
+
 export async function searchContactByEmail(email: string): Promise<HubSpotContact | null> {
   const apiKey = getApiKey()
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`, {
@@ -46,6 +53,30 @@ export async function searchContactByEmail(email: string): Promise<HubSpotContac
     }
   }
   return null
+}
+
+export async function getContactById(contactId: string): Promise<HubSpotContactDetails | null> {
+  const apiKey = getApiKey()
+  const response = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=firstname,lastname,email`,
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    return null
+  }
+
+  const data = await response.json()
+  return {
+    id: data.id,
+    firstname: data.properties.firstname || '',
+    lastname: data.properties.lastname || '',
+    email: data.properties.email || '',
+  }
 }
 
 export async function updateContactTier(contactId: string, tier: string): Promise<boolean> {
