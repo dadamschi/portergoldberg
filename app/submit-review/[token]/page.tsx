@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { PortableTextBlock } from '@portabletext/types'
 import { notFound } from 'next/navigation'
 import { verifyReviewToken } from '@/lib/tokens'
-import { getContactById } from '@/lib/hubspot'
+import { getContactById, getContactDeals } from '@/lib/hubspot'
 import { client } from '@/lib/client'
 import { TESTIMONIAL_BY_HUBSPOT_ID_QUERY } from '@/lib/queries'
 import { TestimonialForm } from '@/components/TestimonialForm'
@@ -76,10 +76,17 @@ export default async function SubmitReviewPage({ params }: Props) {
     )
   }
 
-  // Fetch contact details from HubSpot (for new submissions)
-  const contact = await getContactById(contactId)
+  // Fetch contact details and deals from HubSpot
+  const [contact, deals] = await Promise.all([
+    getContactById(contactId),
+    getContactDeals(contactId),
+  ])
+
   const defaultName = existingTestimonial?.clientName
     || (contact ? `${contact.firstname} ${contact.lastname}`.trim() : '')
+
+  // Get most recent deal
+  const recentDeal = deals[0] || null
 
   // Optional Google review URL from env
   const googleReviewUrl = process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL
@@ -112,6 +119,7 @@ export default async function SubmitReviewPage({ params }: Props) {
             defaultName={defaultName}
             googleReviewUrl={googleReviewUrl}
             existingData={existingData}
+            dealName={recentDeal?.dealname}
           />
         </div>
       </section>

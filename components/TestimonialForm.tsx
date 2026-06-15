@@ -14,12 +14,13 @@ type Props = {
   defaultName: string
   googleReviewUrl?: string
   existingData?: ExistingData
+  dealName?: string
 }
 
-export function TestimonialForm({ token, defaultName, googleReviewUrl, existingData }: Props) {
+export function TestimonialForm({ token, defaultName, googleReviewUrl, existingData, dealName }: Props) {
   const [formData, setFormData] = useState({
     clientName: existingData?.clientName || defaultName,
-    clientTitle: existingData?.clientTitle || '',
+    clientTitle: existingData?.clientTitle || dealName || '',
     quote: existingData?.quote || '',
   })
   const isEditing = !!existingData

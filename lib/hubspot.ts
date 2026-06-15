@@ -79,6 +79,86 @@ export async function getContactById(contactId: string): Promise<HubSpotContactD
   }
 }
 
+export type HubSpotDeal = {
+  id: string
+  dealname: string
+  pipeline: string
+  dealstage: string
+  closedate: string | null
+}
+
+export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]> {
+  const apiKey = getApiKey()
+
+  // Get associated deals for the contact
+  const associationsUrl = `${HUBSPOT_API_BASE}/crm/v4/objects/contacts/${contactId}/associations/deals`
+  console.log('[HubSpot] Fetching associations:', associationsUrl)
+
+  const response = await fetch(associationsUrl, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  })
+
+  if (!response.ok) {
+    console.log('[HubSpot] Associations failed:', response.status)
+    return []
+  }
+
+  const associations = await response.json()
+  console.log('[HubSpot] Associations response:', JSON.stringify(associations, null, 2))
+
+  const dealIds = associations.results?.map((r: { toObjectId: number }) => r.toObjectId) || []
+
+  if (dealIds.length === 0) {
+    console.log('[HubSpot] No deal associations found')
+    return []
+  }
+
+  console.log('[HubSpot] Deal IDs:', dealIds)
+
+  // Fetch deal details
+  const dealsResponse = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/objects/deals/batch/read`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        inputs: dealIds.map((id: number) => ({ id: String(id) })),
+        properties: ['dealname', 'pipeline', 'dealstage', 'closedate'],
+      }),
+    }
+  )
+
+  if (!dealsResponse.ok) {
+    console.log('[HubSpot] Deals fetch failed:', dealsResponse.status)
+    return []
+  }
+
+  const dealsData = await dealsResponse.json()
+  console.log('[HubSpot] Deals response:', JSON.stringify(dealsData, null, 2))
+
+  // Sort by closedate descending (most recent first)
+  const deals: HubSpotDeal[] = (dealsData.results || [])
+    .map((deal: { id: string; properties: { dealname?: string; pipeline?: string; dealstage?: string; closedate?: string } }) => ({
+      id: deal.id,
+      dealname: deal.properties.dealname || '',
+      pipeline: deal.properties.pipeline || '',
+      dealstage: deal.properties.dealstage || '',
+      closedate: deal.properties.closedate || null,
+    }))
+    .sort((a: HubSpotDeal, b: HubSpotDeal) => {
+      if (!a.closedate) return 1
+      if (!b.closedate) return -1
+      return new Date(b.closedate).getTime() - new Date(a.closedate).getTime()
+    })
+
+  return deals
+}
+
 export async function updateContactTier(contactId: string, tier: string): Promise<boolean> {
   const apiKey = getApiKey()
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
