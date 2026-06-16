@@ -1,5 +1,7 @@
 'use server'
 
+import { searchContactByEmail, createContact } from '@/lib/hubspot'
+
 type ConnectFormData = {
   name: string
   email: string
@@ -12,6 +14,17 @@ type ConnectFormData = {
 type ConnectResult = {
   success: boolean
   message: string
+}
+
+function splitName(fullName: string): { firstName: string; lastName: string } {
+  const trimmed = fullName.trim()
+  const parts = trimmed.split(/\s+/)
+  if (parts.length === 1) {
+    return { firstName: parts[0], lastName: '' }
+  }
+  const firstName = parts[0]
+  const lastName = parts.slice(1).join(' ')
+  return { firstName, lastName }
 }
 
 export async function submitConnectForm(data: ConnectFormData): Promise<ConnectResult> {
@@ -88,6 +101,27 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
     } catch (err) {
       console.error(`[Connect] Failed to add ${email} to vendor list:`, err)
     }
+  }
+
+  // Create HubSpot contact if email is unique
+  try {
+    const existingContact = await searchContactByEmail(email)
+    if (!existingContact) {
+      const { firstName, lastName } = splitName(name)
+      const result = await createContact(email, firstName, lastName, 'Website Lead')
+      if (result.success) {
+        console.log('[Connect] Created HubSpot contact for', email)
+      } else if (result.conflict) {
+        console.log('[Connect] HubSpot contact already exists for', email)
+      } else {
+        console.error('[Connect] Failed to create HubSpot contact:', result.error)
+      }
+    } else {
+      console.log('[Connect] HubSpot contact already exists for', email, '- skipping creation')
+    }
+  } catch (err) {
+    console.error('[Connect] HubSpot integration error:', err)
+    // Don't fail the form submission if HubSpot fails
   }
 
   return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }

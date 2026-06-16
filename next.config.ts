@@ -116,6 +116,26 @@ const nextConfig: NextConfig = {
         destination: '/sellling/staging-services',
         permanent: true,
       },
+      {
+        source: '/resources',
+        destination: '/client-resources',
+        permanent: true,
+      },
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/active-listings-2',
+        destination: '/inventory',
+        permanent: true,
+      },
+      {
+        source: '/our-process',
+        destination: '/selling/our-process',
+        permanent: true,
+      },
     ]
   },
 }
