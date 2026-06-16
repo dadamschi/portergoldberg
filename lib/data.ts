@@ -16,6 +16,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Testimonials', href: '/testimonials' },
   { label: 'Properties', href: '/inventory',
     children: [
+      { label: 'Properties', href: '/inventory' },
       { label: 'Available', href: 'https://www.sothebysrealty.com/jamesonsir/eng/sales/int/775-a-df19010717111012533-agentid' },
       { label: 'Sold Listings', href: 'https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid?utm_source=pg-chicago&utm_medium=website&utm_campaign=sold-listings' },
     ],

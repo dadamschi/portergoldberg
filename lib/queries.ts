@@ -52,8 +52,8 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           brochureUrl,
           featured
         },
-    "sold": *[_type == "listing" && statusType == "sold"] |
-      order(order asc) {
+    "sold": *[_type == "listing" && statusType == "sold" && defined(soldOrder)] |
+      order(soldOrder asc) {
           _id,
           address,
           neighborhood,

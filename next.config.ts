@@ -61,6 +61,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/sell',
+        destination: '/selling',
+        permanent: true,
+      },
+      {
         source: '/lets-connect',
         destination: '/contact',
         permanent: true,
@@ -104,6 +109,11 @@ const nextConfig: NextConfig = {
       {
         source: '/inventory-2',
         destination: '/inventory',
+        permanent: true,
+      },
+      {
+        source: '/staging-services',
+        destination: '/sellling/staging-services',
         permanent: true,
       },
     ]

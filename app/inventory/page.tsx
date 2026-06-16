@@ -22,8 +22,8 @@ async function getInventoryData(): Promise<InventoryData> {
 
 export default async function InventoryPage() {
   const { available, sold } = await getInventoryData()
-  const availableDisplayed = available.slice(0, 6);
-  const soldDisplayed = sold.slice(0, 6);
+  const availableDisplayed = available.slice(0, 8);
+  const soldDisplayed = sold.slice(0, 8);
 
   return (
     <main className="pg-page pg-inventory-page">

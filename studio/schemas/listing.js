@@ -117,6 +117,13 @@ export const listing = defineType({
       hidden: ({ document }) => !document?.isHalcyonProject,
     }),
     defineField({
+      name: "soldOrder",
+      title: "Sold List Order",
+      type: "number",
+      description: "Display order on the inventory sold list (lower numbers appear first). Only listings with this set will appear.",
+      hidden: ({ document }) => document?.statusType !== "sold",
+    }),
+    defineField({
       name: "units",
       title: "Units",
       type: "number",
