@@ -5,7 +5,6 @@ export function Listings({listings}: {
   listings: Listing[]
 }) {
   const displayed = listings.slice(0, 4)
-  const columnCount = Math.min(displayed.length, 4)
 
   return (
     <section className="pg-listings">
@@ -19,12 +18,11 @@ export function Listings({listings}: {
           </a>
         </div>
 
-        <div
-          className="pg-listings-grid"
-          style={{ gridTemplateColumns: `repeat(${columnCount}, 300px)` }}
-        >
+        <div className="pg-listings-grid">
           {displayed.map((listing) => (
-            <ListingCard key={listing._id} listing={listing} />
+            <div key={listing._id} style={{ width: '300px', maxWidth: '100%' }}>
+              <ListingCard listing={listing} />
+            </div>
           ))}
         </div>
       </div>
