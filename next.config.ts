@@ -92,6 +92,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/listings',
+        destination: '/inventory',
+        permanent: true,
+      },
+      {
         source: '/schools',
         destination: '/school-guidance',
         permanent: true,
