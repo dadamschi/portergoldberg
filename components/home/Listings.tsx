@@ -4,7 +4,14 @@ import { ListingCard } from '../ListingCard'
 export function Listings({listings}: {
   listings: Listing[]
 }) {
-  const displayed = listings.slice(0, 4)
+  const displayed = listings.slice(0, 4);
+
+  const getGridClass = (count: number) => {
+    if (count % 4 === 0) {
+      return 'pg-listings-grid pg-listings-grid--4col';
+    }
+    return 'pg-listings-grid pg-listings-grid--3col';
+  }
 
   return (
     <section className="pg-listings">
@@ -18,7 +25,7 @@ export function Listings({listings}: {
           </a>
         </div>
 
-        <div className="pg-listings-grid">
+        <div className={getGridClass(displayed.length)}>
           {displayed.map((listing) => (
             <div key={listing._id} style={{ width: '300px', maxWidth: '100%' }}>
               <ListingCard listing={listing} />

@@ -25,6 +25,13 @@ export default async function InventoryPage() {
   const availableDisplayed = available.slice(0, 9);
   const soldDisplayed = sold.slice(0, 9);
 
+  const getGridClass = (count: number) => {
+    if (count % 4 === 0) {
+      return 'pg-listings-grid pg-listings-grid--4col';
+    }
+    return 'pg-listings-grid pg-listings-grid--3col';
+  }
+
   return (
     <main className="pg-page pg-inventory-page">
       <section className="pg-page-hero">
@@ -36,7 +43,7 @@ export default async function InventoryPage() {
         <div className="pg-listings-inner">
         <h2>Available</h2>
         {/* <h2>Available & Coming Soon</h2> */}
-        <div className="pg-listings-grid pg-listings-grid--3col">
+        <div className={getGridClass(available.length)}>
             {availableDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}
@@ -62,7 +69,7 @@ export default async function InventoryPage() {
         >
           See more sold properties →
         </a>
-        <div className="pg-listings-grid pg-listings-grid--3col">
+        <div className={getGridClass(sold.length)}>
             {soldDisplayed.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}

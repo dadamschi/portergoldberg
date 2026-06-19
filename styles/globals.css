@@ -1434,6 +1434,11 @@ body {
   max-width: calc(33.333% - 16px);
 }
 
+.pg-listings-grid--4col > * {
+  flex: 0 0 calc(25% - 18px);
+  max-width: calc(25% - 18px);
+}
+
 @media (max-width: 1024px) {
   .pg-listings-grid--3col > * {
     flex: 0 0 calc(50% - 12px);
