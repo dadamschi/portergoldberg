@@ -7,12 +7,14 @@ import Image from 'next/image'
 import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 import { MarketingGallery } from '@/components/MarketingGallery'
-import { ContentTemplate } from '@/app/contentTemplate'
+import { ContentTemplate } from '@/components/contentTemplate'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Marketing | Selling Your Chicago Home',
-  description: 'PorterGoldberg\'s comprehensive marketing services include professional photography, videography, custom brochures, and targeted digital campaigns to sell your Chicago home.',
-}
+export const metadata = createMetadata({
+  title: 'Our Process | Selling Your Chicago Home',
+  description: 'PorterGoldberg\'s property preparation services help Chicago homeowners maximize their sale price through strategic improvements, repairs, and pre-listing preparation.',
+  path: '/selling/our-process',
+})
 
 async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)

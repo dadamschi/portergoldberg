@@ -5,14 +5,15 @@ import { PortableTextClient } from '@/components/PortableTextClient'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
-import { ContactBanner } from '@/components'
+import { ContactBanner, ContentTemplate } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
-import { ContentTemplate } from '@/app/contentTemplate'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Staging Services | Selling Your Chicago Home',
-  description: 'Professional home staging services from PorterGoldberg help Chicago sellers present their properties beautifully and sell faster for top dollar.',
-}
+export const metadata = createMetadata({
+    title: 'Staging Services | Selling Your Chicago Home',
+    description: 'Professional home staging services from PorterGoldberg help Chicago sellers present their properties beautifully and sell faster for top dollar.',
+    path: '/selling/our-process',
+  })
 
 async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)

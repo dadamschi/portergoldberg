@@ -1,5 +1,4 @@
 import { ContentHero } from '@/components/ContentHero'
-import { ContactBanner } from '@/components/ContactBanner'
 
 type ContentTemplateProps = {
   title: string

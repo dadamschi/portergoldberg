@@ -4,11 +4,19 @@ import { client } from '@/lib/client'
 import { ALL_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
 import { Listing } from "@/types"
+import { ContentTemplate } from '@/components/contentTemplate'
+import { createMetadata } from '@/lib/metadata'
 
 type InventoryData = {
   available: Listing[],
   sold: Listing[]
 }
+
+export const metadata = createMetadata({
+    title: 'Inventory',
+    description: 'Explore PorterGoldberg current listings and recently sold properties in Chicago',
+    path: '/inventory',
+  })
 
 async function getInventoryData(): Promise<InventoryData> {
   try {
@@ -22,15 +30,17 @@ async function getInventoryData(): Promise<InventoryData> {
 
 export default async function InventoryPage() {
   const { available, sold } = await getInventoryData()
+  const title = 'Properties'
+  const heroData = {
+    heroIntro: 'Explore our current listings and recently sold properties in Chicago',
+  }
 
   return (
-    <main className="pg-page pg-inventory-page">
-      <section className="pg-page-hero">
-        <h1>Properties</h1>
-        <p>Explore our current listings and recently sold properties in Chicago</p>
-      </section>
+    <ContentTemplate
+      title={title}
+      heroData={heroData}
+    >
 
-      <section className="pg-listings">
         <div className="pg-listings-inner">
           <h2>Available</h2>
           <ListingsGrid listings={available} maxItems={4} />
@@ -57,7 +67,6 @@ export default async function InventoryPage() {
           </a>
           <ListingsGrid listings={sold} maxItems={9} />
         </div>
-      </section>
-    </main>
+      </ContentTemplate>
   )
 }

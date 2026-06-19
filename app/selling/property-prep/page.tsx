@@ -3,14 +3,15 @@ import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SellingPageData } from '@/types'
-import { BeforeAfterGallery, ContactBanner } from '@/components'
+import { BeforeAfterGallery, ContactBanner, ContentTemplate } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
-import { ContentTemplate } from '@/app/contentTemplate'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Property Preparation | Selling Your Chicago Home',
   description: 'PorterGoldberg\'s property preparation services help Chicago homeowners maximize their sale price through strategic improvements, repairs, and pre-listing preparation.',
-}
+  path: '/selling/our-process',
+})
 
 async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)

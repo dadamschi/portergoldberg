@@ -8,7 +8,7 @@ import type { Metadata } from 'next'
 
   export function createMetadata({ title, description, path }: PageMeta): Metadata {
     return {
-      title: `${title} | Porter Goldberg`,
+      title: `${title} | PorterGoldberg`,
       description,
       openGraph: {
         title,
