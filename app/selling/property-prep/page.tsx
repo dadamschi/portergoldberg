@@ -5,6 +5,7 @@ import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SellingPageData } from '@/types'
 import { BeforeAfterGallery, ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
+import { ContentTemplate } from '@/app/contentTemplate'
 
 export const metadata: Metadata = {
   title: 'Property Preparation | Selling Your Chicago Home',
@@ -20,7 +21,7 @@ export default async function SellingPropertyPrepPage() {
 
   if (!data) {
     return (
-      <main className="pg-page pg-selling-page pg-selling-subpage">
+      <main className="pg-page">
         <section className="pg-page-hero">
           <h1>Property Preparation</h1>
           <p>Content coming soon.</p>
@@ -30,40 +31,30 @@ export default async function SellingPropertyPrepPage() {
   }
 
   return (
-    <main className="pg-page pg-selling-page pg-selling-subpage">
-        {/* Hero Section */}
-        <section className="pg-page-hero">
-          <h1>{data.title}</h1>
-          {data.heroHeadline && <p>{data.heroHeadline}</p>}
-          {data.heroIntro && <p>{data.heroIntro}</p>}
-        </section>
-
+    <ContentTemplate title="Property Preparation" heroData={data}>
         <SellingSectionNav currentSection="property preparation" />
+        {/* Property Preparation Section */}
+  
+          {/* {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>} */}
+          {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
+            <div className="pg-selling-column-intro">
+              <PortableTextClient value={data.propertyPrepIntro} />
+            </div>
+          )}
 
-        <div className="pg-selling-columns">
-          {/* Property Preparation Section */}
-          <section className="pg-selling-column pg-selling-property-prep">
-            {/* {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>} */}
-            {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
-              <div className="pg-selling-column-intro">
-                <PortableTextClient value={data.propertyPrepIntro} />
-              </div>
-            )}
-
-            {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
-              <BeforeAfterGallery items={data.beforeAfterGallery} />
-            )}
-          </section>
-
-          <div className="pg-listings-cta-section--selling">
-            <ContactBanner
-              title="Find out how Lauren and Samantha can help you get the highest value for your property."
-              cta="Reach Out"
-              openContactForm
-              contactMessage="Yes! I would like to get more information about your listing services."
-            />
-          </div>
+          {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
+            <BeforeAfterGallery items={data.beforeAfterGallery} />
+          )}
+  
+        <div className="pg-listings-cta-section--selling">
+          <ContactBanner
+            title="Find out how Lauren and Samantha can help you get the highest value for your property."
+            cta="Reach Out"
+            openContactForm
+            contactMessage="Yes! I would like to get more information about your listing services."
+          />
         </div>
-      </main>
+
+    </ContentTemplate>
   )
 }

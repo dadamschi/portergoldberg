@@ -7,6 +7,7 @@ import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
+import { ContentTemplate } from '@/app/contentTemplate'
 
 export const metadata: Metadata = {
   title: 'Staging Services | Selling Your Chicago Home',
@@ -22,7 +23,7 @@ export default async function SellingStagingPage() {
 
   if (!data) {
     return (
-      <main className="pg-page pg-selling-page pg-selling-subpage">
+      <main className="pg-page">
         <section className="pg-page-hero">
           <h1>Staging</h1>
           <p>Content coming soon.</p>
@@ -32,18 +33,11 @@ export default async function SellingStagingPage() {
   }
 
   return (
-    <main className="pg-page pg-selling-page pg-selling-subpage">
-        {/* Hero Section */}
-        <section className="pg-page-hero">
-          <h1>{data.title}</h1>
-          {data.heroHeadline && <p>{data.heroHeadline}</p>}
-          {data.heroIntro && <p>{data.heroIntro}</p>}
-        </section>
-
-        <SellingSectionNav currentSection="staging services" />
-
-      <div className="pg-selling-columns">
-        {/* Staging Section */}
+    <ContentTemplate
+      title={data.title}
+      heroData={data}
+    >
+      <SellingSectionNav currentSection="staging services" />
         <section className="pg-selling-column pg-selling-staging">
           {/* {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>} */}
           {data.stagingIntro && data.stagingIntro.length > 0 && (
@@ -91,15 +85,79 @@ export default async function SellingStagingPage() {
           )}
         </section>
 
-        <div className="pg-listings-cta-section--selling">
-          <ContactBanner
-            title="We can help you get your property ready with a staging consultation."
-            cta="Stage my property"
-            openContactForm
-            contactMessage="Yes! I would like to get more information about your property staging services."
-          />
-        </div>
-      </div>
-    </main>
+        <ContactBanner
+          title="We can help you get your property ready with a staging consultation."
+          cta="Stage my property"
+          openContactForm
+          contactMessage="Yes! I would like to get more information about your property staging services."
+        />
+    </ContentTemplate>
+    // <main className="pg-page">
+    //     {/* Hero Section */}
+    //     <section className="pg-page-hero">
+    //       <h1>{data.title}</h1>
+    //       {data.heroHeadline && <p>{data.heroHeadline}</p>}
+    //       {data.heroIntro && <p>{data.heroIntro}</p>}
+    //     </section>
+
+    //     <SellingSectionNav currentSection="staging services" />
+
+    //   <div className="pg-selling-columns">
+    //     {/* Staging Section */}
+    //     <section className="pg-selling-column pg-selling-staging">
+    //       {/* {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>} */}
+    //       {data.stagingIntro && data.stagingIntro.length > 0 && (
+    //         <>
+    //           <div className="pg-selling-column-intro">
+    //             <PortableTextClient value={data.stagingIntro} />
+    //           </div>
+    //           <div>
+    //             <a
+    //               href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
+    //               target="_blank"
+    //               rel="noopener noreferrer"
+    //               className="pg-selling-staging-btn"
+    //             >
+    //               Haven Home Stagers
+    //             </a>
+    //           </div>
+    //         </>
+    //       )}
+
+    //       {data.stagingPartners && data.stagingPartners.length > 0 && (
+    //         <div className="pg-selling-partners">
+    //           {data.stagingPartners.map((partner, index) => (
+    //             <div key={index} className="pg-selling-partner">
+    //               {partner.logo && (
+    //                 <Image
+    //                   src={partner.logo.asset.url}
+    //                   alt={partner.logo.alt || partner.name}
+    //                   className="pg-selling-partner-logo"
+    //                   width={120}
+    //                   height={60}
+    //                   style={{ objectFit: 'contain' }}
+    //                 />
+    //               )}
+    //               <h4>{partner.name}</h4>
+    //               {partner.description && <p>{partner.description}</p>}
+    //               {partner.website && (
+    //                 <a href={addUtmParams(partner.website, { campaign: 'staging-partner' })} target="_blank" rel="noopener noreferrer">
+    //                   Visit Website
+    //                 </a>
+    //               )}
+    //             </div>
+    //           ))}
+    //         </div>
+    //       )}
+    //     </section>
+
+    //     <ContactBanner
+    //       title="We can help you get your property ready with a staging consultation."
+    //       cta="Stage my property"
+    //       openContactForm
+    //       contactMessage="Yes! I would like to get more information about your property staging services."
+    //     />
+    //   </div>
+    // </main>
   )
 }

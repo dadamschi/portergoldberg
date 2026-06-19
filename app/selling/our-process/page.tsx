@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { ContactBanner } from '@/components'
 import { SellingSectionNav } from '@/components/SellingSectionNav'
 import { MarketingGallery } from '@/components/MarketingGallery'
+import { ContentTemplate } from '@/app/contentTemplate'
 
 export const metadata: Metadata = {
   title: 'Marketing | Selling Your Chicago Home',
@@ -22,7 +23,7 @@ export default async function SellingMarketingPage() {
 
   if (!data) {
     return (
-      <main className="pg-page pg-selling-page pg-selling-subpage">
+      <main className="pg-page">
         <section className="pg-page-hero">
           <h1>Marketing</h1>
           <p>Content coming soon.</p>
@@ -32,20 +33,11 @@ export default async function SellingMarketingPage() {
   }
 
   return (
-    <main className="pg-page pg-selling-page pg-selling-subpage">
-      {/* Hero Section */}
-      <section className="pg-page-hero">
-        <h1>{data.title}</h1>
-        {data.heroHeadline && <p>{data.heroHeadline}</p>}
-        {data.heroIntro && <p>{data.heroIntro}</p>}
-      </section>
-
-      <SellingSectionNav currentSection="our process" />
-
-      <div className="pg-selling-columns">
+    <ContentTemplate title="Our Process" heroData={data}>
+        <SellingSectionNav currentSection="our process" />
+        
         {/* Marketing Section */}
-        <section className="pg-selling-column pg-selling-marketing">
-          {/* {data.marketingHeadline && <h2>{data.marketingHeadline}</h2>} */}
+        <div>
           {data.marketingIntro && data.marketingIntro.length > 0 && (
             <div className="pg-selling-column-intro">
               <PortableTextClient value={data.marketingIntro} />
@@ -73,17 +65,13 @@ export default async function SellingMarketingPage() {
           )}
 
           <MarketingGallery />
-        </section>
-
-        <div className="pg-listings-cta-section--selling">
-          <ContactBanner
-            title="Connect with us today to build your customized marketing plan."
-            cta="Connect"
-            openContactForm
-            contactMessage="Yes! I would like to get more information about your listing services and discuss a marketing plan."
-          />
         </div>
-      </div>
-    </main>
+        <ContactBanner
+          title="Connect with us today to build your customized marketing plan."
+          cta="Connect"
+          openContactForm
+          contactMessage="Yes! I would like to get more information about your listing services and discuss a marketing plan."
+        />
+    </ContentTemplate>
   )
 }

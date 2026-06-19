@@ -76,8 +76,10 @@ export function ContactBanner({
   }
 
   return (
-    <Link href={href ?? '/contact'} className="pg-contact-banner-link">
-      {content}
-    </Link>
+    <section className="pg-cta-section">
+      <Link href={href ?? '/contact'} className="pg-contact-banner-link">
+        {content}
+      </Link>
+    </section>
   )
 }

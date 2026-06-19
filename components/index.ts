@@ -1,4 +1,5 @@
 export { Nav } from './Nav'
+export { ListingsGrid } from './ListingsGrid'
 export { Hero } from './Hero'
 export { Stats } from './Stats'
 export { About } from './About'

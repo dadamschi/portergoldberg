@@ -47,7 +47,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero heroBio={heroBio} />
-      <Listings listings={listings} />
+      <Listings listings={listings} isFeatured />
       <Testimonials testimonials={testimonials} />
     </>
   )

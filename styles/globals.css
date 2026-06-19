@@ -135,6 +135,16 @@ body {
   min-height: 100vh;
 }
 
+.pg-content {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #555;
+}
+
 .pg-preview-banner {
   background: var(--pg-gold);
   color: #fff;
@@ -1238,11 +1248,6 @@ body {
    LISTINGS
    ============================================================ */
 .pg-listings {
-  background-color: #fff;
-  width: 100%;
-}
-
-.pg-listings-inner {
   width: 80%;
   max-width: 1080px;
   margin: 0 auto;
@@ -2842,8 +2847,9 @@ body {
   background: #000035;
   border-radius: 6px;
   overflow: visible;
-  width: 728px;
+  width: auto;
   min-height: 90px;
+  margin-top: 24px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -3375,12 +3381,6 @@ body {
     grid-row: auto;
     min-height: 140px;
   }
-
-  .pg-listings-inner {
-    width: 90%;
-    padding: 40px 0 60px;
-  }
-
 
   .pg-contact {
     grid-template-columns: 1fr;
@@ -3933,9 +3933,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
-}
-
-.pg-selling-column {
   padding: 34px 40px;
   width: 100%;
 }
@@ -3957,10 +3954,6 @@ body {
 }
 
 .pg-selling-column-intro {
-  text-align: left;
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #555;
   margin-bottom: 32px;
 }
 

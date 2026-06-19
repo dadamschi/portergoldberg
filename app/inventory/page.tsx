@@ -1,9 +1,9 @@
 import { ContactBanner } from '@/components'
+import { ListingsGrid } from '@/components/ListingsGrid'
 import { client } from '@/lib/client'
 import { ALL_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
 import { Listing } from "@/types"
-import { ListingCard } from '@/components/ListingCard'
 
 type InventoryData = {
   available: Listing[],
@@ -22,15 +22,6 @@ async function getInventoryData(): Promise<InventoryData> {
 
 export default async function InventoryPage() {
   const { available, sold } = await getInventoryData()
-  const availableDisplayed = available.slice(0, 9);
-  const soldDisplayed = sold.slice(0, 9);
-
-  const getGridClass = (count: number) => {
-    if (count % 4 === 0) {
-      return 'pg-listings-grid pg-listings-grid--4col';
-    }
-    return 'pg-listings-grid pg-listings-grid--3col';
-  }
 
   return (
     <main className="pg-page pg-inventory-page">
@@ -41,40 +32,31 @@ export default async function InventoryPage() {
 
       <section className="pg-listings">
         <div className="pg-listings-inner">
-        <h2>Available</h2>
-        {/* <h2>Available & Coming Soon</h2> */}
-        <div className={getGridClass(available.length)}>
-            {availableDisplayed.map((listing) => (
-              <ListingCard key={listing._id} listing={listing} />
-            ))}
-          </div>
-      </div>
+          <h2>Available</h2>
+          <ListingsGrid listings={available} maxItems={4} />
+        </div>
 
-      <div className="pg-listings-cta-section">
-        <ContactBanner
-          title="Have questions about our available or upcoming listings?"
-          cta="Reach Out"
-          openContactForm
-          contactMessage="I have questions about your available or upcoming listings."
-        />
-      </div>
+        <div className="pg-listings-cta-section">
+          <ContactBanner
+            title="Have questions about our available or upcoming listings?"
+            cta="Reach Out"
+            openContactForm
+            contactMessage="I have questions about your available or upcoming listings."
+          />
+        </div>
 
-      <div className="pg-listings-inner">
-        <h2>Sold</h2>
-        <a
-          href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pg-listings-more-link"
-        >
-          See more sold properties →
-        </a>
-        <div className={getGridClass(sold.length)}>
-            {soldDisplayed.map((listing) => (
-              <ListingCard key={listing._id} listing={listing} />
-            ))}
-          </div>
-      </div>
+        <div className="pg-listings-inner">
+          <h2>Sold</h2>
+          <a
+            href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pg-listings-more-link"
+          >
+            See more sold properties →
+          </a>
+          <ListingsGrid listings={sold} maxItems={9} />
+        </div>
       </section>
     </main>
   )

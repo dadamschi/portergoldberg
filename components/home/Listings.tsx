@@ -1,38 +1,25 @@
 import type { Listing } from '@/types'
-import { ListingCard } from '../ListingCard'
+import { ListingsGrid } from '../ListingsGrid'
 
-export function Listings({listings}: {
+type ListingsProps = {
   listings: Listing[]
-}) {
-  const displayed = listings.slice(0, 4);
+  isFeatured?: boolean
+}
 
-  const getGridClass = (count: number) => {
-    if (count % 4 === 0) {
-      return 'pg-listings-grid pg-listings-grid--4col';
-    }
-    return 'pg-listings-grid pg-listings-grid--3col';
-  }
-
+export function Listings({ listings, isFeatured }: ListingsProps) {
   return (
     <section className="pg-listings">
-      <div className="pg-listings-inner">
+      {isFeatured && (
         <div className="pg-section-head" style={{ flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <span className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000'   }}>
+          <span className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000' }}>
             Featured Listings
           </span>
           <a href='/inventory' className="pg-section-head-link">
             View All →
           </a>
         </div>
-
-        <div className={getGridClass(displayed.length)}>
-          {displayed.map((listing) => (
-            <div key={listing._id} style={{ width: '300px', maxWidth: '100%' }}>
-              <ListingCard listing={listing} />
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
+      <ListingsGrid listings={listings} maxItems={4} />
     </section>
   )
 }
