@@ -144,11 +144,15 @@ body {
   font-size: 1rem;
   line-height: 1.8;
   color: #555;
+  margin-top: 30px;
 }
 
 @media (max-width: 1100px) {
   .pg-content {
-    padding: 0px 10px;
+    max-width: 90%;
+    padding: 0px 10px 20px;
+    margin: 0 10px;
+    width: 100%;
   }
 }
 
@@ -204,6 +208,7 @@ body {
   color: #fff;
   padding: 20px 0px;
   text-align: center;
+  margin-bottom: 30px;
 }
 
 .pg-page-hero h1 {
@@ -224,6 +229,7 @@ body {
 @media (max-width: 768px) {
   .pg-page-hero {
     padding: 15px;
+    margin-bottom: 10px;
   }
 
   .pg-page-hero p {
@@ -3955,7 +3961,10 @@ body {
    ============================================================================= */
 
 /* Full-Width Sections */
-.pg-selling-columns {
+.pg-selling-content {
+    padding: 24px 0;
+  }
+/* .pg-selling-columns {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -3983,11 +3992,6 @@ body {
   margin-bottom: 32px;
 }
 
-.pg-selling-column-intro ul {
-  list-style: disc;
-  padding-left: 24px;
-}
-
 .pg-selling-column-intro p {
   padding-top: 10px;
 }
@@ -4000,6 +4004,11 @@ body {
   width: 100%;
   height: auto;
   border-radius: 8px;
+} */
+
+ul {
+  list-style: disc;
+  padding-left: 24px;
 }
 
 /* Marketing Section */
@@ -4307,6 +4316,10 @@ body {
     padding: 5px 24px;
   }
 
+  .pg-selling-content {
+    padding: 12px 0;
+  }
+
   .pg-selling-hero h1 {
     font-size: 2rem;
   }
@@ -4327,7 +4340,7 @@ body {
 
 /* Selling Section Navigation */
 .pg-selling-section-nav {
-  padding: 0px 4px 0;
+  padding: 0px 4px 10px;
 }
 
 .pg-selling-section-nav-inner {

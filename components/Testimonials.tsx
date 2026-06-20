@@ -39,7 +39,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
   return (
     <section className="pg-testimonials">
       <div className="pg-testimonials-inner">
-        <h2 className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000' }}>Reasons to Choose Us</h2>
+        <h2 className="pg-section-title">Reasons to Choose Us</h2>
         <a
                   href='/testimonials'
                   className="pg-listings-more-link"

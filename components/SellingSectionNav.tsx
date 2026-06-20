@@ -6,7 +6,7 @@ const SELLING_SECTIONS = NAV_ITEMS.filter(item => item.label.toLowerCase() === '
 );
 
 type SellingSectionNavProps = {
-  currentSection: 'our process' | 'property preparation' | 'staging services'
+  currentSection: string
 }
 
 export function SellingSectionNav({ currentSection }: SellingSectionNavProps) {

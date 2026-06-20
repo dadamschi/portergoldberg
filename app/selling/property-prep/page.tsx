@@ -33,24 +33,22 @@ export default async function SellingPropertyPrepPage() {
 
   return (
     <ContentTemplate title="Property Preparation" heroData={data}>
+    <SellingSectionNav currentSection="property preparation" />
+      <div className="pg-selling-content">
+      {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
+        <PortableTextClient value={data.propertyPrepIntro} />
+      )}
 
-          {/* {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>} */}
-          {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
-              <PortableTextClient value={data.propertyPrepIntro} />
-          )}
-
-          {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
-            <BeforeAfterGallery items={data.beforeAfterGallery} />
-          )}
-
-        <div className="pg-listings-cta-section--selling">
-          <ContactBanner
-            title="Find out how Lauren and Samantha can help you get the highest value for your property."
-            cta="Reach Out"
-            openContactForm
-            contactMessage="Yes! I would like to get more information about your listing services."
-          />
-        </div>
+      {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
+        <BeforeAfterGallery items={data.beforeAfterGallery} />
+      )}
+      </div>
+    <ContactBanner
+      title="Find out how Lauren and Samantha can help you get the highest value for your property."
+      cta="Reach Out"
+      openContactForm
+      contactMessage="Yes! I would like to get more information about your listing services."
+    />
 
     </ContentTemplate>
   )

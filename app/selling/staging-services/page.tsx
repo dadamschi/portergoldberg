@@ -35,48 +35,48 @@ export default async function SellingStagingPage() {
 
   return (
     <ContentTemplate title="Staging Services" heroData={data}>
-        {/* {data.stagingHeadline && <h2>{data.stagingHeadline}</h2>} */}
-        {data.stagingIntro && data.stagingIntro.length > 0 && (
-          <>
-            <PortableTextClient value={data.stagingIntro} />
-            <div>
-              <a
-                href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pg-selling-staging-btn"
-              >
-                Haven Home Stagers
-              </a>
-            </div>
-          </>
-        )}
-
-        {data.stagingPartners && data.stagingPartners.length > 0 && (
-          <div className="pg-selling-partners">
-            {data.stagingPartners.map((partner, index) => (
-              <div key={index} className="pg-selling-partner">
-                {partner.logo && (
-                  <Image
-                    src={partner.logo.asset.url}
-                    alt={partner.logo.alt || partner.name}
-                    className="pg-selling-partner-logo"
-                    width={120}
-                    height={60}
-                    style={{ objectFit: 'contain' }}
-                  />
-                )}
-                <h4>{partner.name}</h4>
-                {partner.description && <p>{partner.description}</p>}
-                {partner.website && (
-                  <a href={addUtmParams(partner.website, { campaign: 'staging-partner' })} target="_blank" rel="noopener noreferrer">
-                    Visit Website
-                  </a>
-                )}
-              </div>
-            ))}
+      <SellingSectionNav currentSection="staging services" />      
+      {data.stagingIntro && data.stagingIntro.length > 0 && (
+        <div className="pg-selling-content">
+          <PortableTextClient value={data.stagingIntro} />
+          <div style={{ marginTop: '2rem' }}>
+            <a
+              href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pg-selling-staging-btn"
+            >
+              Haven Home Stagers
+            </a>
           </div>
-        )}
+        </div>
+      )}
+
+      {data.stagingPartners && data.stagingPartners.length > 0 && (
+        <div className="pg-selling-partners">
+          {data.stagingPartners.map((partner, index) => (
+            <div key={index} className="pg-selling-partner">
+              {partner.logo && (
+                <Image
+                  src={partner.logo.asset.url}
+                  alt={partner.logo.alt || partner.name}
+                  className="pg-selling-partner-logo"
+                  width={120}
+                  height={60}
+                  style={{ objectFit: 'contain' }}
+                />
+              )}
+              <h4>{partner.name}</h4>
+              {partner.description && <p>{partner.description}</p>}
+              {partner.website && (
+                <a href={addUtmParams(partner.website, { campaign: 'staging-partner' })} target="_blank" rel="noopener noreferrer">
+                  Visit Website
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       <ContactBanner
         title="We can help you get your property ready with a staging consultation."

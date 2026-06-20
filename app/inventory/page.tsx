@@ -32,7 +32,7 @@ export default async function InventoryPage() {
   const { available, sold } = await getInventoryData()
   const title = 'Properties'
   const heroData = {
-    heroIntro: 'Explore our current listings and recently sold properties in Chicago',
+    heroHeadline: 'Explore our current listings and recently sold properties in Chicago',
   }
 
   return (
@@ -40,8 +40,7 @@ export default async function InventoryPage() {
       title={title}
       heroData={heroData}
     >
-
-        <div className="pg-listings-inner">
+        <div>
           <h2>Available</h2>
           <ListingsGrid listings={available} maxItems={4} />
         </div>
@@ -55,7 +54,7 @@ export default async function InventoryPage() {
           />
         </div>
 
-        <div className="pg-listings-inner">
+        <div>
           <h2>Sold</h2>
           <a
             href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
