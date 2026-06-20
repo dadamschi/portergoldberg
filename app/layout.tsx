@@ -109,9 +109,7 @@ export default async function RootLayout({
       <body>
         <div className="page-container">
           <Nav items={NAV_ITEMS} />
-          <main className="pg-main">
             {children}
-          </main>
           <Footer agents={agents} />
         </div>
         <Suspense fallback={null}>

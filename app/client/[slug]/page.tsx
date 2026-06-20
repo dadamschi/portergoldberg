@@ -44,20 +44,16 @@ export default async function ClientPageRoute({ params }: Props) {
   const title = page.pageTitle || page.title
 
   return (
-    <main className="pg-page">
-      <section className="pg-client-page-section">
-        <div className="pg-client-page-container">
-          {title && <h1 className="pg-client-page-title">{title}</h1>}
+    <>
+      {title && <h1 className="pg-client-page-title">{title}</h1>}
 
-          {page.markdownContent && (
-            <div className="pg-client-page-content pg-markdown">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {page.markdownContent}
-              </ReactMarkdown>
-            </div>
-          )}
+      {page.markdownContent && (
+        <div className="pg-client-page-content pg-markdown">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {page.markdownContent}
+          </ReactMarkdown>
         </div>
-      </section>
-    </main>
+      )}
+    </>
   )
 }

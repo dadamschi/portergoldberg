@@ -1,16 +1,16 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import { client } from '@/lib/client'
 import { AGENTS_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import type { Agent } from '@/types'
+import { ContentTemplate } from '@/components'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'About Us',
   description: 'Meet Samantha Porter and Lauren Goldberg — Chicago real estate experts at Jameson Sotheby\'s International Realty with 44 years combined experience and $550M+ in career sales.',
-}
-
-export const revalidate = 86400
+  path: '/about-us',
+})
 
 async function getAgents(): Promise<Agent[]> {
   return client.fetch<Agent[]>(AGENTS_QUERY)
@@ -64,35 +64,32 @@ function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: bo
 
 function PartnershipSection() {
   return (
-    <section className="pg-partnership" style= {{ backgroundColor: '#666666'}}>
-      <div className="pg-partnership-inner">
-        <h3 className="pg-partnership-quote">
-          <strong>Samantha</strong> and <strong>Lauren</strong> are Chicago natives, moms with
-          two young children, and have husbands in construction. With kids in public and private
-          schools, involvement in community, and a great knowledge of the real estate
-          culture&hellip; they are a distinguishable resource.
-        </h3>
-      </div>
+    <section className="pg-partnership">
+      <h3>
+        <strong>Samantha</strong> and <strong>Lauren</strong> are Chicago natives, moms with
+        two young children, and have husbands in construction. With kids in public and private
+        schools, involvement in community, and a great knowledge of the real estate
+        culture&hellip; they are a distinguishable resource.
+      </h3>
     </section>
   )
 }
 
 export default async function AboutPage() {
   const agents = await getAgents()
+  const heroData = {
+    heroHeadline: 'Meet the team behind PorterGoldberg Residential'
+  }
 
   return (
-    <main className="pg-page pg-about-page">
-        <section className="pg-page-hero">
-          <h1>About Us</h1>
-          <p>Meet the team behind PorterGoldberg Residential.</p>
-        </section>
-
+    <ContentTemplate title="About Us" heroData={heroData}>
         {agents.map((agent, index) => (
           <div key={agent._id}>
             <AgentSection agent={agent} reversed={index % 2 === 1} />
             {index === 0 && <PartnershipSection />}
           </div>
         ))}
-      </main>
+
+    </ContentTemplate>
   )
 }
