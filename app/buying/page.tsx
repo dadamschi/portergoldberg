@@ -3,11 +3,14 @@ import { client } from '@/lib/client'
 import { BUY_PAGE_QUERY } from '@/lib/queries'
 import { Flipbook } from '@/components/Flipbook'
 import type { BuyPageData } from '@/types'
+import { createMetadata } from '@/lib/metadata'
+import { ContentTemplate } from '@/components'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Buying a Home in Chicago',
   description: 'Expert guide to buying a home in Chicago. PorterGoldberg Residential provides full-service buyer representation in Lincoln Park, Lakeview, Bucktown, and Chicago\'s North Side.',
-}
+  path: '/buying',
+})
 
 async function getBuyPageData(): Promise<BuyPageData | null> {
   const data = await client.fetch<BuyPageData>(BUY_PAGE_QUERY)
@@ -16,7 +19,10 @@ async function getBuyPageData(): Promise<BuyPageData | null> {
 
 export default async function BuyPage() {
   const data = await getBuyPageData()
-  console.log('BuyPage data:', data)
+  const templateData = {
+    title: data?.title,
+    heroHeadline: data?.headline,
+  }
 
   if (!data) {
     return (
@@ -30,15 +36,10 @@ export default async function BuyPage() {
   }
 
   return (
-    <main className="pg-page pg-buy-page">
-      <section className="pg-page-hero">
-        <h1>{data.title}</h1>
-        {data.headline && <p>{data.headline}</p>}
-      </section>
-
+    <ContentTemplate title={data.title} heroData={templateData}>
       <section className="pg-buy-flipbook">
         <Flipbook images={data.flipbookImages} />
       </section>
-    </main>
+    </ContentTemplate>
   )
 }

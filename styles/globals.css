@@ -3769,14 +3769,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .pg-buy-hero {
-    padding: 40px 20px;
-  }
-
-  .pg-buy-hero h1 {
-    font-size: 28px;
-  }
-
   .pg-buy-flipbook {
     padding: 40px 20px;
   }
