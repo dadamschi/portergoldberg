@@ -36,14 +36,11 @@ export default async function SellingMarketingPage() {
 
   return (
     <ContentTemplate title="Our Process" heroData={data}>
-        <SellingSectionNav currentSection="our process" />
         
         {/* Marketing Section */}
         <div>
           {data.marketingIntro && data.marketingIntro.length > 0 && (
-            <div className="pg-selling-column-intro">
-              <PortableTextClient value={data.marketingIntro} />
-            </div>
+            <PortableTextClient value={data.marketingIntro} />
           )}
 
           {data.marketingImage && (

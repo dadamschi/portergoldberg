@@ -136,7 +136,7 @@ body {
 }
 
 .pg-content {
-  max-width: 900px;
+  max-width: 1080px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 12px;
@@ -144,6 +144,12 @@ body {
   font-size: 1rem;
   line-height: 1.8;
   color: #555;
+}
+
+@media (max-width: 1100px) {
+  .pg-content {
+    padding: 0px 10px;
+  }
 }
 
 .pg-preview-banner {
@@ -196,30 +202,33 @@ body {
 .pg-page-hero {
   background: #000;
   color: #fff;
-  padding: 20px 40px;
+  padding: 20px 0px;
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .pg-page-hero h1 {
   font-size: 3rem;
-  font-weight: 300;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 0;
+  font-weight: 600;
 }
 
 .pg-page-hero p {
   font-size: 18px;
-  max-width: 680px;
-  margin: 24px auto 0;
+  max-width: 60%;
+  margin: 20px auto 0;
   opacity: 0.9;
   font-weight: 500;
 }
 
 @media (max-width: 768px) {
   .pg-page-hero {
-    padding: 20px 20px;
+    padding: 15px;
+  }
+
+  .pg-page-hero p {
+    margin: 2px auto 0;
+    max-width: 100%;
   }
 
   .pg-page-hero h1 {
@@ -686,6 +695,7 @@ body {
     height: 360px;
     border-radius: 120px;
     margin: 0 auto;
+    display: none;
   }
 }
 
@@ -1839,7 +1849,8 @@ body {
   .pg-agent-section--reversed .pg-agent-photo {
     order: 2;
   }
-.pg-partnership {
+
+  .pg-partnership {
     padding: 48px 24px;
   }
 }
@@ -2588,6 +2599,12 @@ body {
   margin: 0 auto;
 }
 
+.pg-testimonials-inner > .pg-section-title {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #000;
+}
+
 .pg-testimonials-header {
   text-align: center;
   margin-bottom: 64px;
@@ -2812,6 +2829,10 @@ body {
     padding: 0 20px;
   }
 
+  .pg-testimonials-inner > .pg-section-title {
+    font-size: 30px;
+  }
+
   .pg-testimonials-section {
     padding: 15px 0;
   }
@@ -2953,9 +2974,11 @@ body {
 
   .pg-contact-banner-info {
     width: 100%;
-    padding: 24px;
-    text-align: center;
+    max-width: 100%;
+    font-size: 24px;
+    font-weight: 600;
     align-items: center;
+    padding: 0px 0;
   }
 }
 
@@ -3260,6 +3283,8 @@ body {
   .pg-footer-agents {
     flex-direction: column;
     gap: 32px;
+    border-top: none;
+    border-bottom: none;
   }
 
   .pg-footer-agent-card {
@@ -3347,7 +3372,7 @@ body {
   }
 
   .pg-hero-stat {
-    padding: 24px 10px;
+    padding: 12px 10px;
   }
 
   .pg-hero-stat-value {
@@ -4049,6 +4074,10 @@ body {
 .pg-selling-before-after-item {
   flex: 0 1 50%;
   max-width: 50%;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -4056,12 +4085,6 @@ body {
     flex: 0 1 100%;
     max-width: 100%;
   }
-}
-
-.pg-selling-before-after-item {
-  border-radius: 8px;
-  padding: 16px;
-  box-sizing: border-box;
 }
 
 .pg-selling-before-after-item h4 {
@@ -4111,10 +4134,6 @@ body {
 .pg-selling-before img:hover,
 .pg-selling-after img:hover {
   filter: grayscale(0%);
-}
-
-.pg-selling-before-after-item {
-  cursor: pointer;
 }
 
 .pg-selling-before-after-item:hover {
@@ -4285,7 +4304,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .pg-selling-column {
-    padding: 60px 24px;
+    padding: 5px 24px;
   }
 
   .pg-selling-hero h1 {
@@ -4308,7 +4327,7 @@ body {
 
 /* Selling Section Navigation */
 .pg-selling-section-nav {
-  padding: 0px 24px 0;
+  padding: 0px 4px 0;
 }
 
 .pg-selling-section-nav-inner {
@@ -4327,8 +4346,8 @@ body {
   text-decoration: none;
   color: #666;
   padding: 12px 24px;
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   position: relative;
   transition: color 0.2s;
 }
@@ -4357,17 +4376,8 @@ body {
 }
 
 @media (max-width: 768px) {
-  .pg-selling-section-nav {
-    padding: 16px 16px 0;
-  }
-
-  .pg-selling-section-nav-inner {
-    gap: 0;
-  }
-
   .pg-selling-section-nav-link {
-    padding: 10px 12px;
-    font-size: 0.8125rem;
+    font-size: 1rem;
   }
 }
 
@@ -5326,6 +5336,7 @@ body {
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -5859,6 +5870,7 @@ body {
   color: #fff;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

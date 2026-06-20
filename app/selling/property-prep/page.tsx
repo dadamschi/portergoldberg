@@ -33,20 +33,16 @@ export default async function SellingPropertyPrepPage() {
 
   return (
     <ContentTemplate title="Property Preparation" heroData={data}>
-        <SellingSectionNav currentSection="property preparation" />
-        {/* Property Preparation Section */}
-  
+
           {/* {data.propertyPrepHeadline && <h2>{data.propertyPrepHeadline}</h2>} */}
           {data.propertyPrepIntro && data.propertyPrepIntro.length > 0 && (
-            <div className="pg-selling-column-intro">
               <PortableTextClient value={data.propertyPrepIntro} />
-            </div>
           )}
 
           {data.beforeAfterGallery && data.beforeAfterGallery.length > 0 && (
             <BeforeAfterGallery items={data.beforeAfterGallery} />
           )}
-  
+
         <div className="pg-listings-cta-section--selling">
           <ContactBanner
             title="Find out how Lauren and Samantha can help you get the highest value for your property."
