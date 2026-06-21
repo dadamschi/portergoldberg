@@ -4,7 +4,7 @@ import { PRESS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
 import { formatMonthYear } from '@/lib/utils/dateTime'
 import type { PressItem } from '@/types'
-
+import { ContentTemplate } from '@/components/contentTemplate'
 import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
@@ -101,13 +101,16 @@ function PressCard({ item }: { item: PressItem }) {
 
 export default async function PressPage() {
   const pressItems = await getPressItems()
+  const title = 'In thePress'
+  const heroData = {
+    heroHeadline: 'PorterGoldberg featured in media and publications',
+  }
 
   return (
-    <main className="pg-page">
-      <section className="pg-page-hero">
-        <h1>In the Press</h1>
-        <p>PorterGoldberg featured in media and publications.</p>
-      </section>
+    <ContentTemplate
+          title={title}
+          heroData={heroData}
+        >
 
       {pressItems.length > 0 && (
         <section className="pg-press-collage-section">
@@ -129,7 +132,7 @@ export default async function PressPage() {
             </p>
           )}
         </div>
-      </section>
-    </main>
+        </section>
+    </ContentTemplate>
   )
 }

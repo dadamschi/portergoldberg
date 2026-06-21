@@ -1,15 +1,15 @@
-import type { Metadata } from 'next'
 import type { Testimonial } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
 import { TestimonialsList } from '@/components/TestimonialsList'
+import { createMetadata } from '@/lib/metadata'
+import { ContentTemplate } from '@/components/contentTemplate'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Client Reviews & Testimonials',
   description: 'Read reviews and testimonials from our clients about their experience buying and selling homes with PorterGoldberg Residential in Chicago.',
-}
-
-export const revalidate = 86400
+  path: '/testimonials',
+})
 
 async function getTestimonials(): Promise<Testimonial[]> {
   try {
@@ -22,13 +22,16 @@ async function getTestimonials(): Promise<Testimonial[]> {
 
 export default async function TestimonialsPage() {
   const testimonials = await getTestimonials()
+  const title = 'Client Reviews & Testimonials'
+  const heroData = {
+    heroHeadline: 'Hear from our clients about their experience buying and selling homes with PorterGoldberg',
+  }
 
   return (
-    <main className="pg-page pg-testimonials-page">
-      <section className="pg-page-hero">
-        <h1>Client Reviews & Testimonials</h1>
-        <p>Hear from our clients about their experience buying and selling homes with PorterGoldberg</p>
-      </section>
+    <ContentTemplate
+              title={title}
+              heroData={heroData}
+            >
 
       <section className="pg-testimonials-section">
         <div className="pg-testimonials-inner">
@@ -41,6 +44,6 @@ export default async function TestimonialsPage() {
           )}
         </div>
       </section>
-    </main>
+    </ContentTemplate>
   )
 }
