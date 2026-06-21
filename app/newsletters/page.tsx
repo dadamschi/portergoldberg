@@ -1,17 +1,15 @@
-import type { Metadata } from 'next'
 import type { NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import Link from 'next/link'
 import Image from 'next/image'
 import { formatDateOnly } from '@/lib/utils/dateTime'
+import { ContentTemplate } from '@/components'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Newsletter Archive',
   description: 'Browse past newsletters from PorterGoldberg Residential — market updates, tips, and Chicago real estate insights.',
-  alternates: {
-    canonical: 'https://portergoldberg.com/newsletters',
-  },
   openGraph: {
     title: 'Newsletter Archive | PorterGoldberg Residential',
     description: 'Browse past newsletters from PorterGoldberg Residential — market updates, tips, and Chicago real estate insights.',
@@ -19,7 +17,8 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'PorterGoldberg Residential',
   },
-}
+  path: '/newsletters',
+})
 
 export const revalidate = 604800 // 1 week - webhook handles on-demand revalidation
 
@@ -71,24 +70,21 @@ export default async function NewslettersPage() {
   const BANNER_AFTER = 9
   const firstBatch = newsletters.slice(0, BANNER_AFTER)
   const secondBatch = newsletters.slice(BANNER_AFTER)
+  const heroData = {
+    heroHeadline: 'Market updates, tips, and insights from Lauren and Samantha',
+    heroImage: {
+      src: '/ywwt2.png',
+      alt: 'Your Weekly Walk-Through',
+      width: 1500,
+      height: 500,
+      priority: true,
+      unoptimized: true,
+      style:{ width: '100%', height: 'auto', maxWidth: '800px' }
+    }
+  }
 
   return (
-    <main className="pg-page">
-      <section className="pg-page-hero">
-        <div className="pg-newsletter-header-image">
-          <Image
-            src="/ywwt2.png"
-            alt="Your Weekly Walk-Through"
-            width={1500}
-            height={500}
-            priority
-            unoptimized
-            style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
-          />
-        </div>
-        <p>Market updates, tips, and insights from Lauren and Samantha</p>
-      </section>
-
+    <ContentTemplate heroData={heroData} >
       <section className="pg-newsletters-section">
         <div className="pg-newsletters-inner">
           {newsletters.length > 0 ? (
@@ -121,6 +117,6 @@ export default async function NewslettersPage() {
           )}
         </div>
       </section>
-    </main>
+    </ContentTemplate>
   )
 }

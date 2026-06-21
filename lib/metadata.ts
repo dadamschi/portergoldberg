@@ -4,16 +4,16 @@ import type { Metadata } from 'next'
     title: string
     description: string
     path?: string
+    openGraph?: Metadata['openGraph']
   }
 
-  export function createMetadata({ title, description, path }: PageMeta): Metadata {
+  export function createMetadata({ title, description, path, openGraph }: PageMeta): Metadata {
     return {
       title: `${title} | PorterGoldberg`,
       description,
-      openGraph: {
-        title,
-        description,
-        url: path ? `https://portergoldberg.com${path}` : undefined,
+      openGraph,
+      alternates: {
+        canonical: path ? `https://portergoldberg.com${path}` : undefined,
       },
     }
   }

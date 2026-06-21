@@ -1,7 +1,5 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import type { EventItem } from '@/types'
-import { PortableText } from '@portabletext/react'
 import { ContactLink } from '@/components/ContactLink'
 import { EventsJsonLd } from '@/components/JsonLd'
 import { formatDate, formatTime } from '@/lib/utils/dateTime'
@@ -9,15 +7,14 @@ import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
 import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
 import { ImageLightbox } from '@/components/ImageLightbox'
-import { portableTextComponents } from '@/lib/portableText'
+import { createMetadata } from '@/lib/metadata'
+import { PortableTextClient } from '@/components'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Events',
   description: 'Upcoming webinars, workshops, and past event recordings from PorterGoldberg Residential.',
-}
-
-// Revalidate every hour (or on-demand via webhook)
-export const revalidate = 86400
+    path: '/events',
+})
 
 async function getEventsData(query:string): Promise<EventItem[]> {
   try {
@@ -56,7 +53,7 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
               </div>
             )}
                     <div className="pg-event-desc">
-                      <PortableText value={event.description} components={portableTextComponents} />
+                      <PortableTextClient value={event.description} />
                     </div>
 
             {(event.speakerName) && (
@@ -88,9 +85,7 @@ function EventCard({ event, isPast }: { event: EventItem; isPast: boolean }) {
               </div>
             )}
           </div>
-
         </div>
-
 
         {event.schedule && event.schedule.length > 0 && (
           <div className="pg-event-schedule">

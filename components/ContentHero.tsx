@@ -1,20 +1,24 @@
 'use client'
 import Image from 'next/image'
 
+type ImageProps = {
+  src: string
+  alt: string
+  width: number
+  height: number
+  style?: React.CSSProperties
+  priority?: boolean
+  unoptimized?: boolean
+}
+
 type ContentHeroProps = {
   title?: string
   heroHeadline?: string
   heroIntro?: string
-  heroImage?: {
-      src: string
-      alt: string
-      width: number
-      height: number
-    }
+  heroImage?: ImageProps
 }
 
 export function ContentHero({ title, heroHeadline, heroIntro, heroImage }: ContentHeroProps) {
-  console.log(heroImage)
   return (
     <section className="pg-page-hero">
       {heroImage ? (
@@ -24,6 +28,9 @@ export function ContentHero({ title, heroHeadline, heroIntro, heroImage }: Conte
             width={heroImage.width}
             height={heroImage.height}
             className="pg-hero-logo"
+            style={heroImage.style}
+            priority={heroImage.priority}
+            unoptimized={heroImage.unoptimized}
           />
         ) : (
           <h1>{title}</h1>

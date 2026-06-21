@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.sanity.io',
       },
     ],
+    qualities: [75, 85, 95],
   },
   logging: {
     fetches: {
@@ -24,7 +25,7 @@ const nextConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net https://p.typekit.net",
               "img-src 'self' data: blob: https: https://cdn.sanity.io",
               "font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net",
               "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://vitals.vercel-insights.com https://vercel.live",

@@ -1,4 +1,5 @@
 import { ContentHero } from '@/components/ContentHero'
+import { LocalBusinessJsonLd, WebsiteJsonLd } from '@/components/JsonLd'
 
 type HeroImage = {
   src: string
@@ -21,6 +22,8 @@ type ContentTemplateProps = {
 export function ContentTemplate({ title, children, heroData }: ContentTemplateProps) {
   return (
     <>
+      <LocalBusinessJsonLd />
+      <WebsiteJsonLd />
       <ContentHero
         title={title}
         heroHeadline={heroData?.heroHeadline}

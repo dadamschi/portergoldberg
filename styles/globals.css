@@ -3318,13 +3318,56 @@ body {
    RESPONSIVE
    ============================================================ */
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
+  .pg-logo {
+    max-width: 300px;
+  }
+
   .pg-nav-links {
-    gap: 16px;
+    gap: 20px;
+  }
+
+  .pg-nav-link {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .pg-logo {
+    max-width: 260px;
+  }
+
+  .pg-nav-links {
+    gap: 14px;
+  }
+
+  .pg-nav-link {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .pg-nav-cta {
+    font-size: 11px;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .pg-logo {
+    max-width: 220px;
+  }
+
+  .pg-nav-links {
+    gap: 10px;
   }
 
   .pg-nav-link {
     font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .pg-nav-cta {
+    display: none;
   }
 }
 
