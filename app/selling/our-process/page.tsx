@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'

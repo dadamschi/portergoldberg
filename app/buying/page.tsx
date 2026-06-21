@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { client } from '@/lib/client'
 import { BUY_PAGE_QUERY } from '@/lib/queries'
 import { Flipbook } from '@/components/Flipbook'
