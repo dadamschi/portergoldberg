@@ -1,11 +1,19 @@
 import { ContentHero } from '@/components/ContentHero'
 
+type HeroImage = {
+  src: string
+  alt: string
+  width: number
+  height: number
+}
+
 type ContentTemplateProps = {
-  title: string
+  title?: string
   heroData?: {
     heroHeadline?: string
     heroIntro?: string
     heroTitle?: string
+    heroImage?: HeroImage
   }
   children: React.ReactNode
 }
@@ -13,7 +21,12 @@ type ContentTemplateProps = {
 export function ContentTemplate({ title, children, heroData }: ContentTemplateProps) {
   return (
     <>
-      <ContentHero title={title} heroHeadline={heroData?.heroHeadline} heroIntro={heroData?.heroIntro} />
+      <ContentHero
+        title={title}
+        heroHeadline={heroData?.heroHeadline}
+        heroIntro={heroData?.heroIntro}
+        heroImage={heroData?.heroImage}
+      />
       <div className="pg-content">
         {children}
       </div>

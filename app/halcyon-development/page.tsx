@@ -5,6 +5,7 @@ import { HALCYON_LISTINGS_QUERY } from '@/lib/queries'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { Listing } from '@/types'
 import { ListingCard } from '@/components/ListingCard'
+import { ContentTemplate } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Halcyon Development',
@@ -24,22 +25,22 @@ async function getHalcyonListings(): Promise<HalcyonData> {
 export default async function HalcyonDevelopmentPage() {
   const { available, sold } = await getHalcyonListings()
 
-  return (
-    <main className="pg-page pg-halcyon-page">
-      {/* Hero Section */}
-      <section className="pg-page-hero pg-halcyon-hero">
-        <Image
-          src="/halcyon-header-WHITE.png"
-          alt="Halcyon Development"
-          width={361}
-          height={54}
-          className="pg-halcyon-logo"
-        />
-        {/* <h1>Halcyon Development</h1> */}
-        <p>
-          As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago&apos;s most respected and visionary builders
-        </p>
-      </section>
+  const title = 'Halcyon Development'
+  const heroData = {
+    heroHeadline: 'As the exclusive representatives for Halcyon Development, Samantha and Lauren partner with one of Chicago\'s most respected and visionary builders.',
+    heroImage: {
+      src: '/halcyon-header-WHITE.png',
+      alt: 'Halcyon Development',
+      width: 361,
+      height: 54
+    }
+  }
+
+  return (    
+    <ContentTemplate 
+      title={title}
+      heroData={heroData}
+    >
 
       {/* About Section */}
       <section className="pg-halcyon-about">
@@ -143,6 +144,6 @@ export default async function HalcyonDevelopmentPage() {
           </div>
         </section>
       )}
-    </main>
+    </ContentTemplate>
   )
 }
