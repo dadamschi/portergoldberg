@@ -10,7 +10,6 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check:sitemap": "npx ts-node scripts/check-sitemap.ts",
     "test": "playwright test",
     "test:screenshots": "playwright test tests/screenshots.spec.ts",
     "check:sitemap": "npx ts-node scripts/check-sitemap.ts"
