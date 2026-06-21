@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
-    "test:screenshots": "playwright test tests/screenshots.spec.ts"
+    "test:screenshots": "playwright test tests/screenshots.spec.ts",
+    "check:sitemap": "npx ts-node scripts/check-sitemap.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.3",

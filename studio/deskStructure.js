@@ -6,8 +6,14 @@ export const structure = (S) =>
       S.documentTypeListItem("testimonial").title("Testimonials"),
       S.documentTypeListItem("newsletter").title("Newsletters"),
       S.documentTypeListItem("listing").title("Listings"),
+      S.listItem()
+        .title("Client Page")
+        .child(
+          S.document()
+            .schemaType("clientPage")
+            .documentId("clientPage")
+        ),
       S.documentTypeListItem("event").title("Events"),
-      S.documentTypeListItem("press").title("Press"),
 
       S.divider(),
 
@@ -48,16 +54,9 @@ export const structure = (S) =>
             .documentId("halcyonPage")
         ),
 
-      S.listItem()
-        .title("Client Page")
-        .child(
-          S.document()
-            .schemaType("clientPage")
-            .documentId("clientPage")
-        ),
-
       S.divider(),
 
       // === OTHER ===
       S.documentTypeListItem("agent").title("Agents"),
+      S.documentTypeListItem("press").title("Press"),
     ]);

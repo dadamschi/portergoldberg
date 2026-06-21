@@ -50,7 +50,8 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           units,
           "image": image { ${imageFragment} },
           brochureUrl,
-          featured
+          featured,
+          featuredOrder
         },
     "sold": *[_type == "listing" && statusType == "sold" && defined(soldOrder)] |
       order(soldOrder asc) {
@@ -66,7 +67,8 @@ export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
           units,
           "image": image { ${imageFragment} },
           brochureUrl,
-          featured
+          featured,
+          featuredOrder
         }
   }
   `) 
@@ -309,7 +311,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     about { sectionLabel, headline, introParagraphs, tagline },
     social[] { platform, url }
   },
-  "listings": *[_type == "listing" && featured == true] | order(order asc) [0...4] {
+  "listings": *[_type == "listing" && featuredOrder != null] | order(order asc) [0...4] {
     _id,
     address,
     neighborhood,
@@ -323,7 +325,8 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     units,
     "image": image { ${imageFragment} },
     brochureUrl,
-    featured
+    featured,
+    featuredOrder
   },
   "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(order asc, _createdAt desc) {
     _id,

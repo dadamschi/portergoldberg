@@ -30,7 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: '/vendors', priority: 0.6, changeFrequency: 'monthly' as const },
     { route: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
     { route: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
-  ]
+  
+    { route: '/school-guidance', priority: 0.6, changeFrequency: 'monthly' as const },
+    { route: '/selling/our-process', priority: 0.8, changeFrequency: 'weekly' as const },
+    { route: '/selling/property-prep', priority: 0.8, changeFrequency: 'weekly' as const },
+    { route: '/selling/staging-services', priority: 0.8, changeFrequency: 'weekly' as const },]
 
   const staticEntries = staticPages.map(({ route, priority, changeFrequency }) => ({
     url: `${baseUrl}${route}`,
