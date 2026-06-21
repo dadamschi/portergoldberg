@@ -38,18 +38,16 @@ async function getHomePageData(): Promise<HomePageData> {
 
 export default async function HomePage() {
   const data = await getHomePageData()
-  console.log('data', data)
 
   // Use Sanity data if available, otherwise fall back to static data
   const featuredListings = [...data.listings].sort((a, b) => a.featuredOrder! - b.featuredOrder!);
-  console.log('featuredListings', featuredListings)
   const testimonials = data.testimonials
   const heroBio = data.settings?.heroBio
 
   return (
     <>
       <Hero heroBio={heroBio} />
-      <Listings listings={featuredListings} />
+      <Listings listings={featuredListings} isFeatured />
       <Testimonials testimonials={testimonials} />
     </>
   )

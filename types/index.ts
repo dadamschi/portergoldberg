@@ -31,6 +31,7 @@ export type Listing = {
   isHalcyonProject?: boolean
   units?: number
   featured?: boolean
+  featuredOrder?: number
 }
 
 export type FlipbookImage = {
