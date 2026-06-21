@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import { notFound, redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SectionHeader, ContactLink } from '@/components'
 
-export const revalidate = 604800 // 1 week - webhook handles on-demand revalidation
+export const revalidate = 2592000 // 1 month - webhook handles on-demand revalidation
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Newsletter Not Found' }
   }
 
-  const url = `https://portergoldberg.com/newsletters/${slug}`
+  const url = `https://www.portergoldberg.com/newsletters/${slug}`
 
   return {
     title: `${newsletter.title} | ${formatDateOnly(newsletter.publishedAt)}`,

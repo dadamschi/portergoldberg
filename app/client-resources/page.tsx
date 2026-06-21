@@ -5,11 +5,14 @@ import { client } from '@/lib/client'
 import { SCHOOL_GUIDANCE_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import type { SchoolGuidancePageData } from '@/types'
+import { ContentTemplate } from '@/components'
+import { createMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: 'Client Resources',
   description: 'Trusted vendors and local school guidance for PorterGoldberg Residential clients.',
-}
+  path: '/client-resources',
+})
 
 async function getSchoolGuidanceData(): Promise<SchoolGuidancePageData | null> {
   const data = await client.fetch<SchoolGuidancePageData>(SCHOOL_GUIDANCE_PAGE_QUERY)
@@ -18,14 +21,13 @@ async function getSchoolGuidanceData(): Promise<SchoolGuidancePageData | null> {
 
 export default async function ClientResourcesPage() {
   const schoolData = await getSchoolGuidanceData()
+  const templateData = {
+    title: 'Client Resources',
+    heroHeadline: 'Tools and guidance to help you navigate your real estate journey.',
+  }
 
   return (
-    <main className="pg-page">
-      <section className="pg-resources-header">
-        <h1>Client Resources</h1>
-        <p>Tools and guidance to help you navigate your real estate journey.</p>
-      </section>
-
+    <ContentTemplate title="Client Resources" heroData={templateData}>
       <section className="pg-resources-grid">
         {/* Vendors Teaser */}
         <article className="pg-resource-card">
@@ -82,6 +84,6 @@ export default async function ClientResourcesPage() {
           </div>
         </article>
       </section>
-    </main>
+    </ContentTemplate>
   )
 }

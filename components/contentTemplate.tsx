@@ -5,6 +5,7 @@ type ContentTemplateProps = {
   heroData?: {
     heroHeadline?: string
     heroIntro?: string
+    heroTitle?: string
   }
   children: React.ReactNode
 }

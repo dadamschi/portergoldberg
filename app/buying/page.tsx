@@ -26,7 +26,7 @@ export default async function BuyPage() {
 
   if (!data) {
     return (
-      <main className="pg-page pg-buy-page">
+      <main className="pg-page">
         <section className="pg-page-hero">
           <h1>Buying</h1>
           <p>Content coming soon. Please add a Buy Page document in Sanity.</p>

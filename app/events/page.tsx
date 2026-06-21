@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import type { EventItem } from '@/types'
-import type { PortableTextBlock } from '@portabletext/types'
 import { PortableText } from '@portabletext/react'
 import { ContactLink } from '@/components/ContactLink'
+import { EventsJsonLd } from '@/components/JsonLd'
 import { formatDate, formatTime } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import { client } from '@/lib/client'
@@ -11,66 +11,9 @@ import { PAST_EVENTS_QUERY, UPCOMING_EVENTS_QUERY } from '@/lib/queries'
 import { ImageLightbox } from '@/components/ImageLightbox'
 import { portableTextComponents } from '@/lib/portableText'
 
-function toPlainText(blocks: PortableTextBlock[]): string {
-  return blocks
-    .map((block) => {
-      if (block._type !== 'block' || !block.children) return ''
-      return (block.children as Array<{ text?: string }>)
-        .map((child) => child.text || '')
-        .join('')
-    })
-    .join(' ')
-}
-
 export const metadata: Metadata = {
   title: 'Events',
   description: 'Upcoming webinars, workshops, and past event recordings from PorterGoldberg Residential.',
-}
-
-function EventsJsonLd({ events }: { events: EventItem[] }) {
-  const eventSchemas = events.map((event) => ({
-    '@type': 'Event',
-    name: event.title,
-    description: toPlainText(event.description),
-    startDate: event.date,
-    endDate: event.endDate || event.date,
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: event.location
-      ? 'https://schema.org/OfflineEventAttendanceMode'
-      : 'https://schema.org/OnlineEventAttendanceMode',
-    location: event.location
-      ? {
-          '@type': 'Place',
-          name: event.location,
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: 'Chicago',
-            addressRegion: 'IL',
-          },
-        }
-      : {
-          '@type': 'VirtualLocation',
-          url: event.registrationUrl || 'https://portergoldberg.com/events',
-        },
-    organizer: {
-      '@type': 'Organization',
-      name: 'PorterGoldberg Residential',
-      url: 'https://portergoldberg.com',
-    },
-    image: event.image?.asset?.url,
-  }))
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': eventSchemas,
-  }
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
 }
 
 // Revalidate every hour (or on-demand via webhook)

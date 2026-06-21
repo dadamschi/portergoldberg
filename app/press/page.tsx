@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import { client } from '@/lib/client'
 import { PRESS_QUERY } from '@/lib/queries'
@@ -6,12 +5,13 @@ import { addUtmParams } from '@/lib/utils/utm'
 import { formatMonthYear } from '@/lib/utils/dateTime'
 import type { PressItem } from '@/types'
 
-export const metadata: Metadata = {
+import { createMetadata } from '@/lib/metadata'
+
+export const metadata = createMetadata({
   title: 'Press',
   description: 'PorterGoldberg Residential in the press - featured articles and media coverage.',
-}
-
-export const revalidate = 86400
+  path: '/press',
+})
 
 async function getPressItems(): Promise<PressItem[]> {
   return client.fetch<PressItem[]>(PRESS_QUERY)

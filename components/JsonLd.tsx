@@ -1,3 +1,6 @@
+import type { EventItem } from '@/types'
+import { toPlainText } from '@/lib/utils/text'
+
 const SITE_URL = 'https://www.portergoldberg.com'
 
 export function LocalBusinessJsonLd() {
@@ -117,6 +120,52 @@ export function FAQJsonLd({ faqs }: { faqs: FAQItem[] }) {
         text: faq.answer,
       },
     })),
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
+export function EventsJsonLd({ events }: { events: EventItem[] }) {
+  const eventSchemas = events.map((event) => ({
+    '@type': 'Event',
+    name: event.title,
+    description: toPlainText(event.description),
+    startDate: event.date,
+    endDate: event.endDate || event.date,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: event.location
+      ? 'https://schema.org/OfflineEventAttendanceMode'
+      : 'https://schema.org/OnlineEventAttendanceMode',
+    location: event.location
+      ? {
+          '@type': 'Place',
+          name: event.location,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Chicago',
+            addressRegion: 'IL',
+          },
+        }
+      : {
+          '@type': 'VirtualLocation',
+          url: event.registrationUrl || 'https://portergoldberg.com/events',
+        },
+    organizer: {
+      '@type': 'Organization',
+      name: 'PorterGoldberg Residential',
+      url: 'https://portergoldberg.com',
+    },
+    image: event.image?.asset?.url,
+  }))
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': eventSchemas,
   }
 
   return (

@@ -9,6 +9,10 @@ import { client } from '@/lib/client'
 import { AGENTS_QUERY, RECENT_NEWSLETTER_QUERY } from '@/lib/queries'
 import type { Agent } from '@/types'
 
+// Default revalidation for all pages (24 hours)
+// Override in specific pages that need different values
+export const revalidate = 86400
+
 const siteUrl = 'https://www.portergoldberg.com'
 
 export const viewport: Viewport = {

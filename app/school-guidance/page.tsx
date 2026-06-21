@@ -33,7 +33,7 @@ export default async function SchoolGuidancePage() {
   }
 
   return (
-    <main className="pg-page">
+    <>
       <section className="pg-page-hero">
         <h1>{data.title}</h1>
         {data.headline && <p>{data.headline}</p>}
@@ -59,6 +59,6 @@ export default async function SchoolGuidancePage() {
           )}
         </div>
       </section>
-    </main>
+</>
   )
 }
