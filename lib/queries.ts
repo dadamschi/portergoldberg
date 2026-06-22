@@ -99,6 +99,20 @@ export const TESTIMONIAL_BY_HUBSPOT_ID_QUERY = defineQuery(/* groq */ `
   }
 `)
 
+ export const UNPUBLISHED_DRAFTS_QUERY = defineQuery(/* groq */ `
+    *[
+      _type == "testimonial" 
+      && _id match "drafts.*"
+      && count(*[_id == string::split(^._id, "drafts.")[1]]) == 0
+    ] | order(_createdAt desc) {
+      _id,
+      clientName,
+      clientTitle,
+      date,
+      quote
+    }
+  `)
+
 // =============================================================================
 // AGENTS
 // =============================================================================

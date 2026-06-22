@@ -15,13 +15,20 @@ const DESKTOP_LOAD_MORE = 6 // 3 rows × 2 columns
 const LOAD_DELAY_MS = 800
 
 function getInitials(name: string): string {
-  const initials = name
+  const firstinitial = name
     .split(' ')
     .map((word) => word[0])
     .join('')
-    .slice(0, 2)
+    .slice(0, 1)
     .toUpperCase()
-  return initials.length < 2 ? name : initials
+  const lastinitial = name
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(-1)
+    .toUpperCase()
+  const initials = `${firstinitial}${lastinitial}`
+  return initials
 }
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {

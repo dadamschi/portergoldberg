@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net https://p.typekit.net",
               "img-src 'self' data: blob: https: https://cdn.sanity.io",
               "font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net",
-              "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://vitals.vercel-insights.com https://vercel.live",
+              "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://*.api.sanity.io https://vitals.vercel-insights.com https://vercel.live",
               "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://vercel.live",
               "media-src 'self' blob:",
             ].join('; '),
@@ -140,6 +140,11 @@ const nextConfig: NextConfig = {
       {
         source: '/our-process',
         destination: '/selling/our-process',
+        permanent: true,
+      },
+      {
+        source: '/blog',
+        destination: '/newsletters',
         permanent: true,
       },
     ]
