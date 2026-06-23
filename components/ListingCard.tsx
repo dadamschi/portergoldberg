@@ -87,7 +87,7 @@ export function ListingCard({ listing }: ListingCardProps) {
           )}
           <button
             type="button"
-            onClick={() => openContactForm(contactMessage)}
+            onClick={() => openContactForm(contactMessage, address)}
             className="pg-listing-btn pg-listing-btn--contact"
           >
             Inquire

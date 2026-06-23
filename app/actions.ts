@@ -1,6 +1,9 @@
 'use server'
 
-import { searchContactByEmail, createContact } from '@/lib/hubspot'
+import {
+  addContact, addToVendorList, updateContactProperties
+} from '@/lib/hubspot'
+import { EMAIL_NOTIFICATION_RECIPIENTS } from '@/lib/constants'
 
 type ConnectFormData = {
   name: string
@@ -9,6 +12,7 @@ type ConnectFormData = {
   subscribeNewsletter?: boolean
   addToVendorList?: boolean
   pageUrl?: string
+  propertyAddress?: string
 }
 
 type ConnectResult = {
@@ -28,12 +32,13 @@ function splitName(fullName: string): { firstName: string; lastName: string } {
 }
 
 export async function submitConnectForm(data: ConnectFormData): Promise<ConnectResult> {
-  const { name, email, message, subscribeNewsletter, addToVendorList, pageUrl } = data
+  const { name, email, message, addToVendorList, pageUrl, subscribeNewsletter, propertyAddress } = data
 
   if (!name || !name.trim()) {
     return { success: false, message: 'Please enter your name.' }
   }
-
+  const { firstName, lastName } = splitName(name)
+  
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { success: false, message: 'Please enter a valid email address.' }
   }
@@ -42,154 +47,66 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
     return { success: false, message: 'Please enter a message.' }
   }
 
-  const { sendEmail } = await import('@/lib/email')
+  const { contact } = await addContact({
+          email,
+          firstName,
+          lastName
+        })
 
-  // Send to info@ and artplexity
-  const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
-  const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
+  // const { sendEmail } = await import('@/lib/email')
 
-  const { error } = await sendEmail({
-    from: fromEmail,
-    to: recipients,
-    replyTo: email,
-    subject: `New inquiry from ${name}`,
-    html: `
-      <h2>New Contact Form Submission</h2>
-      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
-      <hr>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, '<br>')}</p>
-      <hr>
-      <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
-      <p><strong>Vendor list signup:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
-    `,
-  })
+  // const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
+  // const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
 
-  if (error) {
-    console.error('[Connect] Failed to send email:', error)
-    return { success: false, message: 'Failed to send message. Please try again.' }
+  // const { error } = await sendEmail({
+  //   from: fromEmail,
+  //   to: EMAIL_NOTIFICATION_RECIPIENTS,
+  //   replyTo: email,
+  //   subject: `New inquiry from ${name}`,
+  //   html: `
+  //     <h2>New Contact Form Submission</h2>
+  //     ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
+  //     <hr>
+  //     <p><strong>Name:</strong> ${name}</p>
+  //     <p><strong>Email:</strong> ${email}</p>
+  //     <p><strong>Message:</strong></p>
+  //     <p>${message.replace(/\n/g, '<br>')}</p>
+  //     <hr>
+  //     <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
+  //     <p><strong>Vendor list signup:</strong> ${shouldAddToVendorList ? 'Yes' : 'No'}</p>
+  //   `,
+  // })
+
+  // if (error) {
+  //   console.error('[Connect] Failed to send email:', error)
+  //   return { success: false, message: 'Failed to send message. Please try again.' }
+  // }
+  let tiers = 'Warm'
+  if(subscribeNewsletter) {
+    tiers = await addPropertyValue(tiers, 'Newsletter')  
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-
-  // Subscribe to newsletter if checkbox was checked
-  if (subscribeNewsletter) {
-    console.log('[Connect] Subscribing', email)
-    try {
-      await fetch(`${baseUrl}/api/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name }),
-      })
-    } catch (err) {
-      console.error(`[Connect] Failed to subscribe ${email} to newsletter:`, err)
+  const propertiesArray = [
+    { "property": "tier", "value": tiers },
+  ]
+  
+  if(propertyAddress) {
+    let propertyAddresses = propertyAddress
+    if(contact.interested_property) {
+      propertyAddresses = await addPropertyValue(contact.interested_property, propertyAddress)
     }
+    propertiesArray.push({ "property": "interested_property", "value": propertyAddresses })
   }
 
-  // Add to vendor list if checkbox was checked
-  if (addToVendorList) {
-    console.log('[Connect] Adding', email, 'to vendor list')
-    try {
-      await fetch(`${baseUrl}/api/vendor-list`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }),
-      })
-    } catch (err) {
-      console.error(`[Connect] Failed to add ${email} to vendor list:`, err)
-    }
-  }
-
-  // Create HubSpot contact if email is unique
-  try {
-    const existingContact = await searchContactByEmail(email)
-    if (!existingContact) {
-      const { firstName, lastName } = splitName(name)
-      const result = await createContact(email, firstName, lastName, 'Website Lead')
-      if (result.success) {
-        console.log('[Connect] Created HubSpot contact for', email)
-      } else if (result.conflict) {
-        console.log('[Connect] HubSpot contact already exists for', email)
-      } else {
-        console.error('[Connect] Failed to create HubSpot contact:', result.error)
-      }
-    } else {
-      console.log('[Connect] HubSpot contact already exists for', email, '- skipping creation')
-    }
-  } catch (err) {
-    console.error('[Connect] HubSpot integration error:', err)
-    // Don't fail the form submission if HubSpot fails
-  }
-
+  await updateContactProperties(contact.id, propertiesArray)
+  
   return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }
 }
 
-type TestFormData = {
-  name: string
-  email: string
-  message: string
-  pageUrl?: string
-  subscribeNewsletter?: boolean
-  addToVendorList?: boolean
-}
-
-type TestResult = {
-  success: boolean
-  message: string
-  sentTo?: string
-}
-
-export async function submitTestForm(data: TestFormData): Promise<TestResult> {
-  const { sendEmail } = await import('@/lib/email')
-  const { name, email, message, pageUrl, subscribeNewsletter, addToVendorList } = data
-
-  if (!name || !name.trim()) {
-    return { success: false, message: 'Please enter your name.' }
+export async function addPropertyValue(currentTier: string, valueToAdd: string): Promise<string> {
+  const values = currentTier ? currentTier.split(';').map(v => v.trim()).filter(Boolean) : []
+  if (!values.includes(valueToAdd)) {
+    values.push(valueToAdd)
   }
-
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { success: false, message: 'Please enter a valid email address.' }
-  }
-
-  if (!message || !message.trim()) {
-    return { success: false, message: 'Please enter a message.' }
-  }
-
-  const testRecipient = process.env.TEST_EMAIL_RECIPIENT
-  if (!testRecipient) {
-    throw new Error('Missing TEST_EMAIL_RECIPIENT environment variable')
-  }
-
-  const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  const fromEmail = `"PorterGoldberg" <${fromAddress}>`
-
-  // Send email via SMTP to TEST recipient only (no portergoldberg addresses)
-  const { error } = await sendEmail({
-    from: fromEmail,
-    to: testRecipient,
-    replyTo: email,
-    subject: `New inquiry from ${name}`,
-    html: `
-      <h2>New Contact Form Submission</h2>
-      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
-      <hr>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, '<br>')}</p>
-      <hr>
-      <p><strong>Subscribe to newsletter:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
-      <p><strong>Add to vendor list:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
-    `,
-  })
-
-  if (error) {
-    console.error('[TestForm] Failed to send email:', error)
-    return { success: false, message: `Failed to send message: ${error.message}` }
-  }
-
-  return { success: true, message: 'Test email sent!', sentTo: testRecipient }
+  return values.join(';')
 }

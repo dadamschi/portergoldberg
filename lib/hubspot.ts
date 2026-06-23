@@ -10,14 +10,11 @@ function getApiKey(): string {
 
 export type HubSpotContact = {
   id: string
-  tier: string
-}
-
-export type HubSpotContactDetails = {
-  id: string
+  email: string
   firstname: string
   lastname: string
-  email: string
+  tier: string
+  interested_property: string
 }
 
 export async function searchContactByEmail(email: string): Promise<HubSpotContact | null> {
@@ -33,10 +30,10 @@ export async function searchContactByEmail(email: string): Promise<HubSpotContac
         filters: [{
           propertyName: 'email',
           operator: 'EQ',
-          value: email,
+          value: email.toLowerCase(),
         }],
       }],
-      properties: ['email', 'tier'],
+      properties: ['email', 'tier', 'firstname', 'lastname', 'interested_property'],
     }),
   })
 
@@ -50,15 +47,19 @@ export async function searchContactByEmail(email: string): Promise<HubSpotContac
     return {
       id: contact.id,
       tier: contact.properties.tier || '',
+      email: contact.properties.email || '',
+      firstname: contact.properties.firstname || '',
+      lastname: contact.properties.lastname || '',
+      interested_property: contact.properties.interested_property || '',
     }
   }
   return null
 }
 
-export async function getContactById(contactId: string): Promise<HubSpotContactDetails | null> {
+export async function getContactById(contactId: string): Promise<HubSpotContact | null> {
   const apiKey = getApiKey()
   const response = await fetch(
-    `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=firstname,lastname,email`,
+    `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=firstname,lastname,email,tier,interested_property`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -76,6 +77,8 @@ export async function getContactById(contactId: string): Promise<HubSpotContactD
     firstname: data.properties.firstname || '',
     lastname: data.properties.lastname || '',
     email: data.properties.email || '',
+    tier: data.properties.tier || '',
+    interested_property: data.properties.interested_property || '',
   }
 }
 
@@ -159,8 +162,14 @@ export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]>
   return deals
 }
 
-export async function updateContactTier(contactId: string, tier: string): Promise<boolean> {
+export async function updateContactProperty(
+  contactId: string,
+  propertyName: string,
+  propertyValue?: string
+): Promise<boolean> {
   const apiKey = getApiKey()
+  const contact = await getContactById(contactId)
+
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
     headers: {
@@ -168,55 +177,42 @@ export async function updateContactTier(contactId: string, tier: string): Promis
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      properties: { tier },
+      properties: { [propertyName]: propertyValue },
     }),
   })
 
   return response.ok
 }
 
-export async function createContact(
-  email: string,
-  firstName: string,
-  lastName: string,
-  tier: string
-): Promise<{ success: boolean; conflict?: boolean; error?: string }> {
+type ContactProperty = {
+  property: string
+  value: string
+}
+
+export async function updateContactProperties(
+  contactId: string,
+  properties: ContactProperty[]
+): Promise<boolean> {
   const apiKey = getApiKey()
-  const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts`, {
-    method: 'POST',
+
+  // Convert array to object for HubSpot API
+  const propertiesObject: Record<string, string> = {}
+  for (const { property, value } of properties) {
+    propertiesObject[property] = value
+  }
+
+  const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
+    method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      properties: {
-        email,
-        firstname: firstName,
-        lastname: lastName,
-        lifecyclestage: 'subscriber',
-        tier,
-      },
+      properties: propertiesObject,
     }),
   })
 
-  if (response.ok) {
-    return { success: true }
-  }
-
-  if (response.status === 409) {
-    return { success: false, conflict: true }
-  }
-
-  const errorData = await response.json()
-  return { success: false, error: errorData.message || `HTTP ${response.status}` }
-}
-
-export function addTierValue(currentTier: string, valueToAdd: string): string {
-  const values = currentTier ? currentTier.split(';').map(v => v.trim()).filter(Boolean) : []
-  if (!values.includes(valueToAdd)) {
-    values.push(valueToAdd)
-  }
-  return values.join(';')
+  return response.ok
 }
 
 export function removeTierValue(currentTier: string, valueToRemove: string): string {
@@ -237,6 +233,134 @@ export type HubSpotVendor = {
   instagram?: string
   isPersonalContact?: boolean
 }
+
+// =============================================================================
+// HIGH-LEVEL SERVICE FUNCTIONS
+// =============================================================================
+
+export type AddContactOptions = {
+  email: string
+  firstName?: string
+  lastName?: string
+}
+
+export type AddContactResult = {
+  success: boolean
+  contact: HubSpotContact
+  error?: string
+}
+
+export async function createContact(
+  email: string,
+  firstName: string,
+  lastName: string
+): Promise<{ success: boolean; conflict?: boolean; error?: string }> {
+  const apiKey = getApiKey()
+  const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      properties: {
+        email,
+        firstname: firstName,
+        lastname: lastName,
+        hs_lead_status: 'NEW',
+      },
+    }),
+  })
+
+  if (response.ok) {
+    return { success: true }
+  }
+
+  if (response.status === 409) {
+    return { success: false, conflict: true }
+  }
+
+  const errorData = await response.json()
+  return { success: false, error: errorData.message || `HTTP ${response.status}` }
+}
+
+/**
+   * Get existing contact or create a new one. Always returns a contact ID.
+   */
+  async function getOrCreateContact(
+    email: string,
+    firstName: string,
+    lastName: string
+  ): Promise<{ contact: HubSpotContact; created: boolean }> {
+    // Try to find existing
+    const existing = await searchContactByEmail(email)
+    if (existing) {
+      return { contact: existing, created: false }
+    }
+
+    // Create new
+    const result = await createContact(email, firstName, lastName)
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to create contact')
+    }
+
+    // Fetch the newly created contact to get its ID
+    const newContact = await searchContactByEmail(email)
+    if (!newContact) {
+      throw new Error('Contact created but not found')
+    }
+
+    return { contact: newContact, created: true }
+  }
+
+/**
+ * Add or update a contact in HubSpot with specified tiers.
+ * If contact exists, adds the tiers to their existing tiers.
+ */
+export async function addContact(options: AddContactOptions): Promise<AddContactResult> {
+  const { email, firstName = '', lastName = '' } = options
+  const { contact, created } = await getOrCreateContact(email, firstName, lastName)
+
+  return { success: true, contact: contact }
+}
+
+/**
+ * Unsubscribe an email from the newsletter.
+ * Removes Newsletter tier from contact.
+ */
+export async function unsubscribeFromNewsletter(email: string): Promise<{ success: boolean; error?: string }> {
+  const contact = await searchContactByEmail(email)
+
+  if (!contact) {
+    return { success: false, error: 'Contact not found' }
+  }
+
+  const newTier = removeTierValue(contact.tier, 'Newsletter')
+  const updated = await updateContactProperty(contact.id, 'tier', newTier)
+
+  return { success: updated }
+}
+
+/**
+ * Add a contact to the vendor list.
+ */
+export async function addToVendorList(
+  email: string,
+  name?: string
+): Promise<AddContactResult> {
+  const [firstName, ...lastNameParts] = (name || '').split(' ')
+  const lastName = lastNameParts.join(' ')
+
+  return addContact({
+    email,
+    firstName: firstName || undefined,
+    lastName: lastName || undefined
+  })
+}
+
+// =============================================================================
+// VENDOR FETCHING
+// =============================================================================
 
 export async function fetchVendors(): Promise<HubSpotVendor[]> {
   const apiKey = getApiKey()

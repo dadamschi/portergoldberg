@@ -1,28 +1,5 @@
 import { NextResponse } from 'next/server'
-import {
-  searchContactByEmail,
-  updateContactTier,
-  removeTierValue,
-} from '@/lib/hubspot'
-
-async function removeFromHubSpotNewsletter(email: string): Promise<{ success: boolean; error?: string }> {
-  const contact = await searchContactByEmail(email)
-  if (!contact) {
-    return { success: false, error: 'Contact not found' }
-  }
-
-  const newTier = removeTierValue(contact.tier, 'Newsletter')
-  if (newTier === contact.tier) {
-    return { success: true } // Already unsubscribed
-  }
-
-  const updated = await updateContactTier(contact.id, newTier)
-  if (!updated) {
-    return { success: false, error: 'Failed to update contact' }
-  }
-
-  return { success: true }
-}
+import { unsubscribeFromNewsletter } from '@/lib/hubspot'
 
 export async function POST(request: Request) {
   const body: { email?: string } = await request.json()
@@ -36,7 +13,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await removeFromHubSpotNewsletter(email)
+    const result = await unsubscribeFromNewsletter(email)
 
     if (result.success) {
       console.log(`[Newsletter] Unsubscribed: ${email}`)

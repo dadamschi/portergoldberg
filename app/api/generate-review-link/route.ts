@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateReviewToken } from '@/lib/tokens'
+import { updateContactProperty } from '@/lib/hubspot'
 
-const HUBSPOT_API_BASE = 'https://api.hubapi.com'
 const REVIEW_LINK_PROPERTY = 'review_link'
 
 /**
@@ -36,9 +36,6 @@ export async function POST(request: NextRequest) {
     if (!process.env.REVIEW_TOKEN_SECRET) {
       throw new Error('REVIEW_TOKEN_SECRET not configured')
     }
-    if (!process.env.HUBSPOT_API_KEY) {
-      throw new Error('HUBSPOT_API_KEY not configured')
-    }
 
     // Generate the review link
     const token = generateReviewToken(String(contactId))
@@ -46,25 +43,14 @@ export async function POST(request: NextRequest) {
     const reviewLink = `${baseUrl}/submit-review/${token}`
 
     // Save to HubSpot contact
-    const updateResponse = await fetch(
-      `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          properties: {
-            [REVIEW_LINK_PROPERTY]: reviewLink,
-          },
-        }),
-      }
+    const updated = await updateContactProperty(
+      String(contactId),
+      REVIEW_LINK_PROPERTY,
+      reviewLink
     )
 
-    if (!updateResponse.ok) {
-      const error = await updateResponse.json()
-      console.error('HubSpot update failed:', error)
+    if (!updated) {
+      console.error('HubSpot update failed for contact:', contactId)
       return NextResponse.json(
         { error: 'Failed to update contact' },
         { status: 500 }

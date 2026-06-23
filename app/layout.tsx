@@ -8,12 +8,11 @@ import { NAV_ITEMS } from '@/lib/data'
 import { client } from '@/lib/client'
 import { AGENTS_QUERY, RECENT_NEWSLETTER_QUERY } from '@/lib/queries'
 import type { Agent } from '@/types'
+import { SITE_URL } from '@/lib/constants'
 
 // Default revalidation for all pages (24 hours)
 // Override in specific pages that need different values
 export const revalidate = 86400
-
-const siteUrl = 'https://www.portergoldberg.com'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -22,7 +21,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'PorterGoldberg Residential | Chicago Real Estate Experts',
     template: '%s | PorterGoldberg Residential',
@@ -40,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: siteUrl,
+    url: SITE_URL,
     siteName: 'PorterGoldberg Residential',
     title: 'PorterGoldberg Residential | Chicago Real Estate Experts',
     description: 'Samantha Porter & Lauren Goldberg — boutique Chicago real estate expertise for buying, selling, and building.',
@@ -71,7 +70,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
   },
   verification: {
     google: '5xjymRUSMxoa9ROBZMjOEvvMEWMyOgXeMEpjhn_oVAE',

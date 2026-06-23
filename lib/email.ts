@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { EMAIL_NOTIFICATION_RECIPIENTS } from './constants'
 
 function getTransporter() {
   if (!process.env.SMTP_HOST) {
@@ -25,10 +26,7 @@ function getTransporter() {
 export const FROM_EMAIL = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
 
 // All notification emails go to these addresses
-const isProduction = process.env.VERCEL_ENV === 'production'
-export const NOTIFY_EMAILS = isProduction
-  ? ['info@portergoldberg.com', 'dadams.chi+portergoldbergcc@gmail.com', 'contact@artplexity.com']
-  : ['dadams.chi+portergoldbergcc@gmail.com']
+export const NOTIFY_EMAILS = EMAIL_NOTIFICATION_RECIPIENTS
 
 type SendEmailOptions = {
   from?: string

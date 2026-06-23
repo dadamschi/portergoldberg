@@ -1,38 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/email'
-import {
-  searchContactByEmail,
-  updateContactTier,
-  createContact,
-  addTierValue,
-} from '@/lib/hubspot'
-
-async function addToHubSpot(email: string, name?: string): Promise<{ success: boolean; error?: string; updated?: boolean }> {
-  const [firstName, ...lastNameParts] = (name || '').split(' ')
-  const lastName = lastNameParts.join(' ')
-
-  const result = await createContact(email, firstName || '', lastName, 'Newsletter;Warm')
-
-  if (result.success) {
-    return { success: true }
-  }
-
-  // 409 = contact already exists, try to update their tier
-  if (result.conflict) {
-    const existingContact = await searchContactByEmail(email)
-    if (existingContact) {
-      const newTier = addTierValue(existingContact.tier, 'Newsletter')
-      if (newTier !== existingContact.tier) {
-        const updated = await updateContactTier(existingContact.id, newTier)
-        return { success: true, updated }
-      }
-      return { success: true, updated: false } // Already had Newsletter
-    }
-    return { success: true } // Couldn't find to update, but contact exists
-  }
-
-  return { success: false, error: result.error }
-}
+import { EMAIL_NOTIFICATION_RECIPIENTS } from '@/lib/constants'
 
 export async function POST(request: Request) {
   const body: { email?: string; name?: string } = await request.json()
@@ -48,22 +16,22 @@ export async function POST(request: Request) {
   // Try to add contact to HubSpot
   let hubspotResult: { success: boolean; error?: string }
   try {
-    hubspotResult = await addToHubSpot(email, name)
-    if (hubspotResult.success) {
-      console.log(`[HubSpot] Successfully added contact: ${email}`)
-    } else {
-      console.error(`[HubSpot] Failed to add contact: ${hubspotResult.error}`)
+    // const result = await addNewsletterToContactByEmail(email)
+    const result = true
+    if(!result) {
+      hubspotResult = { success: false, error: 'Failed to add contact to HubSpot' }
     }
+    hubspotResult = { success: true }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     console.error(`[HubSpot] Error: ${errorMessage}`)
     hubspotResult = { success: false, error: errorMessage }
   }
 
-  // Send notification email to info@
+  // Send notification email
   const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
   const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
-  const recipients = ['info@portergoldberg.com', 'contact@artplexity.com']
+  const recipients = EMAIL_NOTIFICATION_RECIPIENTS
 
   const { error } = await sendEmail({
     from: fromEmail,
@@ -81,8 +49,6 @@ export async function POST(request: Request) {
   if (error) {
     console.error('[Newsletter] Failed to send notification:', error)
   }
-
-  console.log(`[Newsletter] New subscriber: ${email}`)
 
   return NextResponse.json(
     { message: "You're in! Thanks for subscribing." },

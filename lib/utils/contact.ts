@@ -7,10 +7,10 @@
  *   Contact about this listing
  * </button>
  */
-export function openContactForm(message?: string) {
+export function openContactForm(message?: string, address?: string) {
   window.dispatchEvent(
     new CustomEvent('open-connect-form', {
-      detail: message ? { message } : undefined,
+      detail: { message, address },
     })
   )
 }

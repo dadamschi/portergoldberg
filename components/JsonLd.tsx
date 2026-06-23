@@ -1,7 +1,6 @@
 import type { EventItem } from '@/types'
 import { toPlainText } from '@/lib/utils/text'
-
-const SITE_URL = 'https://www.portergoldberg.com'
+import { SITE_URL, EMAIL_INFO, BUSINESS_INFO } from '@/lib/constants'
 
 export function LocalBusinessJsonLd() {
   const jsonLd = {
@@ -13,13 +12,13 @@ export function LocalBusinessJsonLd() {
     logo: `${SITE_URL}/PorterGoldberg-Residential.webp`,
     image: `${SITE_URL}/Lauren-and-Samantha-Oval.webp`,
     telephone: '+1-312-944-8900',
-    email: 'info@portergoldberg.com',
+    email: EMAIL_INFO,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '425 W. North Avenue',
-      addressLocality: 'Chicago',
-      addressRegion: 'IL',
-      postalCode: '60610',
+      streetAddress: BUSINESS_INFO.address,
+      addressLocality: BUSINESS_INFO.city,
+      addressRegion: BUSINESS_INFO.state,
+      postalCode: BUSINESS_INFO.zip,
       addressCountry: 'US',
     },
     geo: {
@@ -153,12 +152,12 @@ export function EventsJsonLd({ events }: { events: EventItem[] }) {
         }
       : {
           '@type': 'VirtualLocation',
-          url: event.registrationUrl || 'https://portergoldberg.com/events',
+          url: event.registrationUrl || `${SITE_URL}/events`,
         },
     organizer: {
       '@type': 'Organization',
-      name: 'PorterGoldberg Residential',
-      url: 'https://portergoldberg.com',
+      name: BUSINESS_INFO.name,
+      url: SITE_URL,
     },
     image: event.image?.asset?.url,
   }))

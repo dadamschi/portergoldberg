@@ -10,8 +10,8 @@ type ConnectFormProps = {
   agents: Agent[]
 }
 
-// Custom event type for opening the form with a message
-type OpenConnectFormEvent = CustomEvent<{ message?: string }>
+// Custom event type for opening the form with a message and optional property address
+type OpenConnectFormEvent = CustomEvent<{ message?: string; address?: string }>
 
 export function ConnectForm({ agents }: ConnectFormProps) {
   const searchParams = useSearchParams()
@@ -19,6 +19,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [propertyAddress, setPropertyAddress] = useState('')
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(true)
   const [addToVendorList, setAddToVendorList] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -76,11 +77,12 @@ export function ConnectForm({ agents }: ConnectFormProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // Listen for custom event from nav CTA (supports optional message in detail)
+  // Listen for custom event from nav CTA (supports optional message and address in detail)
   useEffect(() => {
     function handleOpen(e: Event) {
       const customEvent = e as OpenConnectFormEvent
       setMessage(customEvent.detail?.message || '')
+      setPropertyAddress(customEvent.detail?.address || '')
       setOpen(true)
     }
     window.addEventListener('open-connect-form', handleOpen)
@@ -106,6 +108,7 @@ export function ConnectForm({ agents }: ConnectFormProps) {
         subscribeNewsletter,
         addToVendorList,
         pageUrl: window.location.href,
+        propertyAddress: propertyAddress || undefined,
       })
 
       if (result.success) {
@@ -134,6 +137,9 @@ export function ConnectForm({ agents }: ConnectFormProps) {
       setStatus('idle')
       setFeedback('')
       setMessage('')
+      setPropertyAddress('')
+      setSubscribeNewsletter(true)
+      setAddToVendorList(false)
       captcha.reset()
     }, 300)
   }
