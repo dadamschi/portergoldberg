@@ -53,34 +53,30 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
           lastName
         })
 
-  // const { sendEmail } = await import('@/lib/email')
+  const { sendEmail } = await import('@/lib/email')
 
-  // const fromAddress = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || ''
-  // const fromEmail = `"PorterGoldberg Website" <${fromAddress}>`
+  const { error } = await sendEmail({
+    to: EMAIL_NOTIFICATION_RECIPIENTS,
+    replyTo: email,
+    subject: `New inquiry from ${name}`,
+    html: `
+      <h2>New Contact Form Submission</h2>
+      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
+      <hr>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+      <hr>
+      <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
+      <p><strong>Vendor list signup:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
+    `,
+  })
 
-  // const { error } = await sendEmail({
-  //   from: fromEmail,
-  //   to: EMAIL_NOTIFICATION_RECIPIENTS,
-  //   replyTo: email,
-  //   subject: `New inquiry from ${name}`,
-  //   html: `
-  //     <h2>New Contact Form Submission</h2>
-  //     ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
-  //     <hr>
-  //     <p><strong>Name:</strong> ${name}</p>
-  //     <p><strong>Email:</strong> ${email}</p>
-  //     <p><strong>Message:</strong></p>
-  //     <p>${message.replace(/\n/g, '<br>')}</p>
-  //     <hr>
-  //     <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
-  //     <p><strong>Vendor list signup:</strong> ${shouldAddToVendorList ? 'Yes' : 'No'}</p>
-  //   `,
-  // })
-
-  // if (error) {
-  //   console.error('[Connect] Failed to send email:', error)
-  //   return { success: false, message: 'Failed to send message. Please try again.' }
-  // }
+  if (error) {
+    console.error('[Connect] Failed to send email:', error)
+    return { success: false, message: 'Failed to send message. Please try again.' }
+  }
   let tiers = 'Warm'
   if(subscribeNewsletter) {
     tiers = await addPropertyValue(tiers, 'Newsletter')  

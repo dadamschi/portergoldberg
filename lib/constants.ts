@@ -8,17 +8,14 @@ export const SITE_URL = 'https://www.portergoldberg.com'
 // EMAIL ADDRESSES
 // =============================================================================
 
-export const EMAIL_INFO = 'noreply@portergoldberg.com'
+export const EMAIL_INFO = 'info@portergoldberg.com'
 export const EMAIL_TEAM = 'team@portergoldberg.com'
 
 // Notification recipients for form submissions and alerts
 export const EMAIL_NOTIFICATION_RECIPIENTS =
   process.env.NODE_ENV === 'production'
     ? [EMAIL_INFO, 'contact@artplexity.com']
-    : ['dadams.chi+portergoldbergcc@gmail.com']
-
-// Test recipient for form testing (uses env var)
-export const EMAIL_TEST_RECIPIENT = process.env.TEST_EMAIL_RECIPIENT
+    : ['info@portergoldberg.com']
 
 // =============================================================================
 // AGENT CONTACT INFO

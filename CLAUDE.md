@@ -108,6 +108,39 @@ Studio is standalone in `/studio` with separate `package.json`.
 - `listing.isHalcyonProject`: boolean - shows on Halcyon page
 - `testimonial.pinOnHomePage`: boolean - prioritized on homepage
 
+## Email (Resend)
+
+Transactional emails are sent via [Resend](https://resend.com).
+
+**Domain**: `portergoldberg.com` (verified in Resend dashboard)
+
+### How It Works
+
+```
+Contact Form (ContactPageForm.tsx)
+    → submitConnectForm() (app/actions.ts)
+        → sendEmail() (lib/email.ts)
+            → Resend API
+```
+
+### Key Files
+
+- `lib/email.ts` - Resend client and `sendEmail()` function
+- `lib/constants.ts` - `EMAIL_NOTIFICATION_RECIPIENTS` (where notifications go)
+- `app/actions.ts` - Server action that sends contact form emails
+
+### Configuration
+
+- **From address**: `noreply@portergoldberg.com` (no real mailbox needed, just verified domain)
+- **Reply-To**: Set to the submitter's email so replies go to them
+- **Recipients**: `info@portergoldberg.com` in dev, adds `contact@artplexity.com` in production
+
+### Environment Variable
+
+```env
+RESEND_API_KEY=              # Resend API key (required)
+```
+
 ## HubSpot
 
 **NEVER make changes to HubSpot (create properties, update contacts, create associations, etc.) without explicitly asking first.** Read-only operations (fetching contacts, listing properties) are fine.
@@ -128,4 +161,5 @@ NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_READ_TOKEN=       # Server-side fetches
 SANITY_REVALIDATE_SECRET=    # Webhook auth
 HUBSPOT_API_KEY=             # HubSpot API access
+RESEND_API_KEY=              # Resend email API
 ```
