@@ -3,6 +3,7 @@
 // =============================================================================
 
 export const SITE_URL = 'https://www.portergoldberg.com'
+export const HUBSPOT_CLIENT_ID='46095216'
 
 // =============================================================================
 // EMAIL ADDRESSES
@@ -15,7 +16,7 @@ export const EMAIL_TEAM = 'team@portergoldberg.com'
 export const EMAIL_NOTIFICATION_RECIPIENTS =
   process.env.NODE_ENV === 'production'
     ? [EMAIL_INFO, 'contact@artplexity.com']
-    : ['info@portergoldberg.com']
+    : ['dadams.chi@gmail.com']
 
 // =============================================================================
 // AGENT CONTACT INFO

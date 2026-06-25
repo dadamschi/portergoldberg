@@ -1,7 +1,7 @@
 'use server'
 
 import {
-  addContact, addToVendorList, updateContactProperties
+  addContact, updateContactProperties, buildHubspotContactLink
 } from '@/lib/hubspot'
 import { EMAIL_NOTIFICATION_RECIPIENTS } from '@/lib/constants'
 
@@ -52,31 +52,7 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
           firstName,
           lastName
         })
-
-  const { sendEmail } = await import('@/lib/email')
-
-  const { error } = await sendEmail({
-    to: EMAIL_NOTIFICATION_RECIPIENTS,
-    replyTo: email,
-    subject: `New inquiry from ${name}`,
-    html: `
-      <h2>New Contact Form Submission</h2>
-      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
-      <hr>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, '<br>')}</p>
-      <hr>
-      <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
-      <p><strong>Vendor list signup:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
-    `,
-  })
-
-  if (error) {
-    console.error('[Connect] Failed to send email:', error)
-    return { success: false, message: 'Failed to send message. Please try again.' }
-  }
+  
   let tiers = 'Warm'
   if(subscribeNewsletter) {
     tiers = await addPropertyValue(tiers, 'Newsletter')  
@@ -95,6 +71,33 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
   }
 
   await updateContactProperties(contact.id, propertiesArray)
+
+  const { sendEmail } = await import('@/lib/email')
+  const hubspotContactLink = contact.id ? (await buildHubspotContactLink(contact.id)) : ''
+
+  const { error } = await sendEmail({
+    to: EMAIL_NOTIFICATION_RECIPIENTS,
+    replyTo: email,
+    subject: `New inquiry from ${name}${propertyAddress ? ` - ${propertyAddress}` : ''}`,
+    html: `
+      <h2>New Contact Form Submission</h2>
+      ${pageUrl ? `<p><em>Submitted from: <a href="${pageUrl}">${pageUrl}</a></em></p>` : ''}
+      <hr>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+      <hr>
+      <p><strong>Newsletter signup:</strong> ${subscribeNewsletter ? 'Yes' : 'No'}</p>
+      <p><strong>Vendor list signup:</strong> ${addToVendorList ? 'Yes' : 'No'}</p>
+      ${contact.id ? `<p><strong>HubSpot contact:</strong> ${hubspotContactLink}</p>` : ''}
+    `,
+  })
+
+  if (error) {
+    console.error('[Connect] Failed to send email:', error)
+    return { success: false, message: 'Failed to send message. Please try again.' }
+  }
   
   return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }
 }

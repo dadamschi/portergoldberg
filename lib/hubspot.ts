@@ -1,3 +1,4 @@
+import { HUBSPOT_CLIENT_ID } from './constants'
 const HUBSPOT_API_BASE = 'https://api.hubapi.com'
 
 function getApiKey(): string {
@@ -17,6 +18,10 @@ export type HubSpotContact = {
   interested_property: string
 }
 
+export async function buildHubspotContactLink(contactId: string) {
+  return `https://app.hubspot.com/contacts/${HUBSPOT_CLIENT_ID}/record/0-1/${contactId}`
+}
+
 export async function searchContactByEmail(email: string): Promise<HubSpotContact | null> {
   const apiKey = getApiKey()
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`, {
@@ -33,7 +38,7 @@ export async function searchContactByEmail(email: string): Promise<HubSpotContac
           value: email.toLowerCase(),
         }],
       }],
-      properties: ['email', 'tier', 'firstname', 'lastname', 'interested_property'],
+      properties: ['id','email', 'tier', 'firstname', 'lastname', 'interested_property'],
     }),
   })
 
