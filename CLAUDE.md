@@ -133,7 +133,7 @@ Contact Form (ContactPageForm.tsx)
 
 - **From address**: `noreply@portergoldberg.com` (no real mailbox needed, just verified domain)
 - **Reply-To**: Set to the submitter's email so replies go to them
-- **Recipients**: `info@portergoldberg.com` in dev, adds `contact@artplexity.com` in production
+- **Recipients**: `info@portergoldberg.com` in dev
 
 ### Environment Variable
 

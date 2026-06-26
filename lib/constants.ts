@@ -15,7 +15,7 @@ export const EMAIL_TEAM = 'team@portergoldberg.com'
 // Notification recipients for form submissions and alerts
 export const EMAIL_NOTIFICATION_RECIPIENTS =
   process.env.NODE_ENV === 'production'
-    ? [EMAIL_INFO, 'contact@artplexity.com']
+    ? [EMAIL_INFO]
     : ['dadams.chi@gmail.com']
 
 // =============================================================================

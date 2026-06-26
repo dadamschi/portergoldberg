@@ -173,7 +173,6 @@ export async function updateContactProperty(
   propertyValue?: string
 ): Promise<boolean> {
   const apiKey = getApiKey()
-  const contact = await getContactById(contactId)
 
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
@@ -200,10 +199,52 @@ export async function updateContactProperties(
 ): Promise<boolean> {
   const apiKey = getApiKey()
 
-  // Convert array to object for HubSpot API
+  // Get unique property names and their definitions
+  const uniqueProps = [...new Set(properties.map((p) => p.property))]
+  const definitions: Record<string, PropertyDefinition> = {}
+  const enumerationProps: string[] = []
+
+  for (const prop of uniqueProps) {
+    const definition = await getPropertyDefinition(prop)
+    definitions[prop] = definition
+    if (definition.type === 'enumeration') {
+      enumerationProps.push(prop)
+    }
+  }
+
+  // Fetch current values for enumeration properties
+  const currentValues: Record<string, string> = {}
+  if (enumerationProps.length > 0) {
+    const contactResponse = await fetch(
+      `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${enumerationProps.join(',')}`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    )
+    if (contactResponse.ok) {
+      const contactData: { properties: Record<string, string> } = await contactResponse.json()
+      Object.assign(currentValues, contactData.properties)
+    }
+  }
+
   const propertiesObject: Record<string, string> = {}
   for (const { property, value } of properties) {
-    propertiesObject[property] = value
+    const definition = definitions[property]
+
+    if (definition.type === 'enumeration') {
+      const optionValue = await ensurePropertyOption(property, value)
+      // Use accumulated value if we've already processed this property, otherwise use current from HubSpot
+      const baseValue = propertiesObject[property] ?? currentValues[property] ?? ''
+      const values = baseValue ? baseValue.split(';').map((v) => v.trim()).filter(Boolean) : []
+      if (!values.includes(optionValue)) {
+        values.push(optionValue)
+      }
+      propertiesObject[property] = values.join(';')
+    } else {
+      propertiesObject[property] = value
+    }
   }
 
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
@@ -324,9 +365,9 @@ export async function createContact(
  */
 export async function addContact(options: AddContactOptions): Promise<AddContactResult> {
   const { email, firstName = '', lastName = '' } = options
-  const { contact, created } = await getOrCreateContact(email, firstName, lastName)
+  const { contact } = await getOrCreateContact(email, firstName, lastName)
 
-  return { success: true, contact: contact }
+  return { success: true, contact }
 }
 
 /**
@@ -456,4 +497,157 @@ export async function fetchVendors(): Promise<HubSpotVendor[]> {
     const bName = b.company || `${b.firstName} ${b.lastName}`
     return aName.localeCompare(bName)
   })
+}
+
+// =============================================================================
+// MULTI-SELECT PROPERTY OPTIONS
+// =============================================================================
+
+export type PropertyOption = {
+  label: string
+  value: string
+  displayOrder: number
+  hidden: boolean
+}
+
+export type PropertyDefinition = {
+  name: string
+  label: string
+  type: string
+  options: PropertyOption[]
+}
+
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 1 week
+const propertyDefinitionCache: Map<string, { data: PropertyDefinition; timestamp: number }> = new Map()
+
+export async function getPropertyDefinition(propertyName: string): Promise<PropertyDefinition> {
+  const cached = propertyDefinitionCache.get(propertyName)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data
+  }
+
+  const apiKey = getApiKey()
+  const response = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Failed to get property ${propertyName}: ${error.message || response.status}`)
+  }
+
+  const data: PropertyDefinition = await response.json()
+  propertyDefinitionCache.set(propertyName, { data, timestamp: Date.now() })
+  return data
+}
+
+export async function getAllPropertyDefinitions(): Promise<PropertyDefinition[]> {
+  const apiKey = getApiKey()
+  const response = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/properties/contacts`,
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Failed to get properties: ${error.message || response.status}`)
+  }
+
+  const data: { results: PropertyDefinition[] } = await response.json()
+  return data.results
+}
+
+export async function ensurePropertyOption(
+  propertyName: string,
+  optionLabel: string
+): Promise<string> {
+  const apiKey = getApiKey()
+  const property = await getPropertyDefinition(propertyName)
+
+  const existing = property.options.find(
+    (opt) => opt.label.toLowerCase() === optionLabel.toLowerCase()
+  )
+  if (existing) {
+    return existing.value
+  }
+
+  const newValue = optionLabel.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
+
+  const valueExists = property.options.find((opt) => opt.value === newValue)
+  if (valueExists) {
+    throw new Error(`Option value "${newValue}" already exists with label "${valueExists.label}"`)
+  }
+
+  const maxOrder = Math.max(0, ...property.options.map((opt) => opt.displayOrder))
+  const newOption: PropertyOption = {
+    label: optionLabel,
+    value: newValue,
+    displayOrder: maxOrder + 1,
+    hidden: false,
+  }
+
+  const response = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        options: [...property.options, newOption],
+      }),
+    }
+  )
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Failed to add option to ${propertyName}: ${error.message || response.status}`)
+  }
+
+  // Invalidate cache since we added a new option
+  propertyDefinitionCache.delete(propertyName)
+
+  return newValue
+}
+
+export async function addMultiSelectValue(
+  contactId: string,
+  propertyName: string,
+  optionLabel: string
+): Promise<boolean> {
+  const optionValue = await ensurePropertyOption(propertyName, optionLabel)
+
+  const apiKey = getApiKey()
+  const response = await fetch(
+    `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${propertyName}`,
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch contact ${contactId}`)
+  }
+
+  const contactData: { properties: HubSpotContact & { [key: string]: string } } = await response.json()
+  const currentValue = contactData.properties[propertyName] || ''
+
+  const values = currentValue ? currentValue.split(';').map((v) => v.trim()).filter(Boolean) : []
+  if (!values.includes(optionValue)) {
+    values.push(optionValue)
+  }
+
+  return updateContactProperty(contactId, propertyName, values.join(';'))
 }

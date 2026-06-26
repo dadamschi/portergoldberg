@@ -53,21 +53,16 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
           lastName
         })
   
-  let tiers = 'Warm'
-  if(subscribeNewsletter) {
-    tiers = await addPropertyValue(tiers, 'Newsletter')  
+  const propertiesArray = [
+    { property: 'tier', value: 'Warm' },
+  ]
+
+  if (subscribeNewsletter) {
+    propertiesArray.push({ property: 'tier', value: 'Newsletter' })
   }
 
-  const propertiesArray = [
-    { "property": "tier", "value": tiers },
-  ]
-  
-  if(propertyAddress) {
-    let propertyAddresses = propertyAddress
-    if(contact.interested_property) {
-      propertyAddresses = await addPropertyValue(contact.interested_property, propertyAddress)
-    }
-    propertiesArray.push({ "property": "interested_property", "value": propertyAddresses })
+  if (propertyAddress) {
+    propertiesArray.push({ property: 'interested_property_list', value: propertyAddress })
   }
 
   await updateContactProperties(contact.id, propertiesArray)
@@ -100,12 +95,4 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
   }
   
   return { success: true, message: "Thanks for reaching out! We'll be in touch soon." }
-}
-
-export async function addPropertyValue(currentTier: string, valueToAdd: string): Promise<string> {
-  const values = currentTier ? currentTier.split(';').map(v => v.trim()).filter(Boolean) : []
-  if (!values.includes(valueToAdd)) {
-    values.push(valueToAdd)
-  }
-  return values.join(';')
 }
