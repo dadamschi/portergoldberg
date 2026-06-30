@@ -8,7 +8,8 @@ import { formatDateOnly } from '@/lib/utils/dateTime'
 import { addUtmParams } from '@/lib/utils/utm'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SectionHeader, ContactLink } from '@/components'
+import { SectionHeader, ContactLink, NewsletterDownloadButton } from '@/components'
+import type { NewsletterSection } from '@/lib/newsletter-email-template'
 
 export const revalidate = 2592000 // 1 month - webhook handles on-demand revalidation
 
@@ -76,21 +77,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function ImageSection({ section }: { section: NewsletterImageSection }) {
-  const imageElement = (
+  const hasImage = section.image?.asset?.url
+  const isImageRight = section.layout === 'image-right'
+
+  const imageElement = hasImage ? (
     <Image
-      src={section.image.asset.url}
+      src={section.image!.asset.url}
       alt={section.alt || 'Newsletter section'}
       width={600}
       height={400}
       className="pg-newsletter-section-image"
       style={{ width: '100%', height: 'auto' }}
     />
-  )
+  ) : null
 
-  // Render the image with optional link
+  // Wrap image with link if provided
   let linkedImage = imageElement
-  if (section.linkUrl) {
-    // Contact form trigger: #contact:Your message here
+  if (imageElement && section.linkUrl) {
     if (section.linkUrl.startsWith('#contact:')) {
       const message = section.linkUrl.replace('#contact:', '')
       linkedImage = (
@@ -99,14 +102,12 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
         </ContactLink>
       )
     } else if (section.linkUrl.startsWith('/')) {
-      // Internal links use Next.js Link for client-side navigation
       linkedImage = (
         <Link href={section.linkUrl} className="pg-newsletter-section-link">
           {imageElement}
         </Link>
       )
     } else {
-      // External links open in new tab with UTM params
       linkedImage = (
         <a
           href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
@@ -120,7 +121,7 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
     }
   }
 
-  // Render Instagram handle as clickable link if present
+  // Render Instagram handle as clickable link
   const instagramHandle = section.instagram?.replace('@', '')
   const instagramLink = instagramHandle ? (
     <a
@@ -133,11 +134,37 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
     </a>
   ) : null
 
+  // Text content block
+  const textContent = (section.body || section.moreInfo) ? (
+    <div className="pg-newsletter-section-text">
+      {section.body && <p className="pg-newsletter-section-body">{section.body}</p>}
+      {section.moreInfo && <p className="pg-newsletter-section-more-info">{section.moreInfo}</p>}
+    </div>
+  ) : null
+
+  // If no image, just return text content
+  if (!linkedImage) {
+    return (
+      <>
+        {textContent}
+        {instagramLink}
+      </>
+    )
+  }
+
+  // Layout: image-left (default) or image-right
   return (
-    <>
-      {linkedImage}
-      {instagramLink}
-    </>
+    <div className={`pg-newsletter-section-layout ${isImageRight ? 'pg-newsletter-section-layout--right' : ''}`}>
+      <div className="pg-newsletter-section-media">
+        {linkedImage}
+        {instagramLink}
+      </div>
+      {textContent && (
+        <div className="pg-newsletter-section-content">
+          {textContent}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -151,6 +178,10 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     getAllNewsletters()
   ])
 
+  if (isPreview) {
+    console.log('[Newsletter Preview]', JSON.stringify(newsletter, null, 2))
+  }
+
   if (!newsletter) {
     redirect('/newsletters')
   }
@@ -160,11 +191,27 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     (n) => n.slug.current !== slug
   )
 
+  // Map Sanity sections to email template format for download
+  const emailSections: NewsletterSection[] = (newsletter.imageSections ?? []).map((s) => ({
+    heading: s.heading ?? '',
+    layout: s.layout ?? 'image-left',
+    imageUrl: s.image?.asset?.url ?? '',
+    imageAlt: s.alt,
+    body: s.body ?? '',
+    caption: [s.moreInfo, s.instagram ? `@${s.instagram.replace('@', '')}` : ''].filter(Boolean).join('\n'),
+    linkUrl: s.linkUrl,
+  }))
+
   return (
     <main className="pg-page">
       {isPreview && (
         <div className="pg-preview-banner">
-          Preview Mode — This is a draft
+          <span>Preview Mode — This is a draft</span>
+          <NewsletterDownloadButton
+            sections={emailSections}
+            slug={slug}
+            filename={`newsletter-${slug}.html`}
+          />
         </div>
       )}
       <section className="pg-newsletter-detail-section">

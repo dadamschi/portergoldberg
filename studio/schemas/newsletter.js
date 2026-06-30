@@ -10,6 +10,14 @@ export const newsletter = defineType({
       title: "Title",
       type: "string",
       description: "e.g. 'Your Weekly Walk-Through'",
+      default: "Your Weekly Walk-Through",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "publishedAt",
+      title: "Published Date",
+      type: "date",
+      default: new Date(),
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -20,12 +28,6 @@ export const newsletter = defineType({
         source: "title",
         maxLength: 96,
       },
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "publishedAt",
-      title: "Published Date",
-      type: "date",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -68,7 +70,22 @@ export const newsletter = defineType({
               name: "heading",
               title: "Section Heading",
               type: "string",
-              description: "e.g. 'LOCAL HIGHLIGHT', 'FEATURED PROFESSIONAL', 'NEW CONSTRUCTION'",
+              description: "e.g. 'LOCAL HIGHLIGHT', 'JULY FOURTH', 'FEATURED PROFESSIONAL'",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "layout",
+              title: "Layout",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Image Left", value: "image-left" },
+                  { title: "Image Right", value: "image-right" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "image-left",
+              description: "Position of the image relative to text",
             }),
             defineField({
               name: "image",
@@ -82,6 +99,19 @@ export const newsletter = defineType({
               title: "Alt Text",
               type: "string",
               description: "Describe the image content for accessibility & SEO",
+            }),
+            defineField({
+              name: "body",
+              title: "Body Text",
+              type: "text",
+              rows: 5,
+              description: "Section content extracted from newsletter (for SEO & accessibility)",
+            }),
+            defineField({
+              name: "moreInfo",
+              title: "More Info",
+              type: "string",
+              description: "Additional reference info (e.g. 'Chicago 4th of July Guide')",
             }),
             defineField({
               name: "linkUrl",

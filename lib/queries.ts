@@ -450,12 +450,48 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
     imageSections[] {
       _key,
       heading,
+      layout,
       "image": image { ${imageFragment} },
       alt,
+      body,
+      moreInfo,
       linkUrl,
       instagram
     },
     hubspotUrl
+  }
+`)
+
+// Newsletter by ID for email HTML generation (includes all fields)
+export const NEWSLETTER_BY_ID_QUERY = defineQuery(/* groq */ `
+  *[_type == "newsletter" && _id == $id][0] {
+    _id,
+    title,
+    slug,
+    publishedAt,
+    summary,
+    imageSections[] {
+      _key,
+      heading,
+      layout,
+      "image": image { ${imageFragment} },
+      alt,
+      body,
+      moreInfo,
+      linkUrl,
+      instagram
+    },
+    hubspotUrl
+  }
+`)
+
+// All newsletters for admin selection (includes drafts)
+export const ALL_NEWSLETTERS_ADMIN_QUERY = defineQuery(/* groq */ `
+  *[_type == "newsletter"] | order(coalesce(publishedAt, _createdAt) desc) {
+    _id,
+    title,
+    slug,
+    publishedAt
   }
 `)
 

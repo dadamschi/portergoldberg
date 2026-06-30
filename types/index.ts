@@ -227,8 +227,11 @@ export type SchoolGuidancePageData = {
 export type NewsletterImageSection = {
   _key: string
   heading?: string
-  image: SanityImage
+  layout?: 'image-left' | 'image-right'
+  image?: SanityImage
   alt?: string
+  body?: string
+  moreInfo?: string
   linkUrl?: string
   instagram?: string
 }

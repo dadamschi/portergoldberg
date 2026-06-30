@@ -157,6 +157,10 @@ body {
 }
 
 .pg-preview-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   background: var(--pg-gold);
   color: #fff;
   text-align: center;
@@ -164,6 +168,21 @@ body {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+.pg-newsletter-download-btn {
+  background: var(--pg-dark);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pg-newsletter-download-btn:hover {
+  background: #333;
 }
 
 /* Legal Pages (Privacy, Terms) */
@@ -5219,6 +5238,58 @@ ul {
   text-decoration: underline;
 }
 
+/* Newsletter section layout - image + text side by side */
+.pg-newsletter-section-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.pg-newsletter-section-layout--right {
+  direction: rtl;
+}
+
+.pg-newsletter-section-layout--right > * {
+  direction: ltr;
+}
+
+.pg-newsletter-section-media {
+  width: 100%;
+}
+
+.pg-newsletter-section-content {
+  padding-top: 8px;
+}
+
+.pg-newsletter-section-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+  margin: 0 0 16px 0;
+  white-space: pre-line;
+}
+
+.pg-newsletter-section-more-info {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .pg-newsletter-section-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pg-newsletter-section-layout--right {
+    direction: ltr;
+  }
+}
+
 .pg-newsletter-text-content {
   font-family: var(--font-body);
   font-size: 16px;
@@ -5566,6 +5637,11 @@ ul {
   height: 2px;
   background: var(--pg-dark);
   min-width: 40px;
+}
+
+/* Even sections (2, 4, 6...): text on right, line on left */
+.pg-section-header--right {
+  flex-direction: row-reverse;
 }
 
 @media (max-width: 768px) {
