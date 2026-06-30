@@ -39,4 +39,8 @@ playwright-report/
 test-results/
 screenshots/
 
+# Google Reviews cache
+.google-place-id
+.google-reviews-cache.json
+
 scripts/

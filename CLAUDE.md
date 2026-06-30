@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Brand Guidelines
+
+See **[BRAND.md](./BRAND.md)** for brand rules including:
+- **PorterGoldberg** is always one word (never "Porter Goldberg")
+- Team member names and titles
+- Social media handles
+- Legal disclaimer text
+
 ## Commands
 
 ```bash
