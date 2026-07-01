@@ -71,6 +71,7 @@ function captionHtml(caption: string | undefined): string {
 function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const { eyebrow, title } = parseHeading(section.heading)
+  console.log('layout', layout)
 
   // Label style (matches .pg-section-header-label)
   const labelStyle = `${FONT} font-size:16px; font-weight:700; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
@@ -79,9 +80,11 @@ function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   // Line cell (matches .pg-section-header-line - 2px height)
   const lineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding:0 24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
 
+  const labelTextStyle = (layout === 'image-left') ? labelStyle : titleStyle
+  const titleTextStyle = (layout === 'image-left') ? titleStyle : labelStyle
   // Text spans - order is ALWAYS label then title (never changes)
-  const labelSpan = eyebrow ? `<span style="${labelStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
-  const titleSpan = `<span style="${titleStyle}">${esc(title.toUpperCase())}</span>`
+  const labelSpan = eyebrow ? `<span style="${labelTextStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
+  const titleSpan = `<span style="${titleTextStyle}">${esc(title.toUpperCase())}</span>`
   const gap = eyebrow ? '<span style="display:inline-block; width:12px;"></span>' : ''
 
   // Text cell always has label then title

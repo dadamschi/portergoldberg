@@ -5264,10 +5264,6 @@ ul {
   align-items: start;
 }
 
-.pg-newsletter-section-layout--right {
-  direction: rtl;
-}
-
 .pg-newsletter-section-layout--right > * {
   direction: ltr;
 }

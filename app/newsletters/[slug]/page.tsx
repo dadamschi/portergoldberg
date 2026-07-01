@@ -198,8 +198,8 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
 
   // Text content block (only when body text exists)
   const textBlock = hasBody ? (
-    <div className="pg-newsletter-section-text">
-      {section.body && <p className="pg-newsletter-section-body">{section.body}</p>}
+    <div>
+      {section.body && <p>{section.body}</p>}
       {section.moreInfo && <p className="pg-newsletter-section-more-info">{section.moreInfo}</p>}
     </div>
   ) : null
@@ -278,6 +278,11 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     getNewsletter(slug, isPreview),
     getAllNewsletters()
   ])
+
+  if (isPreview) {
+    console.log('[Newsletter] Preview mode enabled for newsletter:', slug)
+    console.log('[Newsletter] Preview mode enabled for newsletter:', newsletter)
+  }
 
   if (!newsletter) {
     redirect('/newsletters')
