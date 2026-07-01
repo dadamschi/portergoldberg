@@ -154,14 +154,13 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
         : new URL(section.linkUrl!).pathname
       
       const pathMap: Record<string, string> = {
-        '/': 'Home',
+        '/': '',
         '/about': 'About',
         '/selling': 'Selling',
-        '/buying': 'Buying',
-        '/vendors': 'Checkout ourVendors',
+        '/buying': 'Checkout out the Buying Process',
+        '/vendors': 'Checkout our Vendors',
       }
 
-      // TODO: customize link text based on path
       const linkText = pathMap[localPath] ?? 'Learn More'
 
       urlLink = (
@@ -170,14 +169,18 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
         </Link>
       )
     } else {
+      // Check if it's a Jameson property brochure
+      const isBrochure = section.linkUrl!.includes('jamesonps.com')
+      const linkText = isBrochure ? 'Check out the property brochure' : section.linkUrl
+
       urlLink = (
         <a
           href={addUtmParams(section.linkUrl!, { campaign: 'newsletter' })}
           target="_blank"
           rel="noreferrer"
-          className="pg-newsletter-instagram-link"
+          className="pg-newsletter-url-link"
         >
-          {section.linkUrl}
+          {linkText}
         </a>
       )
     }
