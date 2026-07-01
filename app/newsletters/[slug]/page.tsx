@@ -159,6 +159,7 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
         '/selling': 'Selling',
         '/buying': 'Checkout out the Buying Process',
         '/vendors': 'Checkout our Vendors',
+        '/inventory': 'Checkout our current inventory',
       }
 
       const linkText = pathMap[localPath] ?? 'Learn More'
