@@ -12,7 +12,7 @@ export default async function VendorsPage() {
   const vendors = await fetchVendors()
   const title = 'Our Trusted Vendors'
   const heroData = {
-    heroHeadline: 'Over the years, we&apos;ve built trusted relationships with exceptional service providers across Chicago—professionals we confidently recommend',
+    heroHeadline: 'Over the years, we have built trusted relationships with exceptional service providers across Chicago—professionals we confidently recommend',
   }
 
   return (
