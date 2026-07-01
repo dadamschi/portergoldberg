@@ -207,15 +207,15 @@ const FOOTER_HTML = `<table style="width: 100%; max-width: 600px; background-col
     <td colspan="2" style="padding: 20px 10px 4px 10px; background-color: #ffffff;">
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
-          <td style="width: 33.33%; vertical-align: middle;">
+          <td style="width: 50%; vertical-align: middle;">
             <div style="border-top: 1px solid #A8904E;"></div>
           </td>
-          <td style="width: 33.33%; text-align: center; vertical-align: middle;">
+          <td style="text-align: center; vertical-align: middle; white-space: nowrap; padding: 0 12px;">
             <a href="https://www.portergoldberg.com" style="text-decoration: none;">
               <span style="font-size: 18px; font-weight: bold; letter-spacing: 3px; color: #A8904E; text-transform: uppercase;">PORTERGOLDBERG.COM</span>
             </a>
           </td>
-          <td style="width: 33.33%; vertical-align: middle;">
+          <td style="width: 50%; vertical-align: middle;">
             <div style="border-top: 1px solid #A8904E;"></div>
           </td>
         </tr>
@@ -275,19 +275,33 @@ const FOOTER_HTML = `<table style="width: 100%; max-width: 600px; background-col
               <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20PGJameson%20logo.png" alt="PorterGoldberg Residential" height="124" style="display: block; border: none;">
             </a>
           </td>
-          <td style="vertical-align: middle; text-align: right; width: 50%;">
-            <a href="https://www.instagram.com/portergoldbergchicago" style="text-decoration: none; margin-right: 16px; display: inline-block; vertical-align: middle;">
-              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Instagram_Glyph_White.png" alt="Instagram" width="20" height="20" style="display: inline-block; vertical-align: middle; padding: 5px;">
-              <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 6px;">@portergoldbergchicago</span>
-            </a>
-            <a href="https://www.facebook.com/PorterGoldbergResidential" style="text-decoration: none; display: inline-block; vertical-align: middle;">
-              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Facebook_Logo_Secondary.png" alt="Facebook" width="20" height="20" style="display: inline-block; vertical-align: middle; padding: 5px;">
-              <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 6px;">PorterGoldberg Residential</span>
-            </a>
-            <a href="https://www.youtube.com/@PorterGoldbergResidential" style="text-decoration: none; display: inline-block; vertical-align: middle;">
-              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20YouTube%20Logo.png" alt="YouTube" width="20" height="20" style="display: inline-block; vertical-align: middle; padding: 1px;">
-              <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 6px;">@PorterGoldbergResidential</span>
-            </a>
+          <td style="vertical-align: middle; width: 50%;">
+            <table style="border-collapse: collapse; margin-left: auto; margin-right: 15px;">
+              <tr>
+                <td style="padding: 4px 0;">
+                  <a href="https://www.instagram.com/portergoldbergchicago" style="text-decoration: none; display: block;">
+                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Instagram_Glyph_White.png" alt="Instagram" width="20" height="20" style="display: inline-block; vertical-align: middle;">
+                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">@portergoldbergchicago</span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0;">
+                  <a href="https://www.facebook.com/PorterGoldbergResidential" style="text-decoration: none; display: block;">
+                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Facebook_Logo_Secondary.png" alt="Facebook" width="20" height="20" style="display: inline-block; vertical-align: middle;">
+                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">PorterGoldberg Residential</span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0;">
+                  <a href="https://www.youtube.com/@PorterGoldbergResidential" style="text-decoration: none; display: block;">
+                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20YouTube%20Logo.png" alt="YouTube" width="20" height="20" style="display: inline-block; vertical-align: middle;">
+                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">@PorterGoldbergResidential</span>
+                  </a>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>
