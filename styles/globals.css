@@ -5260,6 +5260,7 @@ ul {
 
 .pg-newsletter-section-content {
   padding-top: 8px;
+  text-align: left;
 }
 
 .pg-newsletter-section-body {
@@ -5551,7 +5552,6 @@ ul {
 
 .pg-newsletter-detail-header {
   margin-bottom: 32px;
-  text-align: center;
 }
 
 .pg-newsletter-detail-title {

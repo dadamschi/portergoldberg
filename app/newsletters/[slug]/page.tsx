@@ -76,10 +76,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function ImageSection({ section }: { section: NewsletterImageSection }) {
+function ImageSection({ section, index }: { section: NewsletterImageSection; index: number }) {
   const hasImage = section.image?.asset?.url
-  const isImageRight = section.layout === 'image-right'
+  const hasBody = section.body || section.moreInfo
+  const isImageRight = index % 2 === 1
 
+  // Build image element if we have an image
   const imageElement = hasImage ? (
     <Image
       src={section.image!.asset.url}
@@ -121,7 +123,7 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
     }
   }
 
-  // Render Instagram handle as clickable link
+  // Render Instagram handle as clickable link if present
   const instagramHandle = section.instagram?.replace('@', '')
   const instagramLink = instagramHandle ? (
     <a
@@ -134,37 +136,76 @@ function ImageSection({ section }: { section: NewsletterImageSection }) {
     </a>
   ) : null
 
-  // Text content block
-  const textContent = (section.body || section.moreInfo) ? (
+  // Text content block (only when body text exists)
+  const textBlock = hasBody ? (
     <div className="pg-newsletter-section-text">
       {section.body && <p className="pg-newsletter-section-body">{section.body}</p>}
       {section.moreInfo && <p className="pg-newsletter-section-more-info">{section.moreInfo}</p>}
     </div>
   ) : null
 
-  // If no image, just return text content
-  if (!linkedImage) {
+  // Wrap text with link if provided (no decorations)
+  const linkStyle = { textDecoration: 'none', color: 'inherit' }
+  let textContent = textBlock
+  if (textBlock && section.linkUrl) {
+    if (section.linkUrl.startsWith('#contact:')) {
+      const message = section.linkUrl.replace('#contact:', '')
+      textContent = (
+        <ContactLink message={message} style={linkStyle}>
+          {textBlock}
+        </ContactLink>
+      )
+    } else if (section.linkUrl.startsWith('/')) {
+      textContent = (
+        <Link href={section.linkUrl} style={linkStyle}>
+          {textBlock}
+        </Link>
+      )
+    } else {
+      textContent = (
+        <a
+          href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
+          target="_blank"
+          rel="noreferrer"
+          style={linkStyle}
+        >
+          {textBlock}
+        </a>
+      )
+    }
+  }
+
+  // IMAGE ONLY (no body text): Simple layout - just image + instagram
+  if (!hasBody) {
     return (
       <>
-        {textContent}
+        {linkedImage}
         {instagramLink}
       </>
     )
   }
 
-  // Layout: image-left (default) or image-right
-  return (
-    <div className={`pg-newsletter-section-layout ${isImageRight ? 'pg-newsletter-section-layout--right' : ''}`}>
-      <div className="pg-newsletter-section-media">
-        {linkedImage}
-        {instagramLink}
-      </div>
-      {textContent && (
+  // IMAGE + BODY TEXT: Two-column layout
+  if (hasImage && hasBody) {
+    return (
+      <div className={`pg-newsletter-section-layout ${isImageRight ? 'pg-newsletter-section-layout--right' : ''}`}>
+        <div className="pg-newsletter-section-media">
+          {linkedImage}
+          {instagramLink}
+        </div>
         <div className="pg-newsletter-section-content">
           {textContent}
         </div>
-      )}
-    </div>
+      </div>
+    )
+  }
+
+  // TEXT ONLY (no image): Just render text content
+  return (
+    <>
+      {textContent}
+      {instagramLink}
+    </>
   )
 }
 
@@ -177,10 +218,6 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     getNewsletter(slug, isPreview),
     getAllNewsletters()
   ])
-
-  if (isPreview) {
-    console.log('[Newsletter Preview]', JSON.stringify(newsletter, null, 2))
-  }
 
   if (!newsletter) {
     redirect('/newsletters')
@@ -235,7 +272,7 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
                   {newsletter.imageSections.map((section, index) => (
                     <div key={section._key} className="pg-newsletter-section">
                       {section.heading && <SectionHeader heading={section.heading} index={index} />}
-                      <ImageSection section={section} />
+                      <ImageSection section={section} index={index} />
                     </div>
                   ))}
                 </div>

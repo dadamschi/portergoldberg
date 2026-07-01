@@ -26,6 +26,10 @@ npm run build            # Production build
 # Testing
 npm run test             # Playwright tests
 npm run test:screenshots # Screenshot tests only
+npx playwright test tests/screenshots.spec.ts --grep "homepage" # Run single test
+
+# Scripts (run from project root)
+npx ts-node scripts/<script-name>.ts
 
 # Sanity Studio deployment
 cd studio && npm run deploy
@@ -93,6 +97,13 @@ Use `SanityImage` type from `types/index.ts` for image fields.
 Pages use `export const revalidate = 86400` (24 hours).
 On-demand revalidation via `/api/revalidate` webhook from Sanity (requires `SANITY_REVALIDATE_SECRET` header).
 
+### Middleware
+
+`middleware.ts` runs on all routes and:
+
+- Sets `x-url` and `x-pathname` headers for server components (used for 404 tracking)
+- Adds security headers (X-Content-Type-Options, X-Frame-Options, etc.)
+
 ## Sanity
 
 **Project ID**: `mw8duas2` | **Dataset**: `production`
@@ -124,7 +135,7 @@ Transactional emails are sent via [Resend](https://resend.com).
 
 ### How It Works
 
-```
+```text
 Contact Form (ContactPageForm.tsx)
     → submitConnectForm() (app/actions.ts)
         → sendEmail() (lib/email.ts)
@@ -153,13 +164,16 @@ RESEND_API_KEY=              # Resend API key (required)
 
 **NEVER make changes to HubSpot (create properties, update contacts, create associations, etc.) without explicitly asking first.** Read-only operations (fetching contacts, listing properties) are fine.
 
-Scripts in `scripts/` for HubSpot operations:
+Scripts in `scripts/` for HubSpot and data operations (run with `npx ts-node scripts/<name>.ts`):
 
-- `export-hubspot-contacts.ts` - Export all contacts to JSON
-- `find-duplicate-contacts.ts` - Analyze contacts for duplicates
-- `generate-duplicate-report.ts` - Create client-friendly duplicate report
-- `hubspot-associations.ts` - Manage contact associations
-- `create-team-property.ts` - Create team/household properties
+- **Contact Management**: `export-hubspot-contacts.ts`, `find-duplicate-contacts.ts`, `generate-duplicate-report.ts`, `hubspot-associations.ts`, `list-hubspot-contacts.ts`
+- **Property Management**: `create-team-property.ts`, `create-vendor-category-property.ts`, `create-contact-type-property.ts`, `check-property-usage.ts`
+- **Vendors**: `populate-vendor-categories.ts`, `test-one-vendor.ts`
+- **Testimonials**: `match-testimonials.ts`, `create-testimonial-mapping.ts`, `generate-review-token.ts`, `generate-review-links.ts`
+- **Listings**: `update-sold-listings.ts`, `merge-sold-listings.ts`
+- **Deals/Pipelines**: `list-pipelines.ts`, `list-deals.ts`, `analyze-deal-properties.ts`, `get-pipeline-config.ts`, `get-pipeline-details.ts`
+- **Newsletters**: `sync-newsletter-to-hubspot.ts`, `update-newsletter-content.ts`
+- **Other**: `check-sitemap.ts`, `fetch-google-reviews.ts`
 
 ## Environment Variables
 
