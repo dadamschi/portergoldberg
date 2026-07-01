@@ -3,9 +3,18 @@
 import { useState, useEffect } from 'react'
 import {
   generateNewsletterEmailHtml,
-  createBlankSection,
   type NewsletterSection,
 } from '@/lib/newsletter-email-template'
+
+const BLANK_SECTION: NewsletterSection = {
+  heading: '',
+  imageUrl: '',
+  imageAlt: '',
+  body: '',
+  caption: '',
+  linkUrl: '',
+  instagram: '',
+}
 
 interface SanityNewsletter {
   _id: string
@@ -19,7 +28,6 @@ interface SanityNewsletterFull {
   imageSections: Array<{
     _key: string
     heading: string | null
-    layout: 'image-left' | 'image-right' | null
     image: { asset: { url: string } } | null
     alt: string | null
     body: string | null
@@ -34,7 +42,7 @@ export default function NewsletterBuilderPage() {
   const [selectedId, setSelectedId] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [sections, setSections] = useState<NewsletterSection[]>([
-    createBlankSection(0),
+    { ...BLANK_SECTION },
   ])
   const [generatedHtml, setGeneratedHtml] = useState<string>('')
   const [copied, setCopied] = useState(false)
@@ -59,16 +67,17 @@ export default function NewsletterBuilderPage() {
         const loadedSections: NewsletterSection[] = data.imageSections.map(
           (s) => ({
             heading: s.heading ?? '',
-            layout: s.layout ?? 'image-left',
             imageUrl: s.image?.asset?.url ?? '',
             imageAlt: s.alt ?? '',
             body: s.body ?? '',
-            caption: buildCaption(s.moreInfo, s.instagram),
+            caption: s.moreInfo ?? '',
+            linkUrl: s.linkUrl ?? '',
+            instagram: s.instagram ?? '',
           })
         )
         setSections(loadedSections)
       } else {
-        setSections([createBlankSection(0)])
+        setSections([{ ...BLANK_SECTION }])
       }
     } catch (err) {
       console.error('Failed to load newsletter:', err)
@@ -77,18 +86,8 @@ export default function NewsletterBuilderPage() {
     }
   }
 
-  const buildCaption = (moreInfo?: string | null, instagram?: string | null): string => {
-    const parts: string[] = []
-    if (moreInfo) parts.push(`More Info: ${moreInfo}`)
-    if (instagram) {
-      const handle = instagram.startsWith('@') ? instagram : `@${instagram}`
-      parts.push(`IG: ${handle}`)
-    }
-    return parts.join('\n')
-  }
-
   const addSection = () => {
-    setSections([...sections, createBlankSection(sections.length)])
+    setSections([...sections, { ...BLANK_SECTION }])
   }
 
   const removeSection = (index: number) => {
@@ -101,14 +100,7 @@ export default function NewsletterBuilderPage() {
     value: string
   ) => {
     const updated = [...sections]
-    if (field === 'layout') {
-      updated[index] = {
-        ...updated[index],
-        layout: value as 'image-left' | 'image-right',
-      }
-    } else {
-      updated[index] = { ...updated[index], [field]: value }
-    }
+    updated[index] = { ...updated[index], [field]: value }
     setSections(updated)
   }
 
@@ -201,23 +193,6 @@ export default function NewsletterBuilderPage() {
                   />
                 </div>
 
-                {/* Layout */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Layout
-                  </label>
-                  <select
-                    value={section.layout}
-                    onChange={(e) =>
-                      updateSection(index, 'layout', e.target.value)
-                    }
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                  >
-                    <option value="image-left">Image Left</option>
-                    <option value="image-right">Image Right</option>
-                  </select>
-                </div>
-
                 {/* Image URL */}
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -276,8 +251,40 @@ export default function NewsletterBuilderPage() {
                     onChange={(e) =>
                       updateSection(index, 'caption', e.target.value)
                     }
-                    placeholder="e.g. More Info: Link Name&#10;IG: @handle"
+                    placeholder="Additional info text (e.g. More Info: ...)"
                     rows={2}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {/* Link URL */}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Link URL (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={section.linkUrl}
+                    onChange={(e) =>
+                      updateSection(index, 'linkUrl', e.target.value)
+                    }
+                    placeholder="https://..."
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {/* Instagram */}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Instagram (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={section.instagram}
+                    onChange={(e) =>
+                      updateSection(index, 'instagram', e.target.value)
+                    }
+                    placeholder="@handle"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>

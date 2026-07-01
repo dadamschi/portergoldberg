@@ -291,12 +291,12 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
   // Map Sanity sections to email template format for download
   const emailSections: NewsletterSection[] = (newsletter.imageSections ?? []).map((s) => ({
     heading: s.heading ?? '',
-    layout: s.layout ?? 'image-left',
     imageUrl: s.image?.asset?.url ?? '',
     imageAlt: s.alt,
     body: s.body ?? '',
-    caption: [s.moreInfo, s.instagram ? `@${s.instagram.replace('@', '')}` : ''].filter(Boolean).join('\n'),
+    caption: s.moreInfo ?? '',
     linkUrl: s.linkUrl,
+    instagram: s.instagram,
   }))
 
   return (

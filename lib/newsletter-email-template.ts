@@ -5,24 +5,32 @@
 
 export interface NewsletterSection {
   heading: string // e.g. "FEATURED PROFESSIONAL" - parsed into eyebrow + title
-  layout: 'image-left' | 'image-right'
   imageUrl: string
   imageAlt?: string
   body: string
   caption?: string
   linkUrl?: string
+  instagram?: string // Instagram handle (with or without @)
+}
+
+// Internal type with layout for rendering
+interface NewsletterSectionWithLayout extends NewsletterSection {
+  layout: 'image-left' | 'image-right'
 }
 
 /**
- * Parse heading into eyebrow (first word) and title (rest)
+ * Parse heading into eyebrow (all words except last) and title (last word)
+ * Matches website SectionHeader.tsx behavior exactly
  * e.g. "FEATURED PROFESSIONAL" -> { eyebrow: "FEATURED", title: "PROFESSIONAL" }
+ * e.g. "CURRENT INVENTORY AVAILABLE" -> { eyebrow: "CURRENT INVENTORY", title: "AVAILABLE" }
  */
 function parseHeading(heading: string): { eyebrow: string; title: string } {
-  const parts = heading.trim().split(/\s+/)
-  if (parts.length === 1) {
-    return { eyebrow: '', title: parts[0] }
+  const words = heading.trim().split(/\s+/)
+  if (words.length === 1) {
+    return { eyebrow: '', title: words[0] }
   }
-  return { eyebrow: parts[0], title: parts.slice(1).join(' ') }
+  // All words except last = eyebrow, last word = title
+  return { eyebrow: words.slice(0, -1).join(' '), title: words[words.length - 1] }
 }
 
 const INK = '#1a1a1a'
@@ -60,36 +68,87 @@ function captionHtml(caption: string | undefined): string {
   return `<p style="margin:10px 0 0 0; ${FONT} font-size:13px; line-height:1.4; color:${INK}; text-align:left;">${lines.map(typographic).join('<br>')}</p>`
 }
 
-function ruleCell(): string {
-  return `<td width="100%" valign="middle" style="width:100%; vertical-align:middle;"><div style="border-top:1px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
-}
-
-function sectionHeadHtml(section: NewsletterSection): string {
+function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const { eyebrow, title } = parseHeading(section.heading)
-  const eyebrowTd = eyebrow
-    ? `<td valign="middle" style="${FONT} font-size:13px; letter-spacing:2px; color:${INK}; white-space:nowrap; padding:0 12px; vertical-align:middle; text-transform:uppercase;">${esc(eyebrow.toUpperCase())}</td>`
-    : ''
-  const titleTd = `<td valign="middle" style="${FONT} font-size:26px; letter-spacing:1px; color:${INK}; white-space:nowrap; padding:0 12px; vertical-align:middle; text-transform:uppercase;">${esc(title.toUpperCase())}</td>`
 
-  // Keep word order consistent (eyebrow + title), only move the line
-  const cells =
-    layout === 'image-right'
-      ? `${ruleCell()}${eyebrowTd}${titleTd}`
-      : `${eyebrowTd}${titleTd}${ruleCell()}`
+  // Label style (matches .pg-section-header-label)
+  const labelStyle = `${FONT} font-size:16px; font-weight:700; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  // Title style (matches .pg-section-header-title)
+  const titleStyle = `${FONT} font-size:36px; font-weight:500; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  // Line cell (matches .pg-section-header-line - 2px height)
+  const lineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding:0 24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
+
+  // Text spans - order is ALWAYS label then title (never changes)
+  const labelSpan = eyebrow ? `<span style="${labelStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
+  const titleSpan = `<span style="${titleStyle}">${esc(title.toUpperCase())}</span>`
+  const gap = eyebrow ? '<span style="display:inline-block; width:12px;"></span>' : ''
+
+  // Text cell always has label then title
+  const textCell = `<td valign="middle" style="white-space:nowrap; vertical-align:middle;">${labelSpan}${gap}${titleSpan}</td>`
+
+  // Only the position changes: text on left vs right of line
+  const cells = layout === 'image-right'
+    ? `${lineCell}${textCell}` // Even sections: line | text
+    : `${textCell}${lineCell}` // Odd sections: text | line
 
   return `
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 2px 0;">
     <tr>${cells}</tr>
   </table>`
 }
 
 function wrapInLink(content: string, url?: string): string {
   if (!url) return content
+
+  // Convert #contact: links to mailto
+  if (url.startsWith('#contact:')) {
+    const subject = url.replace('#contact:', '')
+    const mailtoUrl = `mailto:info@portergoldberg.com?subject=${encodeURIComponent(subject)}`
+    return `<a href="${mailtoUrl}" style="color:inherit; text-decoration:none;">${content}</a>`
+  }
+
   return `<a href="${esc(url)}" target="_blank" style="color:inherit; text-decoration:none;">${content}</a>`
 }
 
-function sectionBlockHtml(section: NewsletterSection): string {
+/**
+ * Renders clickable links for URL and Instagram below the image
+ * Matches website pg-newsletter-section-links styling
+ */
+function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
+  const links: string[] = []
+  const linkStyle = `${FONT} font-size:13px; color:${INK}; text-decoration:underline;`
+
+  if (linkUrl) {
+    if (linkUrl.startsWith('#contact:')) {
+      // Convert #contact: links to mailto with subject
+      const subject = linkUrl.replace('#contact:', '')
+      const mailtoUrl = `mailto:info@portergoldberg.com?subject=${encodeURIComponent(subject)}`
+      links.push(`<a href="${mailtoUrl}" style="${linkStyle}">Contact Us</a>`)
+    } else if (!linkUrl.startsWith('mailto:')) {
+      // Regular URL link
+      let linkText = linkUrl
+      if (linkUrl.startsWith('/') || linkUrl.includes('portergoldberg.com')) {
+        linkText = 'Learn More'
+      } else if (linkUrl.includes('jamesonps.com')) {
+        linkText = 'Check out the property brochure'
+      }
+      links.push(`<a href="${esc(linkUrl)}" target="_blank" style="${linkStyle}">${esc(linkText)}</a>`)
+    }
+  }
+
+  // Instagram link
+  if (instagram) {
+    const handle = instagram.replace('@', '')
+    links.push(`IG: <a href="https://instagram.com/${esc(handle)}" target="_blank" style="${linkStyle}">@${esc(handle)}</a>`)
+  }
+
+  if (links.length === 0) return ''
+
+  return `<p style="margin:10px 0 0 0; ${FONT} font-size:13px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
+}
+
+function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const alt = section.imageAlt || section.heading
   const link = section.linkUrl
@@ -100,6 +159,7 @@ function sectionBlockHtml(section: NewsletterSection): string {
     <td width="48%" valign="top" style="padding:0; width:48%;">
       ${wrapInLink(imageContent, link)}
       ${captionHtml(section.caption)}
+      ${sectionLinksHtml(section.linkUrl, section.instagram)}
     </td>`
 
   const textCell = `
@@ -120,7 +180,7 @@ function sectionBlockHtml(section: NewsletterSection): string {
   </table>`
 }
 
-function renderSectionEmail(section: NewsletterSection): string {
+function renderSectionEmail(section: NewsletterSectionWithLayout): string {
   return `${sectionHeadHtml(section)}${sectionBlockHtml(section)}`
 }
 
@@ -141,6 +201,27 @@ const HEADER_HTML = `<table style="width: 100%; max-width: 600px; background-col
  * Fixed footer HTML - agent cards, social links, legal
  */
 const FOOTER_HTML = `<table style="width: 100%; max-width: 600px; background-color: #000000; padding: 20px; font-family: Arial, sans-serif; color: #ffffff; border-collapse: collapse; -webkit-font-smoothing: antialiased;">
+
+  <!-- Website URL Row -->
+  <tr>
+    <td colspan="2" style="padding: 20px 10px 4px 10px; background-color: #ffffff;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td style="width: 33.33%; vertical-align: middle;">
+            <div style="border-top: 1px solid #A8904E;"></div>
+          </td>
+          <td style="width: 33.33%; text-align: center; vertical-align: middle;">
+            <a href="https://www.portergoldberg.com" style="text-decoration: none;">
+              <span style="font-size: 18px; font-weight: bold; letter-spacing: 3px; color: #A8904E; text-transform: uppercase;">PORTERGOLDBERG.COM</span>
+            </a>
+          </td>
+          <td style="width: 33.33%; vertical-align: middle;">
+            <div style="border-top: 1px solid #A8904E;"></div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
   <!-- Agent Row -->
   <tr>
@@ -227,9 +308,19 @@ const FOOTER_HTML = `<table style="width: 100%; max-width: 600px; background-col
 /**
  * Generates sections HTML for the newsletter.
  * Returns just the sections - header/footer handled separately in HubSpot.
+ * Forces alternating layouts: even index = image-left, odd index = image-right
  */
 export function generateSectionsHtml(sections: NewsletterSection[]): string {
-  const sectionsHtml = sections.map(renderSectionEmail).join('\n')
+  const sectionsHtml = sections
+    .map((section, index) => {
+      // Force alternating layout regardless of what's stored in Sanity
+      const alternatingSection: NewsletterSectionWithLayout = {
+        ...section,
+        layout: index % 2 === 0 ? 'image-left' : 'image-right',
+      }
+      return renderSectionEmail(alternatingSection)
+    })
+    .join('\n')
 
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 24px;">
     <tr><td style="padding-top:38px;">
@@ -261,16 +352,3 @@ ${viewOnWebsite}
 ${FOOTER_HTML}`
 }
 
-/**
- * Creates a blank section with default values
- */
-export function createBlankSection(index: number): NewsletterSection {
-  return {
-    heading: '',
-    layout: index % 2 === 0 ? 'image-left' : 'image-right',
-    imageUrl: '',
-    imageAlt: '',
-    body: '',
-    caption: '',
-  }
-}

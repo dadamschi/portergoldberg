@@ -74,20 +74,6 @@ export const newsletter = defineType({
               validation: (rule) => rule.required(),
             }),
             defineField({
-              name: "layout",
-              title: "Layout",
-              type: "string",
-              options: {
-                list: [
-                  { title: "Image Left", value: "image-left" },
-                  { title: "Image Right", value: "image-right" },
-                ],
-                layout: "radio",
-              },
-              initialValue: "image-left",
-              description: "Position of the image relative to text",
-            }),
-            defineField({
               name: "image",
               title: "Image",
               type: "image",
