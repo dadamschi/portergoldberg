@@ -135,6 +135,61 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
       @{instagramHandle}
     </a>
   ) : null
+    // Build URL link element (only for regular links, not #contact: or mailto:)
+  const isRegularLink = section.linkUrl &&
+    !section.linkUrl.startsWith('#contact:') &&
+    !section.linkUrl.startsWith('mailto:')
+
+  const isLocalLink = section.linkUrl && (
+    section.linkUrl.startsWith('/') ||
+    section.linkUrl.includes('portergoldberg.com')
+  )
+
+  // Build the URL link element
+  let urlLink: React.ReactNode = null
+  if (isRegularLink) {
+    if (isLocalLink) {
+      const localPath = section.linkUrl!.startsWith('/')
+        ? section.linkUrl!
+        : new URL(section.linkUrl!).pathname
+      
+      const pathMap: Record<string, string> = {
+        '/': 'Home',
+        '/about': 'About',
+        '/selling': 'Selling',
+        '/buying': 'Buying',
+        '/vendors': 'Checkout ourVendors',
+      }
+
+      // TODO: customize link text based on path
+      const linkText = pathMap[localPath] ?? 'Learn More'
+
+      urlLink = (
+        <Link href={localPath} className="pg-newsletter-url-link">
+          {linkText}
+        </Link>
+      )
+    } else {
+      urlLink = (
+        <a
+          href={addUtmParams(section.linkUrl!, { campaign: 'newsletter' })}
+          target="_blank"
+          rel="noreferrer"
+          className="pg-newsletter-instagram-link"
+        >
+          {section.linkUrl}
+        </a>
+      )
+    }
+  }
+
+  // Stack URL link and Instagram link together
+  const sectionLinks = (urlLink || instagramLink) ? (
+    <div className="pg-newsletter-section-links">
+      {urlLink}
+      {instagramLink}
+    </div>
+  ) : null
 
   // Text content block (only when body text exists)
   const textBlock = hasBody ? (
@@ -175,12 +230,12 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
     }
   }
 
-  // IMAGE ONLY (no body text): Simple layout - just image + instagram
+  // IMAGE ONLY (no body text): Simple layout - just image + links
   if (!hasBody) {
     return (
       <>
         {linkedImage}
-        {instagramLink}
+        {sectionLinks}
       </>
     )
   }
@@ -191,7 +246,7 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
       <div className={`pg-newsletter-section-layout ${isImageRight ? 'pg-newsletter-section-layout--right' : ''}`}>
         <div className="pg-newsletter-section-media">
           {linkedImage}
-          {instagramLink}
+          {sectionLinks}
         </div>
         <div className="pg-newsletter-section-content">
           {textContent}
@@ -204,7 +259,7 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
   return (
     <>
       {textContent}
-      {instagramLink}
+      {sectionLinks}
     </>
   )
 }

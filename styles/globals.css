@@ -5223,9 +5223,27 @@ ul {
   opacity: 0.95;
 }
 
-.pg-newsletter-instagram-link {
-  display: inline-block;
+.pg-newsletter-section-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   margin-top: 12px;
+}
+
+.pg-newsletter-url-link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--pg-gold);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.pg-newsletter-url-link:hover {
+  color: var(--pg-gold-dark, #b8860b);
+  text-decoration: underline;
+}
+
+.pg-newsletter-instagram-link {
   font-family: var(--font-body);
   font-size: 14px;
   color: var(--pg-gold);
