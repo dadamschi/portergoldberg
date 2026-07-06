@@ -13,11 +13,12 @@ type Props = {
   token: string
   defaultName: string
   googleReviewUrl?: string
+  zillowReviewUrl?: string
   existingData?: ExistingData
   dealName?: string
 }
 
-export function TestimonialForm({ token, defaultName, googleReviewUrl, existingData, dealName }: Props) {
+export function TestimonialForm({ token, defaultName, googleReviewUrl, zillowReviewUrl, existingData, dealName }: Props) {
   const [formData, setFormData] = useState({
     clientName: existingData?.clientName || defaultName,
     clientTitle: existingData?.clientTitle || dealName || '',
@@ -27,7 +28,7 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, existingD
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('loading')
     setErrorMessage('')
@@ -63,9 +64,14 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, existingD
   // Fallback to Google Maps page if direct review URL not configured
   const GOOGLE_MAPS_URL = 'https://www.google.com/maps/place/PorterGoldberg+Residential+%7C+Samantha+Porter+%26+Lauren+Goldberg/@41.9148645,-87.6618455,12z/data=!4m6!3m5!1s0x207634bdb970231d:0xb74d4313170b93a3!8m2!3d41.9148646!4d-87.6618455!16s%2Fg%2F11y3l222gx?entry=ttu'
 
-  const handleCopyAndReview = () => {
+  const handleCopyAndGoogleReview = () => {
     navigator.clipboard.writeText(formData.quote)
     window.open(googleReviewUrl || GOOGLE_MAPS_URL, '_blank')
+  }
+
+  const handleCopyAndZillowReview = () => {
+    navigator.clipboard.writeText(formData.quote)
+    window.open(zillowReviewUrl || 'https://www.zillow.com/profile/portergoldberg', '_blank')
   }
 
   if (status === 'success') {
@@ -80,18 +86,27 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, existingD
           <p className="pg-testimonial-attribution">— {formData.clientName}</p>
         </div>
 
-        <div className="pg-testimonial-google">
+        <div className="pg-testimonial-reviews">
           <h3>Help Us Reach More Clients</h3>
-          <p>Would you mind sharing your experience on Google? It only takes a minute and helps others find us.</p>
-          <button
-            type="button"
-            onClick={handleCopyAndReview}
-            className="pg-testimonial-google-btn"
-          >
-            Copy & Leave Google Review
-          </button>
+          <p>Would you mind sharing your experience on Google or Zillow? It only takes a minute and helps others find us.</p>
+          <div className="pg-testimonial-review-buttons">
+            <button
+              type="button"
+              onClick={handleCopyAndGoogleReview}
+              className="pg-testimonial-review-btn"
+            >
+              Copy & Leave Google Review
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyAndZillowReview}
+              className="pg-testimonial-review-btn"
+            >
+              Copy & Leave Zillow Review
+            </button>
+          </div>
           <p className="pg-testimonial-hint">
-            We&apos;ll copy your testimonial to your clipboard. Click &quot;Write a review&quot; on Google and paste it.
+            We&apos;ll copy your testimonial to your clipboard. Click &quot;Write a review&quot; and paste it.
           </p>
         </div>
       </div>

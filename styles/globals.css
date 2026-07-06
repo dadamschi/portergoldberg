@@ -6376,27 +6376,33 @@ ul {
   color: #1a1a1a;
 }
 
-.pg-testimonial-google {
+.pg-testimonial-reviews {
   padding-top: 24px;
   border-top: 1px solid #e0e0e0;
 }
 
-.pg-testimonial-google h3 {
+.pg-testimonial-reviews h3 {
   font-size: 18px;
   margin-bottom: 12px;
 }
 
-.pg-testimonial-google > p {
+.pg-testimonial-reviews > p {
   font-size: 14px;
   color: #666;
   margin-bottom: 16px;
 }
 
-.pg-testimonial-google-btn {
+.pg-testimonial-review-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pg-testimonial-review-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #4285f4;
+  background: #1a1a1a;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -6406,8 +6412,8 @@ ul {
   transition: background 0.2s;
 }
 
-.pg-testimonial-google-btn:hover {
-  background: #3367d6;
+.pg-testimonial-review-btn:hover {
+  background: #333;
 }
 
 .pg-testimonial-hint {
