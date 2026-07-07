@@ -3972,6 +3972,23 @@ body {
     font-size: 20px;
   }
 
+  .pg-halcyon-about-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .pg-halcyon-about-image {
+    max-width: 280px;
+    margin: 0 auto;
+    border-radius: 140px;
+    border-width: 6px;
+  }
+
+  .pg-halcyon-about-text h2 {
+    text-align: center;
+    font-size: 28px;
+  }
+
   .pg-halcyon-media-row {
     grid-template-columns: 1fr;
   }
