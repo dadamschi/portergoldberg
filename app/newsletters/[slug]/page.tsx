@@ -173,7 +173,8 @@ function ImageSection({ section, index }: { section: NewsletterImageSection; ind
     } else {
       // Check if it's a Jameson property brochure
       const isBrochure = section.linkUrl!.includes('jamesonps.com')
-      const linkText = isBrochure ? 'Check out the property brochure' : section.linkUrl
+      let linkText = isBrochure ? 'Check out the property brochure' : section.linkUrl
+      linkText = ((section.linkUrl?.length ?? 0) > 50) ? 'Learn More' : linkText
 
       urlLink = (
         <a

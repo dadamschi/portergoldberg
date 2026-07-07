@@ -9,10 +9,21 @@ Build a centralized API service that provides email (Resend), CRM (HubSpot), and
 | Component | Technology | Rationale |
 |-----------|------------|-----------|
 | Runtime | **Hono** on Cloudflare Workers | Lightweight, fast cold starts, edge deployment, TypeScript-first |
-| Database | **Supabase** (Postgres) | Free tier, instant API, row-level security, easy auth |
+| Database | **Cloudflare D1** (SQLite) | Same platform as Workers, zero config, generous free tier |
 | Email | **Resend** | Already using, simple API |
 | CRM | **HubSpot API** | Already integrated |
 | Deployment | **Cloudflare Workers** | Global edge, generous free tier, Wrangler CLI |
+
+### Why Cloudflare D1?
+
+| Option | Free Tier | Notes |
+|--------|-----------|-------|
+| **Cloudflare D1** ✓ | 5GB, 25M reads/mo | Same platform, native integration, SQLite |
+| Turso | 9GB, 500M reads/mo | Distributed SQLite, separate service |
+| Supabase | 500MB, 50k rows | Postgres, more features but separate account |
+| Cloudflare KV | 1GB, 100k reads/day | Key-value only, no SQL |
+
+D1 is the simplest choice since you're already on Cloudflare Workers - no additional accounts or services to manage.
 
 ## Repository Structure
 
@@ -31,8 +42,10 @@ shared-services-api/
 │   │   └── vendors.ts           # GET /vendors
 │   ├── services/
 │   │   ├── resend.ts            # Resend client wrapper
-│   │   ├── hubspot.ts           # HubSpot client (port from portergoldberg)
-│   │   └── supabase.ts          # Supabase client for config
+│   │   └── hubspot.ts           # HubSpot client (port from portergoldberg)
+│   ├── db/
+│   │   ├── schema.sql           # D1 table definitions
+│   │   └── queries.ts           # Type-safe query helpers
 │   ├── types/
 │   │   └── index.ts             # Shared types
 │   └── utils/
@@ -43,22 +56,36 @@ shared-services-api/
 └── README.md
 ```
 
-## Database Schema (Supabase)
+## Database Schema (Cloudflare D1)
+
+D1 uses SQLite. Create and manage with Wrangler CLI:
+
+```bash
+# Create database
+wrangler d1 create services-db
+
+# Run migrations
+wrangler d1 execute services-db --file=./src/db/schema.sql
+
+# Local development
+wrangler d1 execute services-db --local --file=./src/db/schema.sql
+```
 
 ### `projects` table
 Stores configuration for each client project.
 
 ```sql
-CREATE TABLE projects (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+-- src/db/schema.sql
+CREATE TABLE IF NOT EXISTS projects (
+  id TEXT PRIMARY KEY,                         -- UUID as text
   name TEXT NOT NULL,                          -- "PorterGoldberg", "ClientB"
   slug TEXT UNIQUE NOT NULL,                   -- "portergoldberg", "clientb"
-  api_key TEXT UNIQUE NOT NULL,                -- hashed API key for auth
+  api_key_hash TEXT UNIQUE NOT NULL,           -- hashed API key for auth
 
   -- Email config
   resend_api_key TEXT NOT NULL,                -- encrypted
   from_email TEXT NOT NULL,                    -- "Company <noreply@domain.com>"
-  notification_emails TEXT[] NOT NULL,         -- ["info@domain.com"]
+  notification_emails TEXT NOT NULL,           -- JSON array: '["info@domain.com"]'
 
   -- HubSpot config
   hubspot_api_key TEXT,                        -- encrypted, nullable if not using
@@ -68,31 +95,116 @@ CREATE TABLE projects (
   default_tier TEXT DEFAULT 'Warm',
 
   -- Metadata
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
 );
 
--- Index for API key lookups
-CREATE INDEX idx_projects_api_key ON projects(api_key);
+CREATE INDEX IF NOT EXISTS idx_projects_api_key ON projects(api_key_hash);
+CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
 ```
 
 ### `request_logs` table
 For debugging and analytics.
 
 ```sql
-CREATE TABLE request_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  project_id UUID REFERENCES projects(id),
+CREATE TABLE IF NOT EXISTS request_logs (
+  id TEXT PRIMARY KEY,
+  project_id TEXT REFERENCES projects(id),
   endpoint TEXT NOT NULL,
   method TEXT NOT NULL,
-  status_code INT NOT NULL,
-  duration_ms INT,
+  status_code INTEGER NOT NULL,
+  duration_ms INTEGER,
   error_message TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
--- Auto-delete logs older than 30 days
-CREATE INDEX idx_logs_created_at ON request_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_logs_created_at ON request_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_logs_project_id ON request_logs(project_id);
+```
+
+### Wrangler Configuration
+
+```toml
+# wrangler.toml
+name = "shared-services-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "services-db"
+database_id = "<your-database-id>"  # from `wrangler d1 create`
+```
+
+### Type-Safe Query Helpers
+
+```typescript
+// src/db/queries.ts
+import type { D1Database } from '@cloudflare/workers-types'
+
+export type Project = {
+  id: string
+  name: string
+  slug: string
+  api_key_hash: string
+  resend_api_key: string
+  from_email: string
+  notification_emails: string  // JSON string, parse with JSON.parse()
+  hubspot_api_key: string | null
+  hubspot_client_id: string | null
+  default_tier: string
+  created_at: string
+  updated_at: string
+}
+
+export async function getProjectByApiKey(
+  db: D1Database,
+  apiKeyHash: string
+): Promise<Project | null> {
+  return db
+    .prepare('SELECT * FROM projects WHERE api_key_hash = ?')
+    .bind(apiKeyHash)
+    .first<Project>()
+}
+
+export async function getProjectBySlug(
+  db: D1Database,
+  slug: string
+): Promise<Project | null> {
+  return db
+    .prepare('SELECT * FROM projects WHERE slug = ?')
+    .bind(slug)
+    .first<Project>()
+}
+
+export async function logRequest(
+  db: D1Database,
+  log: {
+    id: string
+    project_id: string
+    endpoint: string
+    method: string
+    status_code: number
+    duration_ms: number
+    error_message?: string
+  }
+): Promise<void> {
+  await db
+    .prepare(`
+      INSERT INTO request_logs (id, project_id, endpoint, method, status_code, duration_ms, error_message)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `)
+    .bind(
+      log.id,
+      log.project_id,
+      log.endpoint,
+      log.method,
+      log.status_code,
+      log.duration_ms,
+      log.error_message ?? null
+    )
+    .run()
+}
 ```
 
 ## API Endpoints
@@ -102,11 +214,25 @@ CREATE INDEX idx_logs_created_at ON request_logs(created_at);
 All requests require `Authorization: Bearer <API_KEY>` header.
 
 ```typescript
-// middleware/auth.ts
-import { Context, Next } from 'hono'
-import { supabase } from '../services/supabase'
+// src/middleware/auth.ts
+import type { Context, Next } from 'hono'
+import type { D1Database } from '@cloudflare/workers-types'
+import { getProjectByApiKey, type Project } from '../db/queries'
 
-export async function authMiddleware(c: Context, next: Next) {
+type Env = {
+  DB: D1Database
+}
+
+// Simple hash function for API keys (use crypto.subtle in production)
+async function hashApiKey(apiKey: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(apiKey)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+export async function authMiddleware(c: Context<{ Bindings: Env }>, next: Next) {
   const authHeader = c.req.header('Authorization')
   if (!authHeader?.startsWith('Bearer ')) {
     return c.json({ error: 'Missing API key' }, 401)
@@ -115,11 +241,7 @@ export async function authMiddleware(c: Context, next: Next) {
   const apiKey = authHeader.slice(7)
   const hashedKey = await hashApiKey(apiKey)
 
-  const { data: project } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('api_key', hashedKey)
-    .single()
+  const project = await getProjectByApiKey(c.env.DB, hashedKey)
 
   if (!project) {
     return c.json({ error: 'Invalid API key' }, 401)
@@ -277,6 +399,7 @@ Fetch vendors from HubSpot (cached).
 // src/index.ts
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import type { D1Database } from '@cloudflare/workers-types'
 import { authMiddleware } from './middleware/auth'
 import { loggingMiddleware } from './middleware/logging'
 import emailRoutes from './routes/email'
@@ -284,7 +407,13 @@ import contactRoutes from './routes/contacts'
 import formRoutes from './routes/forms'
 import vendorRoutes from './routes/vendors'
 
-const app = new Hono()
+// Define environment bindings
+type Env = {
+  DB: D1Database
+  ENCRYPTION_KEY: string
+}
+
+const app = new Hono<{ Bindings: Env }>()
 
 // Global middleware
 app.use('*', cors())
@@ -549,11 +678,12 @@ export async function submitContactForm(data: FormData) {
 
 ### Phase 1: Deploy API
 1. Create new repo `shared-services-api`
-2. Set up Hono + Cloudflare Workers
-3. Set up Supabase project and tables
-4. Port `lib/hubspot.ts` and `lib/email.ts` to services
-5. Implement all routes
-6. Deploy to Cloudflare Workers
+2. Set up Hono + Cloudflare Workers with Wrangler
+3. Create D1 database: `wrangler d1 create services-db`
+4. Run schema migrations: `wrangler d1 execute services-db --file=./src/db/schema.sql`
+5. Port `lib/hubspot.ts` and `lib/email.ts` to services
+6. Implement all routes
+7. Deploy: `wrangler deploy`
 
 ### Phase 2: Create Client SDK
 1. Create `@yourusername/services-client` package
@@ -569,18 +699,33 @@ export async function submitContactForm(data: FormData) {
 6. Remove old lib files
 
 ### Phase 4: Onboard New Projects
-1. Create project record in Supabase with API key
-2. Configure HubSpot/Resend credentials
+1. Add project record to D1:
+   ```bash
+   wrangler d1 execute services-db --command="INSERT INTO projects (...) VALUES (...)"
+   ```
+2. Or create an admin endpoint to add projects via API
 3. Install SDK in new project
 4. Use SDK in server actions
 
 ## Environment Variables
 
 ### API Service (Cloudflare Workers)
-```env
-SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_SERVICE_KEY=eyJ...
-ENCRYPTION_KEY=<for encrypting stored API keys>
+
+D1 bindings are configured in `wrangler.toml`, not environment variables:
+
+```toml
+# wrangler.toml
+[[d1_databases]]
+binding = "DB"
+database_name = "services-db"
+database_id = "<from wrangler d1 create>"
+```
+
+For secrets (encryption key for stored API keys):
+
+```bash
+# Set secrets via Wrangler CLI
+wrangler secret put ENCRYPTION_KEY
 ```
 
 ### Client Projects
@@ -603,9 +748,11 @@ SERVICES_API_URL=https://services.yourdomain.com  # optional, has default
 | Service | Free Tier | Paid |
 |---------|-----------|------|
 | Cloudflare Workers | 100k req/day | $5/mo for 10M req |
-| Supabase | 500MB, 50k rows | $25/mo |
+| Cloudflare D1 | 5GB storage, 25M reads/mo, 50k writes/day | $0.75/M reads, $1/M writes |
 | Resend | 100 emails/day | $20/mo for 50k |
-| Total | $0 for low traffic | ~$50/mo |
+| **Total** | **$0 for low traffic** | **~$25/mo** |
+
+All on one platform (Cloudflare) = simpler billing and management.
 
 ## Versioning Strategy
 
@@ -745,11 +892,12 @@ contacts.get('/:id/deals', async (c) => {
 
 ### Per-Project API Version Override
 
-Allow projects to opt into specific versions via database config:
+Allow projects to opt into specific versions via database config. Add columns to schema:
 
 ```sql
+-- Add to src/db/schema.sql or run as migration
 ALTER TABLE projects ADD COLUMN api_version TEXT DEFAULT 'v1';
-ALTER TABLE projects ADD COLUMN hubspot_api_version TEXT DEFAULT 'v3';  -- or 'v4'
+ALTER TABLE projects ADD COLUMN hubspot_api_version TEXT DEFAULT 'v3';
 ```
 
 ```typescript
@@ -782,5 +930,6 @@ app.use('/contacts/*', async (c, next) => {
 ## Open Questions
 
 1. **Domain**: Where to host? `api.yourdomain.com` or `services.yourdomain.com`?
-2. **Additional services**: Any other services to include? (e.g., file uploads, webhooks)
+2. **Additional services**: Any other services to include? (e.g., file uploads via R2, webhooks)
 3. **Multi-HubSpot**: Should each project be able to have multiple HubSpot portals?
+4. **Admin UI**: Build a simple admin dashboard for managing projects, or just use Wrangler CLI + direct D1 queries?

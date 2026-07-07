@@ -136,6 +136,10 @@ function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
       } else if (linkUrl.includes('jamesonps.com')) {
         linkText = 'Check out the property brochure'
       }
+      // Truncate long URLs to "Learn More"
+      if (linkText.length > 50) {
+        linkText = 'Learn More'
+      }
       links.push(`<a href="${esc(linkUrl)}" target="_blank" style="${linkStyle}">${esc(linkText)}</a>`)
     }
   }
