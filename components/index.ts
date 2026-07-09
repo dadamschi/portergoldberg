@@ -18,7 +18,7 @@ export { SocialLinks, FacebookIcon, InstagramIcon, YouTubeIcon, SOCIAL_URLS } fr
 export { ImageLightbox } from './ImageLightbox'
 export { ImageModal } from './ImageModal'
 export { ContactBanner } from './ContactBanner'
-export { SectionHeader } from './SectionHeader'
+export { SectionHeader } from './newsletter/SectionHeader'
 export { ContactLink } from './ContactLink'
 export { VendorSearch } from './VendorSearch'
 export { PortableTextClient } from './PortableTextClient'

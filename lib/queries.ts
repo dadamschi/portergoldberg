@@ -455,7 +455,8 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
       body,
       moreInfo,
       linkUrl,
-      instagram
+      instagram,
+      email
     },
     hubspotUrl
   }

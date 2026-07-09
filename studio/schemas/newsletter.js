@@ -10,7 +10,7 @@ export const newsletter = defineType({
       title: "Title",
       type: "string",
       description: "e.g. 'Your Weekly Walk-Through'",
-      default: "Your Weekly Walk-Through",
+      initialValue: "Your Weekly Walk-Through",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -111,14 +111,13 @@ export const newsletter = defineType({
               type: "string",
               description: "Instagram handle (with or without @) - displays as clickable link",
             }),
-          ],
-          validation: (rule) =>
-            rule.custom((section) => {
-              if (!section?.linkUrl && !section?.instagram) {
-                return "Either a Link URL or Instagram handle is required";
-              }
-              return true;
+            defineField({
+              name: "email",
+              title: "Email Address",
+              type: "string",
+              description: "Email address - displays as clickable link",
             }),
+          ],
           preview: {
             select: {
               media: "image",

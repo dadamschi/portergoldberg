@@ -11,13 +11,13 @@ type ContactLinkProps = {
 
 export function ContactLink({ message, className, style, children }: ContactLinkProps) {
   return (
-    <button
+    <a
       type="button"
       onClick={() => openContactForm(message)}
       className={`pg-contact-link ${className || ''}`}
       style={style}
     >
       {children}
-    </button>
+    </a>
   )
 }

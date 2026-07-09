@@ -5,10 +5,11 @@ import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/ty
 import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { formatDateOnly } from '@/lib/utils/dateTime'
-import { addUtmParams } from '@/lib/utils/utm'
-import Image from 'next/image'
 import Link from 'next/link'
-import { SectionHeader, ContactLink, NewsletterDownloadButton } from '@/components'
+import { SectionHeader, NewsletterDownloadButton } from '@/components'
+import { SectionImage } from '@/components/newsletter/SectionImage'
+import { SectionContent } from '@/components/newsletter/SectionContent'
+import { SectionLinks } from '@/components/newsletter/SectionLinks'
 import type { NewsletterSection } from '@/lib/newsletter-email-template'
 
 export const revalidate = 2592000 // 1 month - webhook handles on-demand revalidation
@@ -76,196 +77,76 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function ImageSection({ section, index }: { section: NewsletterImageSection; index: number }) {
-  const hasImage = section.image?.asset?.url
-  const hasBody = section.body || section.moreInfo
-  const isImageRight = index % 2 === 1
-
-  // Build image element if we have an image
-  const imageElement = hasImage ? (
-    <Image
-      src={section.image!.asset.url}
-      alt={section.alt || 'Newsletter section'}
-      width={600}
-      height={400}
-      className="pg-newsletter-section-image"
-      style={{ width: '100%', height: 'auto' }}
+function SectionRows({ section, index, isImageRight }: {
+  section: NewsletterImageSection
+  index: number
+  isImageRight: boolean
+}) {
+  const image = (
+    <SectionImage
+      image={section.image ?? null}
+      alt={section.alt}
+      linkUrl={section.linkUrl}
     />
-  ) : null
-
-  // Wrap image with link if provided
-  let linkedImage = imageElement
-  if (imageElement && section.linkUrl) {
-    if (section.linkUrl.startsWith('#contact:')) {
-      const message = section.linkUrl.replace('#contact:', '')
-      linkedImage = (
-        <ContactLink message={message} className="pg-newsletter-section-link">
-          {imageElement}
-        </ContactLink>
-      )
-    } else if (section.linkUrl.startsWith('/')) {
-      linkedImage = (
-        <Link href={section.linkUrl} className="pg-newsletter-section-link">
-          {imageElement}
-        </Link>
-      )
-    } else {
-      linkedImage = (
-        <a
-          href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
-          target="_blank"
-          rel="noreferrer"
-          className="pg-newsletter-section-link"
-        >
-          {imageElement}
-        </a>
-      )
-    }
-  }
-
-  // Render Instagram handle as clickable link if present
-  const instagramHandle = section.instagram?.replace('@', '')
-  const instagramLink = instagramHandle ? (
-    <a
-      href={addUtmParams(`https://instagram.com/${instagramHandle}`, { campaign: 'newsletter' })}
-      target="_blank"
-      rel="noreferrer"
-      className="pg-newsletter-instagram-link"
-    >
-      @{instagramHandle}
-    </a>
-  ) : null
-    // Build URL link element (only for regular links, not #contact: or mailto:)
-  const isRegularLink = section.linkUrl &&
-    !section.linkUrl.startsWith('#contact:') &&
-    !section.linkUrl.startsWith('mailto:')
-
-  const isLocalLink = section.linkUrl && (
-    section.linkUrl.startsWith('/') ||
-    section.linkUrl.includes('portergoldberg.com')
   )
 
-  // Build the URL link element
-  let urlLink: React.ReactNode = null
-  if (isRegularLink) {
-    if (isLocalLink) {
-      const localPath = section.linkUrl!.startsWith('/')
-        ? section.linkUrl!
-        : new URL(section.linkUrl!).pathname
-      
-      const pathMap: Record<string, string> = {
-        '/': '',
-        '/about': 'About',
-        '/selling': 'Selling',
-        '/buying': 'Checkout out the Buying Process',
-        '/vendors': 'Checkout our Vendors',
-        '/inventory': 'Checkout our current inventory',
-        '/testimonials': 'Checkout Testimonials from our valued clients',
-      }
+  const content = (
+    <SectionContent
+      body={section.body}
+      moreInfo={section.moreInfo}
+      linkUrl={section.linkUrl}
+    />
+  )
 
-      const linkText = pathMap[localPath] ?? 'Learn More'
+  const links = (
+    <SectionLinks
+      linkUrl={section.linkUrl}
+      instagram={section.instagram}
+      email={section.email}
+    />
+  )
 
-      urlLink = (
-        <Link href={localPath} className="pg-newsletter-url-link">
-          {linkText}
-        </Link>
-      )
-    } else {
-      // Check if it's a Jameson property brochure
-      const isBrochure = section.linkUrl!.includes('jamesonps.com')
-      let linkText = isBrochure ? 'Check out the property brochure' : section.linkUrl
-      linkText = ((section.linkUrl?.length ?? 0) > 50) ? 'Learn More' : linkText
+  const hasLinks = section.linkUrl || section.instagram || section.email
 
-      urlLink = (
-        <a
-          href={addUtmParams(section.linkUrl!, { campaign: 'newsletter' })}
-          target="_blank"
-          rel="noreferrer"
-          className="pg-newsletter-url-link"
-        >
-          {linkText}
-        </a>
-      )
-    }
-  }
-
-  // Stack URL link and Instagram link together
-  const sectionLinks = (urlLink || instagramLink) ? (
-    <div className="pg-newsletter-section-links">
-      {urlLink}
-      {instagramLink}
-    </div>
-  ) : null
-
-  // Text content block (only when body text exists)
-  const textBlock = hasBody ? (
-    <div>
-      {section.body && <p>{section.body}</p>}
-      {section.moreInfo && <p className="pg-newsletter-section-more-info">{section.moreInfo}</p>}
-    </div>
-  ) : null
-
-  // Wrap text with link if provided (no decorations)
-  const linkStyle = { textDecoration: 'none', color: 'inherit' }
-  let textContent = textBlock
-  if (textBlock && section.linkUrl) {
-    if (section.linkUrl.startsWith('#contact:')) {
-      const message = section.linkUrl.replace('#contact:', '')
-      textContent = (
-        <ContactLink message={message} style={linkStyle}>
-          {textBlock}
-        </ContactLink>
-      )
-    } else if (section.linkUrl.startsWith('/')) {
-      textContent = (
-        <Link href={section.linkUrl} style={linkStyle}>
-          {textBlock}
-        </Link>
-      )
-    } else {
-      textContent = (
-        <a
-          href={addUtmParams(section.linkUrl, { campaign: 'newsletter' })}
-          target="_blank"
-          rel="noreferrer"
-          style={linkStyle}
-        >
-          {textBlock}
-        </a>
-      )
-    }
-  }
-
-  // IMAGE ONLY (no body text): Simple layout - just image + links
-  if (!hasBody) {
-    return (
-      <>
-        {linkedImage}
-        {sectionLinks}
-      </>
-    )
-  }
-
-  // IMAGE + BODY TEXT: Two-column layout
-  if (hasImage && hasBody) {
-    return (
-      <div className={`pg-newsletter-section-layout ${isImageRight ? 'pg-newsletter-section-layout--right' : ''}`}>
-        <div className="pg-newsletter-section-media">
-          {linkedImage}
-          {sectionLinks}
-        </div>
-        <div className="pg-newsletter-section-content">
-          {textContent}
-        </div>
-      </div>
-    )
-  }
-
-  // TEXT ONLY (no image): Just render text content
   return (
     <>
-      {textContent}
-      {sectionLinks}
+      {section.heading && (
+        <tr className="pg-newsletter-row pg-newsletter-row--heading">
+          <td colSpan={2}>
+            <SectionHeader heading={section.heading} index={index} />
+          </td>
+        </tr>
+      )}
+
+      <tr className="pg-newsletter-row pg-newsletter-row">
+        {isImageRight ? (
+          <>
+            <td className="pg-newsletter-cell pg-newsletter-cell--content-left">{content}</td>
+            <td className="pg-newsletter-cell pg-newsletter-cell--image-right">{image}</td>
+          </>
+        ) : (
+          <>
+            <td className="pg-newsletter-cell pg-newsletter-cell--image-left">{image}</td>
+            <td className="pg-newsletter-cell pg-newsletter-cell--content-right">{content}</td>
+</>
+        )}
+      </tr>
+
+      {hasLinks && (
+        <tr className="pg-newsletter-row pg-newsletter-row--links">
+          {isImageRight ? (
+            <>
+              <td className="pg-newsletter-cell pg-newsletter-cell--empty" />
+              <td>{links}</td>
+            </>
+          ) : (
+            <>
+              <td>{links}</td>
+              <td className="pg-newsletter-cell pg-newsletter-cell--empty"></td>
+            </>
+          )}
+        </tr>
+      )}
     </>
   )
 }
@@ -332,29 +213,23 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
                 <h1 className="pg-newsletter-detail-title">{newsletter.title}</h1>
               </header>
 
-              {/* Image sections - the visual newsletter */}
+              {/* Image sections - table-based layout for alignment */}
               {newsletter.imageSections && newsletter.imageSections.length > 0 && (
-                <div className="pg-newsletter-images">
-                  {newsletter.imageSections.map((section, index) => (
-                    <div key={section._key} className="pg-newsletter-section">
-                      {section.heading && <SectionHeader heading={section.heading} index={index} />}
-                      <ImageSection section={section} index={index} />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {newsletter.hubspotUrl && (
-                <div className="pg-newsletter-external">
-                  <a
-                    href={addUtmParams(newsletter.hubspotUrl, { campaign: 'newsletter' })}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="pg-newsletter-external-link"
-                  >
-                    View in browser →
-                  </a>
-                </div>
+                <table className="pg-newsletter-table">
+                  <tbody>
+                    {newsletter.imageSections.map((section, index) => {
+                      const isImageRight = index % 2 === 1
+                      return (
+                        <SectionRows
+                          key={section._key}
+                          section={section}
+                          index={index}
+                          isImageRight={isImageRight}
+                        />
+                      )
+                    })}
+                  </tbody>
+                </table>
               )}
             </article>
           </div>
@@ -377,7 +252,7 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
                   </li>
                 ))}
               </ul>
-              <Link href="/newsletters" className="pg-newsletter-sidebar-archive-link">
+              <Link href="/newsletters" className="pg-newsletter-url-link" style={{ fontWeight: '500' }}>
                 ← View All Newsletters
               </Link>
             </aside>

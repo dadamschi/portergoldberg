@@ -1,19 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { generateNewsletterEmailHtml, type NewsletterSection } from '@/lib/newsletter-email-template'
+import { generateNewsletterEmailHtml, type NewsletterSection, type NewsletterType } from '@/lib/newsletter-email-template'
 
 interface NewsletterDownloadButtonProps {
   sections: NewsletterSection[]
   slug: string
   filename?: string
+  type?: NewsletterType
 }
 
-export function NewsletterDownloadButton({ sections, slug, filename = 'newsletter.html' }: NewsletterDownloadButtonProps) {
+export function NewsletterDownloadButton({ sections, slug, filename = 'newsletter.html', type = 'weekly' }: NewsletterDownloadButtonProps) {
   const [copied, setCopied] = useState(false)
 
   const handleDownload = async () => {
-    const html = generateNewsletterEmailHtml(sections, slug)
+    const html = generateNewsletterEmailHtml(sections, slug, type)
 
     // Copy to clipboard
     await navigator.clipboard.writeText(html)

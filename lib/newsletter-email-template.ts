@@ -73,10 +73,12 @@ function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   const { eyebrow, title } = parseHeading(section.heading)
   console.log('layout', layout)
 
+  // Heading font (Quinoa SC with fallbacks)
+  const headingFont = "font-family:'Quinoa SC', Georgia, serif;"
   // Label style (matches .pg-section-header-label)
-  const labelStyle = `${FONT} font-size:16px; font-weight:700; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  const labelStyle = `${headingFont} font-size:16px; font-weight:700; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
   // Title style (matches .pg-section-header-title)
-  const titleStyle = `${FONT} font-size:36px; font-weight:500; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  const titleStyle = `${headingFont} font-size:36px; font-weight:500; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
   // Line cell (matches .pg-section-header-line - 2px height)
   const lineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding:0 24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
 
@@ -192,9 +194,9 @@ function renderSectionEmail(section: NewsletterSectionWithLayout): string {
 }
 
 /**
- * Fixed header HTML - logos only, no dynamic content
+ * Halcyon e-blast header - logos only
  */
-const HEADER_HTML = `<table style="width: 100%; max-width: 600px; background-color: #000000; padding: 30px 20px; border-collapse: collapse; -webkit-font-smoothing: antialiased;">
+const HEADER_HALCYON = `<table style="width: 100%; max-width: 600px; background-color: #000000; padding: 30px 20px; border-collapse: collapse; -webkit-font-smoothing: antialiased;">
 <tbody>
 <tr>
 <td style="margin: auto;"><img style="display: block; padding-left: 20px" src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Halcyon%20Logo%20No%20Background.png" alt="Halcyon Development" height="50" /></td>
@@ -203,6 +205,37 @@ const HEADER_HTML = `<table style="width: 100%; max-width: 600px; background-col
 </tr>
 </tbody>
 </table>`
+
+/**
+ * Weekly Walk-Through header - agent photos + branding
+ */
+const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration: none;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; border-collapse: collapse;">
+<tr>
+  <!-- Lauren photo (left) -->
+  <td width="25%" style="vertical-align: bottom; background-color: #f5f5f5;">
+    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.lgoldberg.hires.png" alt="Lauren Goldberg" width="150" style="display: block; width: 100%; height: auto; border: 0;">
+  </td>
+
+  <!-- Center content (black background) -->
+  <td width="50%" style="background-color: #000000; text-align: center; vertical-align: middle;">
+    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.logo.hires.png" alt="Your Weekly Walk-Through - PorterGoldberg Residential" style="display: block; width: 100%; height: auto; border: 0;">
+  </td>
+
+  <!-- Samantha photo (right) -->
+  <td width="25%" style="vertical-align: bottom; background-color: #f5f5f5;">
+    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.sporter.hires.png" alt="Samantha Porter" width="150" style="display: block; width: 100%; height: auto; border: 0;">
+  </td>
+</tr>
+</table>
+</a>`
+
+export type NewsletterType = 'weekly' | 'halcyon'
+
+const HEADERS: Record<NewsletterType, string> = {
+  weekly: HEADER_WEEKLY,
+  halcyon: HEADER_HALCYON,
+}
 
 /**
  * Fixed footer HTML - agent cards, social links, legal
@@ -364,10 +397,32 @@ function viewOnWebsiteHtml(slug: string): string {
 
 /**
  * Generates full newsletter HTML including fixed header and footer.
+ * @param sections - Newsletter content sections
+ * @param slug - Optional slug for "View on Website" link
+ * @param type - Newsletter type: 'weekly' (default) or 'halcyon'
  */
-export function generateNewsletterEmailHtml(sections: NewsletterSection[], slug?: string): string {
+/**
+ * Font face declaration for Quinoa SC (hosted on HubSpot)
+ * Note: Only works in Apple Mail, iOS Mail, some Android - others fall back to Georgia
+ */
+const FONT_STYLES = `<style>
+@font-face {
+  font-family: 'Quinoa SC';
+  src: url('https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/quinoa-sc.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+</style>`
+
+export function generateNewsletterEmailHtml(
+  sections: NewsletterSection[],
+  slug?: string,
+  type: NewsletterType = 'weekly'
+): string {
+  const header = HEADERS[type]
   const viewOnWebsite = slug ? viewOnWebsiteHtml(slug) : ''
-  return `${HEADER_HTML}
+  return `${FONT_STYLES}
+${header}
 ${generateSectionsHtml(sections)}
 ${viewOnWebsite}
 ${FOOTER_HTML}`
