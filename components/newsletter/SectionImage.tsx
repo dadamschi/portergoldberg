@@ -12,7 +12,10 @@ interface SectionImageProps {
 
 export function SectionImage({ image, alt, linkUrl }: SectionImageProps) {
   if (!image?.asset?.url) {
-    return null
+    return (<div className="pg-newsletter-card-placeholder">
+            <span>YWWT</span>
+          </div>
+          )
   }
 
   const imageElement = (

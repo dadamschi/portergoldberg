@@ -11,6 +11,7 @@ export interface NewsletterSection {
   caption?: string
   linkUrl?: string
   instagram?: string // Instagram handle (with or without @)
+  titleLarger?: boolean // Toggle which word is larger in section header
 }
 
 // Internal type with layout for rendering
@@ -57,7 +58,7 @@ function paragraphsHtml(body: string): string {
   return paragraphs
     .map(
       (line, i, arr) =>
-        `<p style="margin:0 0 ${i === arr.length - 1 ? 0 : 14}px 0; ${FONT} font-size:15px; line-height:1.55; color:${INK};">${typographic(line)}</p>`
+        `<p style="margin:0 0 ${i === arr.length - 1 ? 0 : 14}px 0; ${FONT} font-size:16px; font-weight:500; line-height:1.55; color:${INK};">${typographic(line)}</p>`
     )
     .join('')
 }
@@ -67,23 +68,26 @@ function captionHtml(caption: string | undefined): string {
   const lines = caption.split('\n').filter(Boolean)
   return `<p style="margin:10px 0 0 0; ${FONT} font-size:13px; line-height:1.4; color:${INK}; text-align:left;">${lines.map(typographic).join('<br>')}</p>`
 }
-
+const headingFont = "font-family:'Century Gothic', Helvetica, Arial, sans-serif;"
 function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const { eyebrow, title } = parseHeading(section.heading)
   console.log('layout', layout)
-
   // Heading font (Quinoa SC with fallbacks)
-  const headingFont = "font-family:'Quinoa SC', Georgia, serif;"
+  
   // Label style (matches .pg-section-header-label)
-  const labelStyle = `${headingFont} font-size:16px; font-weight:700; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  const titleStyle = `${headingFont} font-size:22px; font-weight:400; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
   // Title style (matches .pg-section-header-title)
-  const titleStyle = `${headingFont} font-size:36px; font-weight:500; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
+  const labelStyle = `${headingFont} font-size:36px; font-weight:400; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
   // Line cell (matches .pg-section-header-line - 2px height)
   const lineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding:0 24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
 
-  const labelTextStyle = (layout === 'image-left') ? labelStyle : titleStyle
-  const titleTextStyle = (layout === 'image-left') ? titleStyle : labelStyle
+  // Use titleLarger if set, otherwise fall back to layout-based alternation
+  const isTitleLarger = section.titleLarger !== undefined
+    ? section.titleLarger
+    : layout === 'image-right'
+  const labelTextStyle = isTitleLarger ? titleStyle : labelStyle
+  const titleTextStyle = isTitleLarger ? labelStyle : titleStyle
   // Text spans - order is ALWAYS label then title (never changes)
   const labelSpan = eyebrow ? `<span style="${labelTextStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
   const titleSpan = `<span style="${titleTextStyle}">${esc(title.toUpperCase())}</span>`
@@ -122,7 +126,7 @@ function wrapInLink(content: string, url?: string): string {
  */
 function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
   const links: string[] = []
-  const linkStyle = `${FONT} font-size:13px; color:${INK}; text-decoration:underline;`
+  const linkStyle = `${FONT} font-size:14px; font-weight:400; color:${INK}; text-decoration:none;`
 
   if (linkUrl) {
     if (linkUrl.startsWith('#contact:')) {
@@ -134,13 +138,13 @@ function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
       // Regular URL link
       let linkText = linkUrl
       if (linkUrl.startsWith('/') || linkUrl.includes('portergoldberg.com')) {
-        linkText = 'Learn More'
+        linkText = 'Learn More on PorterGoldberg.com'
       } else if (linkUrl.includes('jamesonps.com')) {
         linkText = 'Check out the property brochure'
       }
       // Truncate long URLs to "Learn More"
       if (linkText.length > 50) {
-        linkText = 'Learn More'
+        linkText = 'Click here to learn more'
       }
       links.push(`<a href="${esc(linkUrl)}" target="_blank" style="${linkStyle}">${esc(linkText)}</a>`)
     }
@@ -154,7 +158,7 @@ function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
 
   if (links.length === 0) return ''
 
-  return `<p style="margin:10px 0 0 0; ${FONT} font-size:13px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
+  return `<p style="margin:10px 0 0 0; ${FONT} font-size:14px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
 }
 
 function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
@@ -162,17 +166,21 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
   const alt = section.imageAlt || section.heading
   const link = section.linkUrl
 
-  const imageContent = `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="280" style="display:block; width:100%; max-width:280px; height:auto;">`
+  // Placeholder for missing images - black box with gold YWWT text
+  const placeholderContent = `<div style="font-family:'Century Gothic', Helvetica, Arial, sans-serif; display:block; width:100%; max-width:280px; aspect-ratio:509/454; background-color:#1a1a1a; color:#c9a227; font-size:24px; font-weight:700; letter-spacing:0.1em; text-align:center; line-height:250px;">YWWT</div>`
+
+  const imageContent = section.imageUrl
+    ? `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="280" style="display:block; width:100%; max-width:280px; height:auto;">`
+    : placeholderContent
 
   const imageCell = `
     <td width="48%" valign="top" style="padding:0; width:48%;">
       ${wrapInLink(imageContent, link)}
       ${captionHtml(section.caption)}
-      ${sectionLinksHtml(section.linkUrl, section.instagram)}
     </td>`
 
   const textCell = `
-    <td width="48%" valign="top" style="padding:0; width:48%;">
+    <td width="48%" valign="middle" style="padding:0; width:48%; vertical-align:middle;">
       ${wrapInLink(paragraphsHtml(section.body), link)}
     </td>`
 
@@ -183,9 +191,20 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
       ? `${textCell}${spacerCell}${imageCell}`
       : `${imageCell}${spacerCell}${textCell}`
 
+  // Links row - positioned under the image cell
+  const linksHtml = sectionLinksHtml(section.linkUrl, section.instagram)
+  const emptyCell = `<td width="48%" style="width:48%;"></td>`
+  const linksCell = `<td width="48%" style="width:48%; padding:8px 0 0 0;">${linksHtml}</td>`
+  const linksRow = linksHtml
+    ? layout === 'image-right'
+      ? `<tr>${emptyCell}${spacerCell}${linksCell}</tr>`
+      : `<tr>${linksCell}${spacerCell}${emptyCell}</tr>`
+    : ''
+
   return `
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 34px 0;">
     <tr>${row}</tr>
+    ${linksRow}
   </table>`
 }
 
@@ -390,7 +409,7 @@ function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 24px;">
     <tr><td style="padding:24px 0 38px 0; text-align:center;">
-      <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:underline;">View this newsletter on our website</a>
+      <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:none;">View this newsletter on our website</a>
     </td></tr>
   </table>`
 }
@@ -401,19 +420,6 @@ function viewOnWebsiteHtml(slug: string): string {
  * @param slug - Optional slug for "View on Website" link
  * @param type - Newsletter type: 'weekly' (default) or 'halcyon'
  */
-/**
- * Font face declaration for Quinoa SC (hosted on HubSpot)
- * Note: Only works in Apple Mail, iOS Mail, some Android - others fall back to Georgia
- */
-const FONT_STYLES = `<style>
-@font-face {
-  font-family: 'Quinoa SC';
-  src: url('https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/quinoa-sc.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-</style>`
-
 export function generateNewsletterEmailHtml(
   sections: NewsletterSection[],
   slug?: string,
@@ -421,8 +427,7 @@ export function generateNewsletterEmailHtml(
 ): string {
   const header = HEADERS[type]
   const viewOnWebsite = slug ? viewOnWebsiteHtml(slug) : ''
-  return `${FONT_STYLES}
-${header}
+  return `${header}
 ${generateSectionsHtml(sections)}
 ${viewOnWebsite}
 ${FOOTER_HTML}`

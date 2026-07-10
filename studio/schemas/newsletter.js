@@ -85,7 +85,6 @@ export const newsletter = defineType({
               title: "Image",
               type: "image",
               options: { hotspot: true },
-              validation: (rule) => rule.required(),
             }),
             defineField({
               name: "alt",

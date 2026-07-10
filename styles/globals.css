@@ -5552,12 +5552,12 @@ ul {
   background: var(--pg-black);
 }
 
-.pg-newsletter-card-placeholder {
+.pg-newsletter-card-placeholder, .pg-newsletter-card-image--placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 509 / 454;
   background: var(--pg-black);
   color: var(--pg-gold);
   font-family: var(--font-heading);
