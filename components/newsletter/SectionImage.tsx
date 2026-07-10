@@ -22,6 +22,7 @@ export function SectionImage({ image, alt, linkUrl }: SectionImageProps) {
       width={508}
       height={454}
       className="pg-newsletter-section-image"
+      style={{ width: '100%', height: 'auto' }}
     />
   )
 
