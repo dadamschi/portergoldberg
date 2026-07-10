@@ -5226,14 +5226,90 @@ ul {
   margin-bottom: 24px;
 }
 
+/* Table-based newsletter layout */
+.pg-newsletter-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 24px auto;
+  font-family: var(--font-newsletter);
+  border-collapse: collapse;
+}
+
+.pg-newsletter-row--content {
+  vertical-align: middle;
+}
+
+.pg-newsletter-cell {
+  padding: 0;
+}
+
+.pg-newsletter-cell--image {
+  padding: 0;
+}
+
+.pg-newsletter-cell--image-left {
+  padding: 0;
+  text-align: left;
+}
+
+.pg-newsletter-cell--image-left .pg-newsletter-section-link {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.pg-newsletter-cell--image-left img {
+  margin: 0;
+  display: block;
+}
+
+.pg-newsletter-cell--image-right img {
+  margin-left: auto;
+  display: block;
+}
+
+.pg-newsletter-cell--content {
+  padding: 0 16px;
+  text-align: left;
+}
+
+/* Content on left (image on right): more padding on right */
+.pg-newsletter-cell--content-left {
+  padding-right: 24px;
+}
+
+/* Content on right (image on left): more padding on left */
+.pg-newsletter-cell--content-right {
+  padding-left: 24px;
+}
+
+.pg-newsletter-cell--content p {
+  font-family: var(--font-newsletter);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.pg-newsletter-cell--content p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-newsletter-cell--empty {
+  padding: 0;
+}
+
 .pg-newsletter-section-image {
   display: block;
   width: 100%;
   height: auto;
+  object-fit: cover;
 }
 
 .pg-newsletter-section-link {
   display: block;
+  margin: 0;
+  padding: 0;
 }
 
 .pg-newsletter-section-link:hover {
@@ -5249,7 +5325,8 @@ ul {
 
 .pg-newsletter-url-link {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--pg-gold);
   text-decoration: none;
   transition: color 0.2s ease;
@@ -5309,6 +5386,44 @@ ul {
   line-height: 1.5;
   color: #666;
   margin: 0;
+}
+
+/* Newsletter Section Header */
+.pg-newsletter-section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pg-newsletter-section-header-label {
+  font-family: 'Quicksand Local', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.pg-newsletter-section-header-title {
+  font-size: 38px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.pg-newsletter-section-header-line {
+  flex: 1;
+  height: 2px;
+  background: var(--pg-dark);
+  min-width: 40px;
+}
+
+/* Even sections (2, 4, 6...): text on right, line on left */
+.pg-newsletter-section-header--right {
+  flex-direction: row-reverse;
 }
 
 @media (max-width: 768px) {
