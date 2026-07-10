@@ -132,7 +132,7 @@ function SectionRows({ section, index, isImageRight }: {
         )}
       </tr>
 
-      {hasLinks && (
+      {hasLinks ? (
         <tr className="pg-newsletter-row pg-newsletter-row--links">
           {isImageRight ? (
             <>
@@ -145,6 +145,10 @@ function SectionRows({ section, index, isImageRight }: {
               <td className="pg-newsletter-cell pg-newsletter-cell--empty"></td>
             </>
           )}
+        </tr>
+      ) : (
+        <tr className="pg-newsletter-row pg-newsletter-row--heading">
+          <td colSpan={2}  className="pg-newsletter-cell pg-newsletter-cell--empty">&nbsp;</td>
         </tr>
       )}
     </>
