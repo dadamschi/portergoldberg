@@ -5288,8 +5288,7 @@ ul {
   padding-left: 24px;
 }
 
-.pg-newsletter-cell--content-left p,
-.pg-newsletter-cell--content-right p {
+[class*="pg-newsletter-cell--content-"] p {
   font-family: var(--font-newsletter);
   font-size: 22px;
   font-weight: 500;
@@ -5297,8 +5296,7 @@ ul {
   white-space: pre-line;
 }
 
-.pg-newsletter-cell--content-left p:last-child,
-.pg-newsletter-cell--content-right p:last-child {
+[class*="pg-newsletter-cell--content"] p:last-child {
   margin-bottom: 0;
 }
 
