@@ -74,6 +74,13 @@ export const newsletter = defineType({
               validation: (rule) => rule.required(),
             }),
             defineField({
+              name: "titleLarger",
+              title: "Title Larger",
+              type: "boolean",
+              description: "Toggle ON to make the last word larger, OFF to make the first words larger",
+              initialValue: true,
+            }),
+            defineField({
               name: "image",
               title: "Image",
               type: "image",

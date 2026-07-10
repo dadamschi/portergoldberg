@@ -227,6 +227,7 @@ export type SchoolGuidancePageData = {
 export type NewsletterImageSection = {
   _key: string
   heading?: string
+  titleLarger?: boolean
   layout?: 'image-left' | 'image-right'
   image?: SanityImage
   alt?: string

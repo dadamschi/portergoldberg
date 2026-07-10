@@ -5407,15 +5407,16 @@ ul {
 .pg-newsletter-section-header-label {
   font-family: 'Quicksand Local', sans-serif;
   font-size: 26px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 400;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   vertical-align: middle;
 }
 
 .pg-newsletter-section-header-title {
   font-size: 38px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  font-weight: 400;
   text-transform: uppercase;
   vertical-align: middle;
 }

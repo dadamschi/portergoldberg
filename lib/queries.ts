@@ -450,6 +450,7 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
     imageSections[] {
       _key,
       heading,
+      titleLarger,
       "image": image { ${imageFragment} },
       alt,
       body,

@@ -113,7 +113,7 @@ function SectionRows({ section, index, isImageRight }: {
       {section.heading && (
         <tr className="pg-newsletter-row pg-newsletter-row--heading">
           <td colSpan={2}>
-            <SectionHeader heading={section.heading} index={index} />
+            <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
           </td>
         </tr>
       )}
