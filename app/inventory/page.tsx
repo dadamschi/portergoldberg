@@ -45,14 +45,12 @@ export default async function InventoryPage() {
           <ListingsGrid listings={available} maxItems={4} />
         </div>
 
-        <div className="pg-listings-cta-section">
           <ContactBanner
             title="Have questions about our available or upcoming listings?"
             cta="Reach Out"
             openContactForm
             contactMessage="I have questions about your available or upcoming listings."
           />
-        </div>
 
         <div>
           <h2>Sold</h2>
