@@ -146,8 +146,8 @@ body {
 @media (max-width: 1100px) {
   .pg-content {
     max-width: 90%;
-    padding: 0px 40px 20px;
-    margin: 0 10px;
+    /* padding: 0px 40px 20px;
+    margin: 0 10px; */
     width: 100%;
   }
  
@@ -253,6 +253,7 @@ body {
 
   .pg-page-hero p {
     margin: 2px auto 0;
+    font-weight: 700;
     max-width: 100%;
   }
 
@@ -416,16 +417,12 @@ body {
 .pg-mobile-link {
   font-family: var(--font-body);
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 700;
   color: var(--pg-white);
   text-decoration: none;
   padding: 10px 0;
   border-bottom: 1px solid var(--pg-border);
   transition: color 0.15s;
-}
-
-.pg-mobile-link:hover {
-  color: var(--pg-sage);
 }
 
 .pg-mobile-item {
@@ -442,10 +439,11 @@ body {
   cursor: pointer;
   text-align: left;
   width: 100%;
+  font-weight: 700;
 }
 
 .pg-mobile-arrow {
-  font-size: 14px;
+  font-size: 22px;
   transition: transform 0.2s;
 }
 
@@ -456,13 +454,13 @@ body {
 .pg-mobile-subnav {
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 20px; 
 }
 
 .pg-mobile-sublink {
   font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 300;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--pg-white);
   text-decoration: none;
   padding: 10px 0;
@@ -2937,8 +2935,8 @@ body {
 
 .pg-contact-banner-name {
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   color: #ffffff;
   line-height: 1.4;
 }
@@ -2948,7 +2946,7 @@ body {
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2973,28 +2971,48 @@ body {
 }
 
 @media (max-width: 768px) {
-  .pg-contact-banner-link {
+  .pg-cta-section {
     width: 100%;
-    max-width: 100%;
+    padding: 24px 0;
+  }
+
+  .pg-contact-banner-link {
+    display: block;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .pg-contact-banner {
+    flex-direction: column;
     width: 100%;
     height: auto;
-    padding-left: 0;
+    border-radius: 0;
+    margin-top: 24px;
+   border-radius: 6px;
   }
 
   .pg-contact-banner-photo {
+    /* width: 100%;
+    aspect-ratio: 437 / 90;
+    position: relative;
+    overflow: hidden; */
     display: none;
+  }
+
+  .pg-contact-banner-img {
+    padding-left: 0 !important;
+    object-fit: contain !important;
+    object-position: center !important;
   }
 
   .pg-contact-banner-info {
     width: 100%;
-    max-width: 100%;
-    font-size: 24px;
-    font-weight: 600;
     align-items: center;
-    padding: 0px 0;
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 24px;
   }
 }
 
@@ -5143,7 +5161,7 @@ ul {
    ============================================================================= */
 
 .pg-school-guidance-content {
-  padding: 60px 24px 80px;
+  padding: 20px 24px 0px;
 }
 
 .pg-school-guidance-inner {

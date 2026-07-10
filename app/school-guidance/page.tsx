@@ -6,6 +6,7 @@ import { SCHOOL_GUIDANCE_PAGE_QUERY } from '@/lib/queries'
 import { portableTextComponents } from '@/lib/portableText'
 import type { SchoolGuidancePageData } from '@/types'
 import { ContentTemplate } from '@/components'
+import { ContactBanner } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Local School Guidance',
@@ -53,7 +54,14 @@ export default async function SchoolGuidancePage() {
             </div>
           )}
         </div>
+        <ContactBanner
+          title="Connect with us to get nofitified about upcoming events."
+          cta="Connect"
+          openContactForm
+          contactMessage="Yes! I would like to get more information about upcoming school guidance events."
+        />
       </section>
+      
     </ContentTemplate>
   )
 }

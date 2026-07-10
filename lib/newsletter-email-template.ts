@@ -407,8 +407,8 @@ ${sectionsHtml}
  */
 function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 24px;">
-    <tr><td style="padding:24px 0 38px 0; text-align:center;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 12px;">
+    <tr><td style="padding:0px 0 4px 0; text-align:center;">
       <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:none;">View this newsletter on our website</a>
     </td></tr>
   </table>`

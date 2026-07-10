@@ -69,9 +69,11 @@ export function ContactBanner({
 
   if (openContactForm) {
     return (
-      <button className="pg-contact-banner-link" onClick={handleClick} type="button">
-        {content}
-      </button>
+      <section className="pg-cta-section">
+        <button className="pg-contact-banner-link" onClick={handleClick} type="button">
+          {content}
+        </button>
+      </section>
     )
   }
 
