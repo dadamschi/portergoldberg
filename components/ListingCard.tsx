@@ -69,11 +69,6 @@ export function ListingCard({ listing }: ListingCardProps) {
               {statusText}
             </span>
           )}
-          {statusType !== 'underContract' && (
-            <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
-              {statusText}
-            </span>
-          )}
           {/* {units && (
             <span className="pg-listing-units">
               {units} Unit{units !== 1 ? 's' : ''}
