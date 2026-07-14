@@ -70,6 +70,7 @@ export const listing = defineType({
           { title: "Active", value: "active" },
           { title: "Coming Soon", value: "coming" },
           { title: "Sold", value: "sold" },
+          { title: "Under Contract", value: "underContract" },
         ],
         layout: "dropdown",
       },

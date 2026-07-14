@@ -47,6 +47,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const newsletter = await getNewsletter(slug)
+  console.log('newsletter', newsletter)
 
   if (!newsletter) {
     return { title: 'Newsletter Not Found' }
@@ -82,6 +83,7 @@ function SectionRows({ section, index, isImageRight }: {
   index: number
   isImageRight: boolean
 }) {
+  console.log('section', section)
   const image = (
     <SectionImage
       image={section.image ?? null}
@@ -103,10 +105,11 @@ function SectionRows({ section, index, isImageRight }: {
       linkUrl={section.linkUrl}
       instagram={section.instagram}
       email={section.email}
+      facebookHandle={section.facebookHandle}
     />
   )
 
-  const hasLinks = section.linkUrl || section.instagram || section.email
+  const hasLinks = section.linkUrl || section.instagram || section.email || section.facebookHandle
 
   return (
     <>
@@ -136,13 +139,14 @@ function SectionRows({ section, index, isImageRight }: {
         <tr className="pg-newsletter-row pg-newsletter-row--links">
           {isImageRight ? (
             <>
-              <td className="pg-newsletter-cell pg-newsletter-cell--empty" />
+              {/* <td className="pg-newsletter-cell pg-newsletter-cell--empty" /> */}
+              <td width='5%'></td>
               <td>{links}</td>
             </>
           ) : (
             <>
-              <td>{links}</td>
-              <td className="pg-newsletter-cell pg-newsletter-cell--empty"></td>
+              <td colSpan={2}>{links}</td>
+              {/* <td className="pg-newsletter-cell pg-newsletter-cell--empty"></td> */}
             </>
           )}
         </tr>
@@ -189,6 +193,7 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     linkUrl: s.linkUrl,
     instagram: s.instagram,
     titleLarger: s.titleLarger,
+    facebookHandle: s.facebookHandle
   }))
 
   return (

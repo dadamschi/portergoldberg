@@ -6,12 +6,14 @@ interface SectionLinksProps {
   linkUrl?: string
   instagram?: string
   email?: string
+  facebookHandle?: string
 }
 
-export function SectionLinks({ linkUrl, instagram, email }: SectionLinksProps) {
+export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: SectionLinksProps) {
   console.log('urlLink', linkUrl)
   console.log('instagramLink', instagram)
-  console.log('emailLink', email)
+  console.log('email', email)
+  console.log('facebook', facebookHandle)
 
   if (!linkUrl && !instagram && !email) {
     return null
@@ -19,7 +21,7 @@ export function SectionLinks({ linkUrl, instagram, email }: SectionLinksProps) {
 
   // Instagram link
   const instagramHandle = instagram?.replace('@', '')
-  const instagramLink = instagramHandle ? (
+  const formattedInstagramLink = instagramHandle ? (
     <a
       href={addUtmParams(`https://instagram.com/${instagramHandle}`, { campaign: 'newsletter' })}
       target="_blank"
@@ -30,7 +32,18 @@ export function SectionLinks({ linkUrl, instagram, email }: SectionLinksProps) {
     </a>
   ) : null
 
-  const emailLink = email ? (
+  const formattedFacebookLink = facebookHandle ? (
+    <a
+      href={addUtmParams(`https://www.facebook.com/${facebookHandle}`, { campaign: 'newsletter' })}
+      target="_blank"
+      rel="noreferrer"
+      className="pg-newsletter-url-link"
+    >
+      FB: {facebookHandle}
+    </a>
+  ) : null
+
+  const formattedEmailLink = email ? (
         <a href={`mailto:${email}?subject=${encodeURIComponent('Information request via PorterGoldberg newsletter')}`} className="pg-newsletter-url-link">
           e: {email}
         </a>
@@ -51,7 +64,6 @@ export function SectionLinks({ linkUrl, instagram, email }: SectionLinksProps) {
   let urlLink: React.ReactNode = null
 
   if (linkType !== 'none' && linkUrl) {
-
     if (linkType === 'local') {
       const localPath = linkUrl.startsWith('/')
         ? linkUrl
@@ -109,8 +121,9 @@ export function SectionLinks({ linkUrl, instagram, email }: SectionLinksProps) {
   return (
     <div className="pg-newsletter-section-links">
       {urlLink}
-      {emailLink}
-      {instagramLink}
+      {formattedEmailLink}
+      {formattedInstagramLink}
+      {formattedFacebookLink}
     </div>
   )
 }

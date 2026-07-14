@@ -37,7 +37,7 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
 
 export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
  {
-    "available": *[_type == "listing" && statusType in ["active", "coming"]] {
+    "available": *[_type == "listing" && statusType in ["active", "coming", "underContract"]] {
           _id,
           address,
           neighborhood,
@@ -457,7 +457,8 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
       moreInfo,
       linkUrl,
       instagram,
-      email
+      email,
+      facebookHandle
     },
     hubspotUrl
   }
@@ -479,7 +480,8 @@ export const NEWSLETTER_BY_ID_QUERY = defineQuery(/* groq */ `
       body,
       moreInfo,
       linkUrl,
-      instagram
+      instagram,
+      facebookHandle
     },
     hubspotUrl
   }

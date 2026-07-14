@@ -236,6 +236,7 @@ export type NewsletterImageSection = {
   linkUrl?: string
   instagram?: string
   email?: string
+  facebookHandle?: string
 }
 
 // Preview for list page

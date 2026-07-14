@@ -123,6 +123,12 @@ export const newsletter = defineType({
               type: "string",
               description: "Email address - displays as clickable link",
             }),
+            defineField({
+              name: "facebookHandle",
+              title: "Facebook Handle",
+              type: "string",
+              description: "Facebook handle (handle name only) - displays as clickable link",
+            })
           ],
           preview: {
             select: {

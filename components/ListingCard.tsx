@@ -10,6 +10,7 @@ const STATUS_CLASS: Record<string, string> = {
   active: 'pg-listing-status--active',
   coming: 'pg-listing-status--coming',
   sold: 'pg-listing-status--sold',
+  underContract: 'pg-listing-status--active',
 }
 
 type ListingCardProps = {
@@ -64,6 +65,11 @@ export function ListingCard({ listing }: ListingCardProps) {
             </div>
           )}
           {statusType !== 'coming' && (
+            <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
+              {statusText}
+            </span>
+          )}
+          {statusType !== 'underContract' && (
             <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
               {statusText}
             </span>

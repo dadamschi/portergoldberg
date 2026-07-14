@@ -34,6 +34,7 @@ export default async function InventoryPage() {
   const heroData = {
     heroHeadline: 'Explore our current listings and recently sold properties in Chicago',
   }
+  console.log('available', available)
 
   return (
     <ContentTemplate
