@@ -1,13 +1,10 @@
 import { HUBSPOT_CLIENT_ID } from './constants'
 const HUBSPOT_API_BASE = 'https://api.hubapi.com'
 
-function getApiKey(): string {
-  const apiKey = process.env.HUBSPOT_API_KEY
-  if (!apiKey) {
-    throw new Error('HUBSPOT_API_KEY environment variable not configured')
-  }
-  return apiKey
-}
+const headers = {
+      'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`,
+      'Content-Type': 'application/json',
+    }
 
 export type HubSpotContact = {
   id: string
@@ -23,13 +20,9 @@ export async function buildHubspotContactLink(contactId: string) {
 }
 
 export async function searchContactByEmail(email: string): Promise<HubSpotContact | null> {
-  const apiKey = getApiKey()
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       filterGroups: [{
         filters: [{
@@ -62,13 +55,10 @@ export async function searchContactByEmail(email: string): Promise<HubSpotContac
 }
 
 export async function getContactById(contactId: string): Promise<HubSpotContact | null> {
-  const apiKey = getApiKey()
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=firstname,lastname,email,tier,interested_property`,
     {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
     }
   )
 
@@ -96,16 +86,13 @@ export type HubSpotDeal = {
 }
 
 export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]> {
-  const apiKey = getApiKey()
 
   // Get associated deals for the contact
   const associationsUrl = `${HUBSPOT_API_BASE}/crm/v4/objects/contacts/${contactId}/associations/deals`
   console.log('[HubSpot] Fetching associations:', associationsUrl)
 
   const response = await fetch(associationsUrl, {
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-    },
+    headers,
   })
 
   if (!response.ok) {
@@ -130,10 +117,7 @@ export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]>
     `${HUBSPOT_API_BASE}/crm/v3/objects/deals/batch/read`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         inputs: dealIds.map((id: number) => ({ id: String(id) })),
         properties: ['dealname', 'pipeline', 'dealstage', 'closedate'],
@@ -172,14 +156,9 @@ export async function updateContactProperty(
   propertyName: string,
   propertyValue?: string
 ): Promise<boolean> {
-  const apiKey = getApiKey()
-
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       properties: { [propertyName]: propertyValue },
     }),
@@ -197,8 +176,6 @@ export async function updateContactProperties(
   contactId: string,
   properties: ContactProperty[]
 ): Promise<boolean> {
-  const apiKey = getApiKey()
-
   // Get unique property names and their definitions
   const uniqueProps = [...new Set(properties.map((p) => p.property))]
   const definitions: Record<string, PropertyDefinition> = {}
@@ -218,9 +195,7 @@ export async function updateContactProperties(
     const contactResponse = await fetch(
       `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${enumerationProps.join(',')}`,
       {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
+        headers,
       }
     )
     if (contactResponse.ok) {
@@ -249,10 +224,7 @@ export async function updateContactProperties(
 
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       properties: propertiesObject,
     }),
@@ -301,13 +273,9 @@ export async function createContact(
   firstName: string,
   lastName: string
 ): Promise<{ success: boolean; conflict?: boolean; error?: string }> {
-  const apiKey = getApiKey()
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       properties: {
         email,
@@ -409,7 +377,6 @@ export async function addToVendorList(
 // =============================================================================
 
 export async function fetchVendors(): Promise<HubSpotVendor[]> {
-  const apiKey = getApiKey()
   const vendors: HubSpotVendor[] = []
   let after: string | undefined
 
@@ -427,10 +394,7 @@ export async function fetchVendors(): Promise<HubSpotVendor[]> {
       `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`,
       {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           filterGroups: [
             {
@@ -526,13 +490,10 @@ export async function getPropertyDefinition(propertyName: string): Promise<Prope
     return cached.data
   }
 
-  const apiKey = getApiKey()
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
     {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
     }
   )
 
@@ -547,13 +508,10 @@ export async function getPropertyDefinition(propertyName: string): Promise<Prope
 }
 
 export async function getAllPropertyDefinitions(): Promise<PropertyDefinition[]> {
-  const apiKey = getApiKey()
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts`,
     {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
     }
   )
 
@@ -570,7 +528,6 @@ export async function ensurePropertyOption(
   propertyName: string,
   optionLabel: string
 ): Promise<string> {
-  const apiKey = getApiKey()
   const property = await getPropertyDefinition(propertyName)
 
   const existing = property.options.find(
@@ -599,10 +556,7 @@ export async function ensurePropertyOption(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
     {
       method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         options: [...property.options, newOption],
       }),
@@ -627,13 +581,10 @@ export async function addMultiSelectValue(
 ): Promise<boolean> {
   const optionValue = await ensurePropertyOption(propertyName, optionLabel)
 
-  const apiKey = getApiKey()
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${propertyName}`,
     {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
     }
   )
 

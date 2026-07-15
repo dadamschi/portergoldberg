@@ -160,6 +160,25 @@ Contact Form (ContactPageForm.tsx)
 RESEND_API_KEY=              # Resend API key (required)
 ```
 
+## Analytics & Tracking
+
+Both tracking scripts are **production-only** (disabled on localhost) and configured in `app/layout.tsx`.
+
+### Google Analytics (GA4)
+
+- **Property**: PorterGoldberg Residential
+- **Measurement ID**: `G-JX5PSVD7FM`
+- **Owner**: dadams.chi@gmail.com
+- **Dashboard**: [analytics.google.com](https://analytics.google.com)
+
+### HubSpot Tracking
+
+- **Portal ID**: `46095216`
+- **Script**: `js.hs-scripts.com/46095216.js`
+- **Dashboard**: [app.hubspot.com](https://app.hubspot.com)
+
+CSP domains for HubSpot are configured in `next.config.ts` (script-src, connect-src, img-src, frame-src).
+
 ## HubSpot
 
 **NEVER make changes to HubSpot (create properties, update contacts, create associations, etc.) without explicitly asking first.** Read-only operations (fetching contacts, listing properties) are fine.
