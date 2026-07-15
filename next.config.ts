@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net https://p.typekit.net",
               "img-src 'self' data: blob: https: https://cdn.sanity.io https://track.hubspot.com https://forms.hsforms.com",
               "font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net",
-              "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://*.api.sanity.io https://vitals.vercel-insights.com https://vercel.live https://*.hubspot.com https://*.hsforms.com https://*.hubapi.com https://forms.hsforms.com",
+              "connect-src 'self' https://www.google-analytics.com https://cdn.sanity.io https://*.api.sanity.io https://vitals.vercel-insights.com https://vercel.live https://*.hubspot.com https://*.hsforms.com https://*.hubapi.com https://forms.hsforms.com https://*.hscollectedforms.net",
               "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://vercel.live https://app.hubspot.com https://forms.hsforms.com",
               "media-src 'self' blob:",
             ].join('; '),

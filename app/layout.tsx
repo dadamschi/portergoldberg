@@ -121,12 +121,14 @@ export default async function RootLayout({
 
         {recentNewsletter && <NewsletterToast newsletter={recentNewsletter} />}
 
-        {/* HubSpot Tracking Code */}
-        <Script
-          id="hs-script-loader"
-          src="//js.hs-scripts.com/46095216.js"
-          strategy="afterInteractive"
-        />
+        {/* HubSpot Tracking Code (production only) */}
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id="hs-script-loader"
+            src="https://js.hs-scripts.com/46095216.js"
+            strategy="afterInteractive"
+          />
+        )}
 
         {/* Google Analytics (GA4)
             Property: PorterGoldberg Residential
@@ -134,18 +136,22 @@ export default async function RootLayout({
             Created: May 2026
             Dashboard: analytics.google.com
         */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-JX5PSVD7FM"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-JX5PSVD7FM');
-          `}
-        </Script>
+        {process.env.NODE_ENV === 'production' && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-JX5PSVD7FM"
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-JX5PSVD7FM');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )
