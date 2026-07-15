@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://js.hs-scripts.com https://js.hsforms.net https://js.hs-analytics.net https://js.hscta.net https://js.hs-banner.com https://js.usemessages.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://js.hs-scripts.com https://js.hsforms.net https://js.hs-analytics.net https://js.hscta.net https://js.hs-banner.com https://js.usemessages.com https://js.hscollectedforms.net",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net https://p.typekit.net",
               "img-src 'self' data: blob: https: https://cdn.sanity.io https://track.hubspot.com https://forms.hsforms.com",
               "font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net",
