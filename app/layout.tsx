@@ -121,6 +121,13 @@ export default async function RootLayout({
 
         {recentNewsletter && <NewsletterToast newsletter={recentNewsletter} />}
 
+        {/* HubSpot Tracking Code */}
+        <Script
+          id="hs-script-loader"
+          src="//js.hs-scripts.com/46095216.js"
+          strategy="afterInteractive"
+        />
+
         {/* Google Analytics (GA4)
             Property: PorterGoldberg Residential
             Owner: dadams.chi@gmail.com
