@@ -5327,7 +5327,7 @@ ul {
   width: 100%;
   height: auto;
   aspect-ratio: 509 / 454;
-  object-fit: cover;
+  /* object-fit: cover; */
 }
 
 .pg-newsletter-section-link {

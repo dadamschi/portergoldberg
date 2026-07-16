@@ -11,6 +11,8 @@ export interface NewsletterSection {
   caption?: string
   linkUrl?: string
   instagram?: string // Instagram handle (with or without @)
+  facebookHandle?: string
+  email?: string
   titleLarger?: boolean // Toggle which word is larger in section header
 }
 
@@ -66,7 +68,7 @@ function paragraphsHtml(body: string): string {
 function captionHtml(caption: string | undefined): string {
   if (!caption) return ''
   const lines = caption.split('\n').filter(Boolean)
-  return `<p style="margin:10px 0 0 0; ${FONT} font-size:13px; line-height:1.4; color:${INK}; text-align:left;">${lines.map(typographic).join('<br>')}</p>`
+  return `<p style="${FONT} font-size:13px; line-height:1.4; color:${INK}; text-align:left;">${lines.map(typographic).join('<br>')}</p>`
 }
 const headingFont = "font-family:'Century Gothic', Helvetica, Arial, sans-serif;"
 function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
@@ -80,7 +82,8 @@ function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   // Title style (matches .pg-section-header-title)
   const labelStyle = `${headingFont} font-size:36px; font-weight:400; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
   // Line cell (matches .pg-section-header-line - 2px height)
-  const lineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding:0 24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
+  const leftLineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding-left:24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
+  const rightLineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding-right:24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
 
   // Use titleLarger if set, otherwise fall back to layout-based alternation
   const isTitleLarger = section.titleLarger !== undefined
@@ -98,8 +101,8 @@ function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
 
   // Only the position changes: text on left vs right of line
   const cells = layout === 'image-right'
-    ? `${lineCell}${textCell}` // Even sections: line | text
-    : `${textCell}${lineCell}` // Odd sections: text | line
+    ? `${rightLineCell}${textCell}` // Even sections: line | text
+    : `${textCell}${leftLineCell}` // Odd sections: text | line
 
   return `
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 2px 0;">
@@ -124,7 +127,7 @@ function wrapInLink(content: string, url?: string): string {
  * Renders clickable links for URL and Instagram below the image
  * Matches website pg-newsletter-section-links styling
  */
-function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
+function sectionLinksHtml(linkUrl?: string, instagram?: string, facebookHandle?: string, email?: string): string {
   const links: string[] = []
   const linkStyle = `${FONT} font-size:14px; font-weight:400; color:${INK}; text-decoration:none;`
 
@@ -155,10 +158,14 @@ function sectionLinksHtml(linkUrl?: string, instagram?: string): string {
     const handle = instagram.replace('@', '')
     links.push(`IG: <a href="https://instagram.com/${esc(handle)}" target="_blank" style="${linkStyle}">@${esc(handle)}</a>`)
   }
+  
+  if (facebookHandle) {
+    links.push(`FB: <a href="https://www.facebook.com/${esc(facebookHandle)}" target="_blank" style="${linkStyle}">${esc(facebookHandle)}</a>`)
+  }
 
   if (links.length === 0) return ''
 
-  return `<p style="margin:10px 0 0 0; ${FONT} font-size:14px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
+  return `<p style="${FONT} padding: 0; margin: 0; font-size:14px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
 }
 
 function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
@@ -192,13 +199,13 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
       : `${imageCell}${spacerCell}${textCell}`
 
   // Links row - positioned under the image cell
-  const linksHtml = sectionLinksHtml(section.linkUrl, section.instagram)
-  const emptyCell = `<td width="48%" style="width:48%;"></td>`
-  const linksCell = `<td width="48%" style="width:48%; padding:8px 0 0 0;">${linksHtml}</td>`
+  const linksHtml = sectionLinksHtml(section.linkUrl, section.instagram, section.facebookHandle, section.email)
+  const emptyCell = `<td></td>`
+  const linksCell = `<td>${linksHtml}</td>`
   const linksRow = linksHtml
     ? layout === 'image-right'
-      ? `<tr>${emptyCell}${spacerCell}${linksCell}</tr>`
-      : `<tr>${linksCell}${spacerCell}${emptyCell}</tr>`
+      ? `<tr><td style="colspan:2;">${emptyCell}</td>${linksCell}</tr>`
+      : `<tr style="colspan:3;">${linksCell}</tr>`
     : ''
 
   return `
