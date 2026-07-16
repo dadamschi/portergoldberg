@@ -1,10 +1,13 @@
 import { HUBSPOT_CLIENT_ID } from './constants'
 const HUBSPOT_API_BASE = 'https://api.hubapi.com'
+const NEWSLETTER_SUBSCRIPTION_ID = '341969674'
 
-const headers = {
-      'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`,
-      'Content-Type': 'application/json',
-    }
+function getHeaders() {
+  return {
+    'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`,
+    'Content-Type': 'application/json',
+  }
+}
 
 export type HubSpotContact = {
   id: string
@@ -22,7 +25,7 @@ export async function buildHubspotContactLink(contactId: string) {
 export async function searchContactByEmail(email: string): Promise<HubSpotContact | null> {
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`, {
     method: 'POST',
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({
       filterGroups: [{
         filters: [{
@@ -58,7 +61,7 @@ export async function getContactById(contactId: string): Promise<HubSpotContact 
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=firstname,lastname,email,tier,interested_property`,
     {
-      headers,
+      headers: getHeaders(),
     }
   )
 
@@ -92,7 +95,7 @@ export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]>
   console.log('[HubSpot] Fetching associations:', associationsUrl)
 
   const response = await fetch(associationsUrl, {
-    headers,
+    headers: getHeaders(),
   })
 
   if (!response.ok) {
@@ -117,7 +120,7 @@ export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]>
     `${HUBSPOT_API_BASE}/crm/v3/objects/deals/batch/read`,
     {
       method: 'POST',
-      headers,
+      headers: getHeaders(),
       body: JSON.stringify({
         inputs: dealIds.map((id: number) => ({ id: String(id) })),
         properties: ['dealname', 'pipeline', 'dealstage', 'closedate'],
@@ -158,7 +161,7 @@ export async function updateContactProperty(
 ): Promise<boolean> {
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({
       properties: { [propertyName]: propertyValue },
     }),
@@ -195,7 +198,7 @@ export async function updateContactProperties(
     const contactResponse = await fetch(
       `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${enumerationProps.join(',')}`,
       {
-        headers,
+        headers: getHeaders(),
       }
     )
     if (contactResponse.ok) {
@@ -224,7 +227,7 @@ export async function updateContactProperties(
 
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}`, {
     method: 'PATCH',
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({
       properties: propertiesObject,
     }),
@@ -275,7 +278,7 @@ export async function createContact(
 ): Promise<{ success: boolean; conflict?: boolean; error?: string }> {
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts`, {
     method: 'POST',
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({
       properties: {
         email,
@@ -339,6 +342,47 @@ export async function addContact(options: AddContactOptions): Promise<AddContact
 }
 
 /**
+ * Subscribe an email from the newsletter.
+ */
+export async function subscribeToNewsletter(email: string): Promise<{ success: boolean; error?: string; message?: string }> {
+  const contact = await searchContactByEmail(email)
+
+  if (!contact) {
+    return { success: false, error: 'Contact not found' }
+  }
+
+  // do not touch unsubscribed contacts
+  const statusRes = await fetch(
+    `${HUBSPOT_API_BASE}/communication-preferences/v4/statuses/${encodeURIComponent(email)}?channel=EMAIL`,
+    { headers: getHeaders() }
+  )
+
+  const statusData = await statusRes.json()
+  if (statusData.status === 'UNSUBSCRIBED') {
+    return { success: false, error: 'Contact has unsubscribed' }
+  }
+
+  if(statusData.results.find((sub: { subscriptionId: string; status: string }) => sub.subscriptionId == NEWSLETTER_SUBSCRIPTION_ID)?.status === 'SUBSCRIBED') {
+    return { success: true, message: 'Contact is already subscribed' }
+  }
+
+  const response = await fetch(
+      `${HUBSPOT_API_BASE}/communication-preferences/v3/subscribe`,
+      {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          emailAddress: email,
+          subscriptionId: NEWSLETTER_SUBSCRIPTION_ID,
+          legalBasis: 'LEGITIMATE_INTEREST_CLIENT', 
+          legalBasisExplanation: 'User opted in to newsletter via contact form',
+        }),
+      })
+
+  return { success: response.ok }
+}
+
+/**
  * Unsubscribe an email from the newsletter.
  * Removes Newsletter tier from contact.
  */
@@ -394,7 +438,7 @@ export async function fetchVendors(): Promise<HubSpotVendor[]> {
       `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/search`,
       {
         method: 'POST',
-        headers,
+        headers: getHeaders(),
         body: JSON.stringify({
           filterGroups: [
             {
@@ -493,7 +537,7 @@ export async function getPropertyDefinition(propertyName: string): Promise<Prope
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
     {
-      headers,
+      headers: getHeaders(),
     }
   )
 
@@ -511,7 +555,7 @@ export async function getAllPropertyDefinitions(): Promise<PropertyDefinition[]>
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts`,
     {
-      headers,
+      headers: getHeaders(),
     }
   )
 
@@ -556,7 +600,7 @@ export async function ensurePropertyOption(
     `${HUBSPOT_API_BASE}/crm/v3/properties/contacts/${propertyName}`,
     {
       method: 'PATCH',
-      headers,
+      headers: getHeaders(),
       body: JSON.stringify({
         options: [...property.options, newOption],
       }),
@@ -584,7 +628,7 @@ export async function addMultiSelectValue(
   const response = await fetch(
     `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}?properties=${propertyName}`,
     {
-      headers,
+      headers: getHeaders(),
     }
   )
 

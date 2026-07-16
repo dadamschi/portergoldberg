@@ -1,7 +1,7 @@
 'use server'
 
 import {
-  addContact, updateContactProperties, buildHubspotContactLink
+  addContact, updateContactProperties, buildHubspotContactLink, subscribeToNewsletter
 } from '@/lib/hubspot'
 import { EMAIL_NOTIFICATION_RECIPIENTS } from '@/lib/constants'
 
@@ -59,6 +59,7 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
 
   if (subscribeNewsletter) {
     propertiesArray.push({ property: 'tier', value: 'Newsletter' })
+    subscribeToNewsletter(email)
   }
 
   if (propertyAddress) {
