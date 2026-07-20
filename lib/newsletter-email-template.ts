@@ -181,7 +181,7 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
     : placeholderContent
 
   const imageCell = `
-    <td width="48%" valign="top" style="padding:0; width:48%;">
+    <td width="48%" valign="middle" style="padding:0; width:48%; vertical-align:middle;">
       ${wrapInLink(imageContent, link)}
       ${captionHtml(section.caption)}
     </td>`
@@ -416,7 +416,7 @@ function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 12px;">
     <tr><td style="padding:0px 0 4px 0; text-align:center;">
-      <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:none;">View this newsletter on our website</a>
+      <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:none;">View this newsletter on our portergoldberg.com website</a>
     </td></tr>
   </table>`
 }
