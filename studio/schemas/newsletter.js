@@ -18,6 +18,7 @@ export const newsletter = defineType({
       title: "Published Date",
       type: "date",
       default: new Date(),
+      description: "Select what the UNIQUE publish date will be for this newsletter",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -25,10 +26,14 @@ export const newsletter = defineType({
       title: "Slug",
       type: "slug",
       options: {
-        source: "title",
-        maxLength: 96,
+        source: (doc) => {
+          const date = doc.publishedAt;
+          const title = doc.title;
+          return `${date}-${title}`.toLowerCase().replace(/\s+/g, "-");
+        }
       },
       validation: (rule) => rule.required(),
+      hidden: ({parent}) => !parent?.publishedAt,
     }),
     defineField({
       name: "summary",
@@ -137,12 +142,23 @@ export const newsletter = defineType({
               alt: "alt",
               link: "linkUrl",
             },
-            prepare({ media, heading, alt, link }) {
+            prepare({ media, heading, link, titleLarger }) {
+              if (!heading) return { title: "Image section", media }
+
+              const words = heading.split(' ')
+              const lastWord = words.pop()
+              const firstWords = words.join(' ')
+
+              // Show which part will be larger
+              const preview = titleLarger
+                ? `${firstWords} [${lastWord}]`  // last word larger
+                : `[${firstWords}] ${lastWord}`  // first words larger
+
               return {
-                title: heading || alt || "Image section",
+                title: preview,
                 subtitle: link ? `Links to: ${link}` : "No link",
                 media,
-              };
+              }
             },
           },
         },

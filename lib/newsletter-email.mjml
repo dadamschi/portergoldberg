@@ -1,0 +1,157 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.55" color="#1a1a1a" />
+      <mj-section padding="0" />
+    </mj-attributes>
+    <mj-style>
+      .section-heading { font-family: 'Century Gothic', Helvetica, Arial, sans-serif; text-transform: uppercase; }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f5f5f5">
+
+    <!-- HEADER: Agent Photos + Logo -->
+    <mj-section background-color="#f5f5f5" padding="0">
+      <mj-group>
+        <mj-column width="25%" padding="0">
+          <mj-image src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.lgoldberg.hires.png" alt="Lauren Goldberg" padding="0" />
+        </mj-column>
+        <mj-column width="50%" background-color="#000000" padding="0">
+          <mj-image src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.logo.hires.png" alt="Your Weekly Walk-Through" padding="0" />
+        </mj-column>
+        <mj-column width="25%" padding="0">
+          <mj-image src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.sporter.hires.png" alt="Samantha Porter" padding="0" />
+        </mj-column>
+      </mj-group>
+    </mj-section>
+
+    <!-- CONTENT SECTIONS -->
+    <mj-section background-color="#ffffff" padding="38px 24px 0 24px">
+      <!-- Section 1: Image Left - mj-group prevents stacking -->
+      <mj-group>
+        <mj-column width="48%">
+          <mj-image src="https://cdn.sanity.io/images/mw8duas2/production/affb3a56cdcbd3b1fcb6be89d0528a25cc3a85a6-509x420.png" alt="Welcome Back" padding="0" />
+        </mj-column>
+        <mj-column width="4%">
+          <mj-spacer height="1px" />
+        </mj-column>
+        <mj-column width="48%">
+          <mj-text css-class="section-heading" font-size="36px" letter-spacing="0.08em" padding="0 0 4px 0">WELCOME</mj-text>
+          <mj-text css-class="section-heading" font-size="22px" letter-spacing="0.15em" padding="0 0 16px 0">BACK</mj-text>
+          <mj-text padding="0">Lincoln Park welcomes Beaumont's back to the neighborhood. This timeless American tavern pairs classic comfort food with French and Italian influences.</mj-text>
+        </mj-column>
+      </mj-group>
+    </mj-section>
+
+    <mj-section background-color="#ffffff" padding="34px 24px 0 24px">
+      <!-- Section 2: Image Right - mj-group prevents stacking -->
+      <mj-group>
+        <mj-column width="48%">
+          <mj-text css-class="section-heading" font-size="22px" letter-spacing="0.15em" padding="0 0 4px 0">SUMMER</mj-text>
+          <mj-text css-class="section-heading" font-size="36px" letter-spacing="0.08em" padding="0 0 16px 0">UPKEEP</mj-text>
+          <mj-text padding="0">Keep your home in peak condition by replacing HVAC filters, cleaning gutters, inspecting your roof and exterior.</mj-text>
+        </mj-column>
+        <mj-column width="4%">
+          <mj-spacer height="1px" />
+        </mj-column>
+        <mj-column width="48%">
+          <mj-image src="https://cdn.sanity.io/images/mw8duas2/production/a1db867b8da7a54b65458b1f0dadc4bb39a79f02-509x451.png" alt="Summer Upkeep" padding="0" />
+        </mj-column>
+      </mj-group>
+    </mj-section>
+
+    <!-- VIEW ON WEBSITE -->
+    <mj-section background-color="#ffffff" padding="24px 24px 4px 24px">
+      <mj-column>
+        <mj-text align="center" font-size="14px">
+          <a href="https://www.portergoldberg.com/newsletters" style="color:#1a1a1a; text-decoration:none;">View this newsletter on our website</a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- FOOTER: Website URL with lines -->
+    <mj-section background-color="#ffffff" padding="20px 24px 4px 24px">
+      <mj-column width="40%">
+        <mj-divider border-color="#A8904E" border-width="1px" padding="0" />
+      </mj-column>
+      <mj-column width="20%">
+        <mj-text align="center" font-size="14px" font-weight="bold" letter-spacing="2px" color="#A8904E" padding="0">
+          <a href="https://www.portergoldberg.com" style="color:#A8904E; text-decoration:none;">PORTERGOLDBERG.COM</a>
+        </mj-text>
+      </mj-column>
+      <mj-column width="40%">
+        <mj-divider border-color="#A8904E" border-width="1px" padding="0" />
+      </mj-column>
+    </mj-section>
+
+    <!-- FOOTER: Agent Cards - mj-group prevents stacking -->
+    <mj-section background-color="#000000" padding="16px 24px">
+      <mj-group>
+        <mj-column width="50%">
+          <mj-table padding="0">
+            <tr>
+              <td style="vertical-align:middle; padding-right:12px;">
+                <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20sporter.png" alt="Samantha Porter" width="50" />
+              </td>
+              <td style="vertical-align:middle; color:#ffffff;">
+                <p style="margin:0; font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">Samantha Porter</p>
+                <p style="margin:0; font-size:11px;">Vice President, Sales</p>
+                <p style="margin:0; font-size:11px;"><a href="tel:7739887898" style="color:#ffffff; text-decoration:none;">773-988-7898</a></p>
+                <p style="margin:0; font-size:11px;"><a href="mailto:samantha@portergoldberg.com" style="color:#ffffff; text-decoration:none;">samantha@portergoldberg.com</a></p>
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+        <mj-column width="50%">
+          <mj-table padding="0">
+            <tr>
+              <td style="vertical-align:middle; text-align:right; padding-right:12px; color:#ffffff;">
+                <p style="margin:0; font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">Lauren Goldberg</p>
+                <p style="margin:0; font-size:11px;">Vice President, Sales</p>
+                <p style="margin:0; font-size:11px;"><a href="tel:7735760053" style="color:#ffffff; text-decoration:none;">773-576-0053</a></p>
+                <p style="margin:0; font-size:11px;"><a href="mailto:lauren@portergoldberg.com" style="color:#ffffff; text-decoration:none;">lauren@portergoldberg.com</a></p>
+              </td>
+              <td style="vertical-align:middle;">
+                <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20lgoldberg.png" alt="Lauren Goldberg" width="50" />
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-group>
+    </mj-section>
+
+    <!-- FOOTER: Logo + Social - mj-group prevents stacking -->
+    <mj-section background-color="#000000" padding="16px 24px">
+      <mj-group>
+        <mj-column width="50%" vertical-align="middle">
+          <mj-image src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20PGJameson%20logo.png" alt="PorterGoldberg Residential" width="150px" padding="0" />
+        </mj-column>
+        <mj-column width="50%" vertical-align="middle">
+          <mj-social icon-size="18px" mode="vertical" align="right" padding="0">
+            <mj-social-element name="instagram" href="https://www.instagram.com/portergoldbergchicago" background-color="transparent" font-size="11px">
+              @portergoldbergchicago
+            </mj-social-element>
+            <mj-social-element name="facebook" href="https://www.facebook.com/PorterGoldbergResidential" background-color="transparent" font-size="11px">
+              PorterGoldberg
+            </mj-social-element>
+            <mj-social-element name="youtube" href="https://www.youtube.com/@PorterGoldbergResidential" background-color="transparent" font-size="11px">
+              @PorterGoldberg
+            </mj-social-element>
+          </mj-social>
+        </mj-column>
+      </mj-group>
+    </mj-section>
+
+    <!-- FOOTER: Legal -->
+    <mj-section background-color="#000000" padding="12px 24px">
+      <mj-column>
+        <mj-text font-size="10px" color="#ffffff" align="center" line-height="1.4">
+          &copy; 2026 Sotheby's International Realty&reg; and the Sotheby's International Realty Logo are service marks licensed to Sotheby's International Realty Affiliates LLC and used with permission. Jameson Sotheby's International Realty fully supports the principles of the Fair Housing Act and the Equal Opportunity Act. Each franchise is independently owned and operated.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

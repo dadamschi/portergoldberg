@@ -1,6 +1,10 @@
 /**
  * Newsletter email template generator for HubSpot.
- * Generates email-client-safe HTML with inline styles and table layout.
+ * Uses fluid-hybrid technique for responsive layouts without media queries.
+ * - inline-block + max-width for auto-stacking columns
+ * - dir="rtl" for image-right sections
+ * - MSO conditional comments for Outlook
+ * - clamp() for responsive font sizes
  */
 
 export interface NewsletterSection {
@@ -37,8 +41,18 @@ function parseHeading(heading: string): { eyebrow: string; title: string } {
 }
 
 const INK = '#1a1a1a'
-const LINE = '#1a1a1a'
-const FONT = 'font-family:Helvetica, Arial, sans-serif;'
+const GOLD = '#A8904E'
+const FONT = 'font-family:Helvetica,Arial,sans-serif;'
+const HEADING_FONT = "font-family:'Century Gothic',Helvetica,Arial,sans-serif;"
+
+// Responsive font sizes using clamp()
+const TITLE_SIZE = 'font-size:25px;font-size:clamp(18px,6.2vw,25px);'
+const LABEL_SIZE = 'font-size:16px;font-size:clamp(13px,4vw,16px);'
+const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
+
+// Column width for fluid-hybrid
+const COL_WIDTH = 250
+const GAP_WIDTH = 18
 
 function esc(input: string): string {
   return input
@@ -53,6 +67,7 @@ function typographic(input: string): string {
   return esc(input)
     .replace(/'/g, '&rsquo;')
     .replace(/"([^"]*)"/g, '&ldquo;$1&rdquo;')
+    .replace(/--/g, '&mdash;')
 }
 
 function paragraphsHtml(body: string): string {
@@ -60,163 +75,162 @@ function paragraphsHtml(body: string): string {
   return paragraphs
     .map(
       (line, i, arr) =>
-        `<p style="margin:0 0 ${i === arr.length - 1 ? 0 : 14}px 0; ${FONT} font-size:16px; font-weight:500; line-height:1.55; color:${INK};">${typographic(line)}</p>`
+        `<p style="margin:0 0 ${i === arr.length - 1 ? 0 : 12}px 0;${FONT}${BODY_SIZE}font-weight:500;line-height:1.55;color:${INK};">${typographic(line)}</p>`
     )
     .join('')
 }
 
-function captionHtml(caption: string | undefined): string {
-  if (!caption) return ''
-  const lines = caption.split('\n').filter(Boolean)
-  return `<p style="${FONT} font-size:13px; line-height:1.4; color:${INK}; text-align:left;">${lines.map(typographic).join('<br>')}</p>`
-}
-const headingFont = "font-family:'Century Gothic', Helvetica, Arial, sans-serif;"
+/**
+ * Renders section heading with eyebrow + title and horizontal line
+ * Line position depends on layout: image-left = line on right, image-right = line on left
+ */
 function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const { eyebrow, title } = parseHeading(section.heading)
-  console.log('layout', layout)
-  // Heading font (Quinoa SC with fallbacks)
-  
-  // Label style (matches .pg-section-header-label)
-  const titleStyle = `${headingFont} font-size:22px; font-weight:400; letter-spacing:0.15em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
-  // Title style (matches .pg-section-header-title)
-  const labelStyle = `${headingFont} font-size:36px; font-weight:400; letter-spacing:0.08em; color:${INK}; white-space:nowrap; vertical-align:middle; text-transform:uppercase;`
-  // Line cell (matches .pg-section-header-line - 2px height)
-  const leftLineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding-left:24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
-  const rightLineCell = `<td width="100%" valign="middle" style="width:100%; vertical-align:middle; padding-right:24px;"><div style="border-top:2px solid ${LINE}; font-size:1px; line-height:1px;">&nbsp;</div></td>`
 
   // Use titleLarger if set, otherwise fall back to layout-based alternation
   const isTitleLarger = section.titleLarger !== undefined
     ? section.titleLarger
     : layout === 'image-right'
-  const labelTextStyle = isTitleLarger ? titleStyle : labelStyle
-  const titleTextStyle = isTitleLarger ? labelStyle : titleStyle
-  // Text spans - order is ALWAYS label then title (never changes)
-  const labelSpan = eyebrow ? `<span style="${labelTextStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
-  const titleSpan = `<span style="${titleTextStyle}">${esc(title.toUpperCase())}</span>`
-  const gap = eyebrow ? '<span style="display:inline-block; width:12px;"></span>' : ''
 
-  // Text cell always has label then title
-  const textCell = `<td valign="middle" style="white-space:nowrap; vertical-align:middle;">${labelSpan}${gap}${titleSpan}</td>`
+  // Build text spans - always eyebrow then title order
+  const eyebrowStyle = isTitleLarger
+    ? `${HEADING_FONT}${LABEL_SIZE}font-weight:400;letter-spacing:0.14em;color:${INK};text-transform:uppercase;`
+    : `${HEADING_FONT}${TITLE_SIZE}font-weight:400;letter-spacing:0.10em;color:${INK};text-transform:uppercase;`
 
-  // Only the position changes: text on left vs right of line
+  const titleStyle = isTitleLarger
+    ? `${HEADING_FONT}${TITLE_SIZE}font-weight:400;letter-spacing:0.06em;color:${INK};text-transform:uppercase;`
+    : `${HEADING_FONT}${LABEL_SIZE}font-weight:400;letter-spacing:0.14em;color:${INK};text-transform:uppercase;`
+
+  const eyebrowSpan = eyebrow ? `<span style="${eyebrowStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
+  const titleSpan = `<span style="${titleStyle}">${esc(title.toUpperCase())}</span>`
+  const gap = eyebrow ? '<span style="display:inline-block;width:9px;"></span>' : ''
+
+  const textCell = `<td valign="middle" style="white-space:nowrap;vertical-align:middle;">${eyebrowSpan}${gap}${titleSpan}</td>`
+  const lineCell = layout === 'image-right'
+    ? `<td width="100%" valign="middle" style="width:100%;vertical-align:middle;padding-right:16px;"><div style="border-top:2px solid ${INK};font-size:1px;line-height:1px;">&nbsp;</div></td>`
+    : `<td width="100%" valign="middle" style="width:100%;vertical-align:middle;padding-left:16px;"><div style="border-top:2px solid ${INK};font-size:1px;line-height:1px;">&nbsp;</div></td>`
+
   const cells = layout === 'image-right'
-    ? `${rightLineCell}${textCell}` // Even sections: line | text
-    : `${textCell}${leftLineCell}` // Odd sections: text | line
+    ? `${lineCell}${textCell}` // Line on left, text on right
+    : `${textCell}${lineCell}` // Text on left, line on right
 
-  return `
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 2px 0;">
-    <tr>${cells}</tr>
-  </table>`
-}
-
-function wrapInLink(content: string, url?: string): string {
-  if (!url) return content
-
-  // Convert #contact: links to mailto
-  if (url.startsWith('#contact:')) {
-    const subject = url.replace('#contact:', '')
-    const mailtoUrl = `mailto:info@portergoldberg.com?subject=${encodeURIComponent(subject)}`
-    return `<a href="${mailtoUrl}" style="color:inherit; text-decoration:none;">${content}</a>`
-  }
-
-  return `<a href="${esc(url)}" target="_blank" style="color:inherit; text-decoration:none;">${content}</a>`
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 12px 0;">
+  <tr>${cells}</tr>
+</table>`
 }
 
 /**
- * Renders clickable links for URL and Instagram below the image
- * Matches website pg-newsletter-section-links styling
+ * Renders link text below the image (URL or Instagram)
  */
-function sectionLinksHtml(linkUrl?: string, instagram?: string, facebookHandle?: string, email?: string): string {
-  const links: string[] = []
-  const linkStyle = `${FONT} font-size:14px; font-weight:400; color:${INK}; text-decoration:none;`
+function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: string): string {
+  const linkStyle = `${FONT}font-size:16px;line-height:1.6;color:${GOLD};font-weight:500;`
+  const anchorStyle = `color:${GOLD};text-decoration:none;`
+  let linkHtml = ''
+
+  if (instagram) {
+    const handle = instagram.replace('@', '')
+    linkHtml = `<p style="margin:0px 0 0 0;${linkStyle}"><a href="https://instagram.com/${esc(handle)}" target="_blank" style="${anchorStyle}">IG: @${esc(handle)}</a></p>`
+  }
+
+    if (facebookHandle) {
+    const handle = facebookHandle.replace('@', '')
+    linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="https://facebook.com/${esc(facebookHandle)}" target="_blank" style="${anchorStyle}">FB: ${esc(handle)}</a></p>`
+  }
 
   if (linkUrl) {
     if (linkUrl.startsWith('#contact:')) {
-      // Convert #contact: links to mailto with subject
       const subject = linkUrl.replace('#contact:', '')
       const mailtoUrl = `mailto:info@portergoldberg.com?subject=${encodeURIComponent(subject)}`
-      links.push(`<a href="${mailtoUrl}" style="${linkStyle}">Contact Us</a>`)
-    } else if (!linkUrl.startsWith('mailto:')) {
-      // Regular URL link
+      linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="${mailtoUrl}" style="${anchorStyle}">Contact Us &rarr;</a></p>`
+    } else {
+      // Display URL or "Learn More" for internal links
       let linkText = linkUrl
       if (linkUrl.startsWith('/') || linkUrl.includes('portergoldberg.com')) {
-        linkText = 'Learn More on PorterGoldberg.com'
-      } else if (linkUrl.includes('jamesonps.com')) {
-        linkText = 'Check out the property brochure'
+        linkText = 'Learn More &rarr;'
+      } else if (linkUrl.length > 40) {
+        linkText = 'Learn More'
       }
-      // Truncate long URLs to "Learn More"
-      if (linkText.length > 50) {
-        linkText = 'Click here to learn more'
-      }
-      links.push(`<a href="${esc(linkUrl)}" target="_blank" style="${linkStyle}">${esc(linkText)}</a>`)
+      linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="${esc(linkUrl)}" target="_blank" style="${anchorStyle}">${linkText}</a></p>`
     }
   }
 
-  // Instagram link
-  if (instagram) {
-    const handle = instagram.replace('@', '')
-    links.push(`IG: <a href="https://instagram.com/${esc(handle)}" target="_blank" style="${linkStyle}">@${esc(handle)}</a>`)
-  }
-  
-  if (facebookHandle) {
-    links.push(`FB: <a href="https://www.facebook.com/${esc(facebookHandle)}" target="_blank" style="${linkStyle}">${esc(facebookHandle)}</a>`)
-  }
-
-  if (links.length === 0) return ''
-
-  return `<p style="${FONT} padding: 0; margin: 0; font-size:14px; line-height:1.6; color:${INK};">${links.join('<br>')}</p>`
+  return linkHtml
 }
 
+/**
+ * Renders section content using fluid-hybrid technique
+ * - inline-block columns auto-stack on narrow screens
+ * - dir="rtl" on wrapper flips columns for image-right
+ * - MSO comments ensure proper Outlook rendering
+ */
 function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
   const layout = section.layout
   const alt = section.imageAlt || section.heading
-  const link = section.linkUrl
+  const isImageRight = layout === 'image-right'
+  const anchorStyle = `text-decoration:none;`
+  
+  const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
 
-  // Placeholder for missing images - black box with gold YWWT text
-  const placeholderContent = `<div style="font-family:'Century Gothic', Helvetica, Arial, sans-serif; display:block; width:100%; max-width:280px; aspect-ratio:509/454; background-color:#1a1a1a; color:#c9a227; font-size:24px; font-weight:700; letter-spacing:0.1em; text-align:center; line-height:250px;">YWWT</div>`
+  // Image column content - width:100% so it fills container (250px on desktop, 100% on mobile)
+  let imageHtml = section.imageUrl
+    ? `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="100%" style="display:block;width:100%;height:auto;">`
+    : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
 
-  const imageContent = section.imageUrl
-    ? `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="280" style="display:block; width:100%; max-width:280px; height:auto;">`
-    : placeholderContent
+  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item);
 
-  const imageCell = `
-    <td width="48%" valign="middle" style="padding:0; width:48%; vertical-align:middle;">
-      ${wrapInLink(imageContent, link)}
-      ${captionHtml(section.caption)}
-    </td>`
+  if (imageContentLink) {
+    imageHtml = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${imageHtml}</a>`
+  }
 
-  const textCell = `
-    <td width="48%" valign="middle" style="padding:0; width:48%; vertical-align:middle;">
-      ${wrapInLink(paragraphsHtml(section.body), link)}
-    </td>`
+  // Image column - for image-right, margin-left creates gap (matches original template)
+  const imageMargin = isImageRight ? `margin:0 0 0 ${GAP_WIDTH}px;` : ''
+  const imageCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;${imageMargin}">
+    ${imageHtml}
+  </div>`
 
-  const spacerCell = `<td width="4%" style="width:4%; font-size:1px; line-height:1px;">&nbsp;</td>`
+  // Text column
+  let sectionBody = paragraphsHtml(section.body)
+  if (imageContentLink) {
+    sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
+  }
+  const textCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
+    ${sectionBody}
+  </div>`
 
-  const row =
-    layout === 'image-right'
-      ? `${textCell}${spacerCell}${imageCell}`
-      : `${imageCell}${spacerCell}${textCell}`
+  // Links row - for image-right, use two divs to align links under image
+  const rightImageLinksHtml = `<div dir="ltr" style="display:inline-block;vertical-align:top;width:${COL_WIDTH}px;max-width:100%;text-align:left;margin:8px 0 0 ${GAP_WIDTH}px;">${linkHtml}</div><!--
+  --><div style="display:inline-block;vertical-align:top;width:${COL_WIDTH}px;max-width:100%;"></div>`
+  const leftImageLinksHtml = `<div style="margin:8px 0 0 0;">${linkHtml}</div>`
+  const linksRow = isImageRight ? rightImageLinksHtml : leftImageLinksHtml
 
-  // Links row - positioned under the image cell
-  const linksHtml = sectionLinksHtml(section.linkUrl, section.instagram, section.facebookHandle, section.email)
-  const emptyCell = `<td></td>`
-  const linksCell = `<td>${linksHtml}</td>`
-  const linksRow = linksHtml
-    ? layout === 'image-right'
-      ? `<tr><td style="colspan:2;">${emptyCell}</td>${linksCell}</tr>`
-      : `<tr style="colspan:3;">${linksCell}</tr>`
-    : ''
+  // MSO table structure for Outlook
+  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
+  const msoMiddle = `<!--[if mso]></td><td width="${GAP_WIDTH}"></td><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
+  const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
 
-  return `
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 34px 0;">
-    <tr>${row}</tr>
-    ${linksRow}
-  </table>`
+  // Wrapper with optional dir="rtl" for image-right
+  // text-align:right for image-right pushes image to right edge (text column has its own text-align:left)
+  const dirAttr = isImageRight ? ' dir="rtl"' : ''
+  const textAlign = isImageRight ? 'text-align:right;' : 'text-align:left;'
+
+  // Spacer div - creates gap on desktop for image-left sections only (image-right uses margin)
+  const spacerCol = isImageRight ? '' : `<div style="display:inline-block;vertical-align:middle;width:${GAP_WIDTH}px;max-width:100%;">&nbsp;</div>`
+
+  return `<div${dirAttr} style="font-size:0;line-height:0;margin:0 0 34px 0;${textAlign}">
+  ${msoStart}
+  ${imageCol}<!--
+  -->${spacerCol}<!--
+  -->${msoMiddle}<!--
+  -->${textCol}
+  ${linksRow}
+  ${msoEnd}
+</div>`
 }
 
 function renderSectionEmail(section: NewsletterSectionWithLayout): string {
-  return `${sectionHeadHtml(section)}${sectionBlockHtml(section)}`
+  return `${sectionHeadHtml(section)}
+${sectionBlockHtml(section)}`
 }
 
 /**
@@ -234,26 +248,10 @@ const HEADER_HALCYON = `<table style="width: 100%; max-width: 600px; background-
 
 /**
  * Weekly Walk-Through header - agent photos + branding
+ * Note: This is typically static in HubSpot, not dynamically generated
  */
-const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration: none;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; border-collapse: collapse;">
-<tr>
-  <!-- Lauren photo (left) -->
-  <td width="25%" style="vertical-align: bottom; background-color: #f5f5f5;">
-    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.lgoldberg.hires.png" alt="Lauren Goldberg" width="150" style="display: block; width: 100%; height: auto; border: 0;">
-  </td>
-
-  <!-- Center content (black background) -->
-  <td width="50%" style="background-color: #000000; text-align: center; vertical-align: middle;">
-    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.logo.hires.png" alt="Your Weekly Walk-Through - PorterGoldberg Residential" style="display: block; width: 100%; height: auto; border: 0;">
-  </td>
-
-  <!-- Samantha photo (right) -->
-  <td width="25%" style="vertical-align: bottom; background-color: #f5f5f5;">
-    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Logos%20%2B%20Images/YWWT/ywwt.header.sporter.hires.png" alt="Samantha Porter" width="150" style="display: block; width: 100%; height: auto; border: 0;">
-  </td>
-</tr>
-</table>
+const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration:none;display:block;">
+  <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20Footer%20Content/ywwt-header.png" alt="Your Weekly Walk-Through — PorterGoldberg Residential" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
 </a>`
 
 export type NewsletterType = 'weekly' | 'halcyon'
@@ -264,121 +262,107 @@ const HEADERS: Record<NewsletterType, string> = {
 }
 
 /**
- * Fixed footer HTML - agent cards, social links, legal
+ * Footer HTML using fluid-hybrid technique
+ * - Agent cards stack on mobile
+ * - Social icons only (no text labels)
  */
-const FOOTER_HTML = `<table style="width: 100%; max-width: 600px; background-color: #000000; padding: 20px; font-family: Arial, sans-serif; color: #ffffff; border-collapse: collapse; -webkit-font-smoothing: antialiased;">
+const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#000000;border-collapse:collapse;">
 
-  <!-- Website URL Row -->
+  <!-- Top band: white, PORTERGOLDBERG.COM centered with gold rules -->
   <tr>
-    <td colspan="2" style="padding: 20px 10px 4px 10px; background-color: #ffffff;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <td style="width: 50%; vertical-align: middle;">
-            <div style="border-top: 1px solid #A8904E;"></div>
-          </td>
-          <td style="text-align: center; vertical-align: middle; white-space: nowrap; padding: 0 12px;">
-            <a href="https://www.portergoldberg.com" style="text-decoration: none;">
-              <span style="font-size: 18px; font-weight: bold; letter-spacing: 3px; color: #A8904E; text-transform: uppercase;">PORTERGOLDBERG.COM</span>
-            </a>
-          </td>
-          <td style="width: 50%; vertical-align: middle;">
-            <div style="border-top: 1px solid #A8904E;"></div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <!-- Agent Row -->
-  <tr>
-    <td style="padding: 10px; vertical-align: middle; width: 50%; border-top: 1px solid #444444; border-bottom: 1px solid #444444;">
-      <table style="border-collapse: collapse;">
-        <tr>
-          <td style="padding-right: 12px; vertical-align: middle;">
-            <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20sporter.png" alt="Samantha Porter" width="60" style="display: block;">
-          </td>
-          <td style="vertical-align: middle;">
-            <p style="margin: 0; font-size: 15px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; color: #ffffff;">Samantha Porter</p>
-            <p style="margin: 0; font-size: 13px; color: #ffffff;">Vice President, Sales</p>
-            <p style="margin: 0; font-size: 13px;">
-              <a href="tel:7739887898" style="color: #ffffff; text-decoration: none;"><span style="color: #ffffff;">773-988-7898</span></a>
-            </p>
-            <p style="margin: 0; font-size: 13px;">
-              <a href="mailto:samantha@portergoldberg.com" style="color: #ffffff; text-decoration: none;"><span style="color: #ffffff;">samantha@portergoldberg.com</span></a>
-            </p>
-          </td>
-        </tr>
-      </table>
-    </td>
-    <td style="padding: 10px; vertical-align: middle; width: 50%; border-top: 1px solid #444444; border-bottom: 1px solid #444444; text-align: right;">
-      <table style="border-collapse: collapse; margin-left: auto;">
-        <tr>
-          <td style="vertical-align: middle; text-align: right; padding-right: 12px;">
-            <p style="margin: 0; font-size: 15px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; color: #ffffff;">Lauren Goldberg</p>
-            <p style="margin: 0; font-size: 13px; color: #ffffff;">Vice President, Sales</p>
-            <p style="margin: 0; font-size: 13px;">
-              <a href="tel:7735760053" style="color: #ffffff; text-decoration: none;"><span style="color: #ffffff;">773-576-0053</span></a>
-            </p>
-            <p style="margin: 0; font-size: 13px;">
-              <a href="mailto:lauren@portergoldberg.com" style="color: #ffffff; text-decoration: none;"><span style="color: #ffffff;">lauren@portergoldberg.com</span></a>
-            </p>
-          </td>
-          <td style="vertical-align: middle;">
-            <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20lgoldberg.png" alt="Lauren Goldberg" width="60" style="display: block;">
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <!-- Logo / Social Row -->
-  <tr>
-    <td colspan="2" style="padding: 14px 10px; border-bottom: 1px solid #444444;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <td style="vertical-align: middle; text-align: center; width: 50%;">
-            <a href="https://www.portergoldberg.com" style="text-decoration: none; display: inline-block; vertical-align: middle;">
-              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20PGJameson%20logo.png" alt="PorterGoldberg Residential" height="124" style="display: block; border: none;">
-            </a>
-          </td>
-          <td style="vertical-align: middle; width: 50%;">
-            <table style="border-collapse: collapse; margin-left: auto; margin-right: 15px;">
+    <td style="padding:0;background-color:#ffffff;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#ffffff;border-collapse:collapse;">
+        <tr><td style="padding:20px 18px;">
+          <a href="https://www.portergoldberg.com" target="_blank" style="text-decoration:none;display:block;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
               <tr>
-                <td style="padding: 4px 0;">
-                  <a href="https://www.instagram.com/portergoldbergchicago" style="text-decoration: none; display: block;">
-                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Instagram_Glyph_White.png" alt="Instagram" width="20" height="20" style="display: inline-block; vertical-align: middle;">
-                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">@portergoldbergchicago</span>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 4px 0;">
-                  <a href="https://www.facebook.com/PorterGoldbergResidential" style="text-decoration: none; display: block;">
-                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Facebook_Logo_Secondary.png" alt="Facebook" width="20" height="20" style="display: inline-block; vertical-align: middle;">
-                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">PorterGoldberg Residential</span>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 4px 0;">
-                  <a href="https://www.youtube.com/@PorterGoldbergResidential" style="text-decoration: none; display: block;">
-                    <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20YouTube%20Logo.png" alt="YouTube" width="20" height="20" style="display: inline-block; vertical-align: middle;">
-                    <span style="color: #ffffff; font-size: 13px; vertical-align: middle; margin-left: 8px;">@PorterGoldbergResidential</span>
-                  </a>
-                </td>
+                <td style="vertical-align:middle;"><div style="height:1px;background-color:#A8904E;font-size:0;line-height:0;">&nbsp;</div></td>
+                <td style="width:1%;white-space:nowrap;padding:0 16px;text-align:center;vertical-align:middle;"><span style="font-size:16px;font-weight:bold;letter-spacing:3px;color:#A8904E;text-transform:uppercase;">PORTERGOLDBERG.COM</span></td>
+                <td style="vertical-align:middle;"><div style="height:1px;background-color:#A8904E;font-size:0;line-height:0;">&nbsp;</div></td>
               </tr>
             </table>
+          </a>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Agents: fluid-hybrid two cards -->
+  <tr>
+    <td style="padding:16px 10px;background-color:#000000;border-top:1px solid #444444;border-bottom:1px solid #444444;">
+      <div style="font-size:0;line-height:0;text-align:center;">
+        <!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="285" valign="top"><![endif]-->
+        <div style="display:inline-block;vertical-align:top;width:285px;max-width:100%;text-align:left;line-height:1.4;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
+            <tr>
+              <td style="padding:6px 12px 6px 0;vertical-align:middle;"><img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20sporter.png" alt="Samantha Porter" width="58" style="display:block;border:0;"></td>
+              <td style="vertical-align:middle;font-family:Helvetica,Arial,sans-serif;">
+                <p style="margin:0;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#ffffff;">Samantha Porter</p>
+                <p style="margin:0 0 2px 0;font-size:12px;color:#ffffff;">Vice President, Sales</p>
+                <p style="margin:0;font-size:12px;"><a href="tel:7739887898" style="color:#ffffff;text-decoration:none;">773-988-7898</a></p>
+                <p style="margin:0;font-size:12px;"><a href="mailto:samantha@portergoldberg.com" style="color:#ffffff;text-decoration:none;">samantha@portergoldberg.com</a></p>
+              </td>
+            </tr>
+          </table>
+        </div><!--
+        --><!--[if mso]></td><td width="285" valign="top"><![endif]-->
+        <div style="display:inline-block;vertical-align:top;width:285px;max-width:100%;text-align:left;line-height:1.4;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
+            <tr>
+              <td style="padding:6px 12px 6px 0;vertical-align:middle;"><img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20lgoldberg.png" alt="Lauren Goldberg" width="58" style="display:block;border:0;"></td>
+              <td style="vertical-align:middle;font-family:Helvetica,Arial,sans-serif;">
+                <p style="margin:0;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#ffffff;">Lauren Goldberg</p>
+                <p style="margin:0 0 2px 0;font-size:12px;color:#ffffff;">Vice President, Sales</p>
+                <p style="margin:0;font-size:12px;"><a href="tel:7735760053" style="color:#ffffff;text-decoration:none;">773-576-0053</a></p>
+                <p style="margin:0;font-size:12px;"><a href="mailto:lauren@portergoldberg.com" style="color:#ffffff;text-decoration:none;">lauren@portergoldberg.com</a></p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </div>
+    </td>
+  </tr>
+
+  <!-- Logo, linked -->
+  <tr>
+    <td style="padding:16px 10px;text-align:center;background-color:#000000;">
+      <a href="https://www.portergoldberg.com" target="_blank" style="text-decoration:none;display:inline-block;">
+        <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20PGJameson%20logo.png" alt="PorterGoldberg Residential" height="110" style="display:block;border:0;">
+      </a>
+    </td>
+  </tr>
+
+  <!-- Social: icon images only -->
+  <tr>
+    <td style="padding:12px 10px 14px 10px;background-color:#000000;">
+      <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+        <tr>
+          <td style="padding:0 12px;">
+            <a href="https://www.instagram.com/portergoldbergchicago" target="_blank" style="text-decoration:none;">
+              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Instagram_Glyph_White.png" alt="Instagram" width="26" height="26" style="display:block;border:0;">
+            </a>
+          </td>
+          <td style="padding:0 12px;">
+            <a href="https://www.facebook.com/PorterGoldbergResidential" target="_blank" style="text-decoration:none;">
+              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Facebook_Logo_Secondary.png" alt="Facebook" width="26" height="26" style="display:block;border:0;">
+            </a>
+          </td>
+          <td style="padding:0 12px;">
+            <a href="https://www.youtube.com/@PorterGoldbergResidential" target="_blank" style="text-decoration:none;">
+              <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20YouTube%20Logo.png" alt="YouTube" width="26" height="26" style="display:block;border:0;">
+            </a>
           </td>
         </tr>
       </table>
     </td>
   </tr>
 
-  <!-- Legal Disclaimer Row -->
+  <!-- Legal disclaimer -->
   <tr>
-    <td colspan="2" style="padding: 12px 10px;">
-      <p style="margin: 0; font-size: 10px; color: #ffffff; line-height: 1.4; text-align: center; -webkit-font-smoothing: antialiased;">
-        &copy; 2026 Sotheby's International Realty&reg; and the Sotheby's International Realty Logo are service marks licensed to Sotheby's International Realty Affiliates LLC and used with permission. Jameson Sotheby's International Realty fully supports the principles of the Fair Housing Act and the Equal Opportunity Act. Each franchise is independently owned and operated. Any services or products provided by independently owned and operated franchisees are not provided by, affiliated with or related to Sotheby's International Realty Affiliates LLC nor any of its affiliated companies.
+    <td style="padding:10px 14px 16px 14px;background-color:#000000;">
+      <p style="margin:0;font-size:10px;color:#ffffff;line-height:1.4;text-align:center;font-family:Arial,sans-serif;">
+        &copy; 2026 Sotheby&rsquo;s International Realty&reg; and the Sotheby&rsquo;s International Realty Logo are service marks licensed to Sotheby&rsquo;s International Realty Affiliates LLC and used with permission. Jameson Sotheby&rsquo;s International Realty fully supports the principles of the Fair Housing Act and the Equal Opportunity Act. Each franchise is independently owned and operated. Any services or products provided by independently owned and operated franchisees are not provided by, affiliated with or related to Sotheby&rsquo;s International Realty Affiliates LLC nor any of its affiliated companies.
       </p>
     </td>
   </tr>
@@ -400,13 +384,18 @@ export function generateSectionsHtml(sections: NewsletterSection[]): string {
       }
       return renderSectionEmail(alternatingSection)
     })
-    .join('\n')
+    .join('\n\n')
 
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 24px;">
-    <tr><td style="padding-top:38px;">
+  // Wrap in content container
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-collapse:collapse;">
+<tr><td align="center" style="padding:0;">
+<div style="max-width:600px;margin:0 auto;padding:32px 18px 8px 18px;background-color:#ffffff;">
+
 ${sectionsHtml}
-    </td></tr>
-  </table>`
+
+</div>
+</td></tr>
+</table>`
 }
 
 /**
@@ -414,11 +403,20 @@ ${sectionsHtml}
  */
 function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; background-color:#ffffff; padding:0 12px;">
-    <tr><td style="padding:0px 0 4px 0; text-align:center;">
-      <a href="${url}" target="_blank" style="${FONT} font-size:14px; color:${INK}; text-decoration:none;">View this newsletter on our portergoldberg.com website</a>
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;padding:0 18px;">
+    <tr><td style="padding:0 0 16px 0;text-align:center;">
+      <a href="${url}" target="_blank" style="${FONT}font-size:14px;color:${INK};text-decoration:none;">View this newsletter on our website</a>
     </td></tr>
   </table>`
+}
+
+/**
+ * Generates preheader (hidden preview text)
+ */
+function preheaderHtml(text: string): string {
+  return `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#e9e7e2;">
+  ${typographic(text)}
+</div>`
 }
 
 /**
@@ -426,17 +424,28 @@ function viewOnWebsiteHtml(slug: string): string {
  * @param sections - Newsletter content sections
  * @param slug - Optional slug for "View on Website" link
  * @param type - Newsletter type: 'weekly' (default) or 'halcyon'
+ * @param previewText - Optional preheader/preview text
  */
 export function generateNewsletterEmailHtml(
   sections: NewsletterSection[],
   slug?: string,
-  type: NewsletterType = 'weekly'
+  type: NewsletterType = 'weekly',
+  previewText?: string
 ): string {
   const header = HEADERS[type]
   const viewOnWebsite = slug ? viewOnWebsiteHtml(slug) : ''
-  return `${header}
+  const preheader = previewText ? preheaderHtml(previewText) : ''
+
+  // Outer wrapper table for email background
+  return `${preheader}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e7e2;border-collapse:collapse;">
+<tr><td align="center" style="padding:0;">
+
+${header}
 ${generateSectionsHtml(sections)}
 ${viewOnWebsite}
-${FOOTER_HTML}`
-}
+${FOOTER_HTML}
 
+</td></tr>
+</table>`
+}
