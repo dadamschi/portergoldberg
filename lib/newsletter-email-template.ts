@@ -1,8 +1,8 @@
 /**
  * Newsletter email template generator for HubSpot.
  * Uses fluid-hybrid technique for responsive layouts without media queries.
- * - inline-block + max-width for auto-stacking columns
- * - dir="rtl" for image-right sections
+ * - inline-block + max-width for auto-stacking columns on mobile
+ * - Source order determines image-left vs image-right (no dir="rtl")
  * - MSO conditional comments for Outlook
  * - clamp() for responsive font sizes
  */
@@ -50,9 +50,10 @@ const TITLE_SIZE = 'font-size:25px;font-size:clamp(18px,6.2vw,25px);'
 const LABEL_SIZE = 'font-size:16px;font-size:clamp(13px,4vw,16px);'
 const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
 
-// Column width for fluid-hybrid
-const COL_WIDTH = 250
+// Column widths for fluid-hybrid (container is 564px after padding, gap is 18px)
+const COL_WIDTH = 273
 const GAP_WIDTH = 18
+
 
 function esc(input: string): string {
   return input
@@ -161,7 +162,7 @@ function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: 
 /**
  * Renders section content using fluid-hybrid technique
  * - inline-block columns auto-stack on narrow screens
- * - dir="rtl" on wrapper flips columns for image-right
+ * - Source order changes for image-right (text first, then image)
  * - MSO comments ensure proper Outlook rendering
  */
 function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
@@ -169,62 +170,61 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
   const alt = section.imageAlt || section.heading
   const isImageRight = layout === 'image-right'
   const anchorStyle = `text-decoration:none;`
-  
+
   const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
 
-  // Image column content - width:100% so it fills container (250px on desktop, 100% on mobile)
+  // Image content
   let imageHtml = section.imageUrl
     ? `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="100%" style="display:block;width:100%;height:auto;">`
     : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
 
-  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item);
+  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item)
 
   if (imageContentLink) {
     imageHtml = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${imageHtml}</a>`
   }
 
-  // Image column - for image-right, margin-left creates gap (matches original template)
-  const imageMargin = isImageRight ? `margin:0 0 0 ${GAP_WIDTH}px;` : ''
-  const imageCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;${imageMargin}">
-    ${imageHtml}
-  </div>`
-
-  // Text column
+  // Text content
   let sectionBody = paragraphsHtml(section.body)
   if (imageContentLink) {
     sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
   }
-  const textCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
+
+  // Image column - inline-block for side-by-side on desktop, max-width:100% for mobile stacking
+  const imageCol = `<div style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;">
+    ${imageHtml}
+  </div>`
+
+  // Text column
+  const textCol = `<div style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
     ${sectionBody}
   </div>`
 
-  // Links row - for image-right, use two divs to align links under image
-  const rightImageLinksHtml = `<div dir="ltr" style="display:inline-block;vertical-align:top;width:${COL_WIDTH}px;max-width:100%;text-align:left;margin:8px 0 0 ${GAP_WIDTH}px;">${linkHtml}</div><!--
-  --><div style="display:inline-block;vertical-align:top;width:${COL_WIDTH}px;max-width:100%;"></div>`
-  const leftImageLinksHtml = `<div style="margin:8px 0 0 0;">${linkHtml}</div>`
-  const linksRow = isImageRight ? rightImageLinksHtml : leftImageLinksHtml
+  // Spacer between columns (only visible on desktop)
+  const spacer = `<div style="display:inline-block;width:${GAP_WIDTH}px;max-width:100%;"></div>`
+
+  // Links row - reset font-size/line-height (parent has font-size:0) and left-align
+  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
 
   // MSO table structure for Outlook
   const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
   const msoMiddle = `<!--[if mso]></td><td width="${GAP_WIDTH}"></td><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
   const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
 
-  // Wrapper with optional dir="rtl" for image-right
-  // text-align:right for image-right pushes image to right edge (text column has its own text-align:left)
-  const dirAttr = isImageRight ? ' dir="rtl"' : ''
-  const textAlign = isImageRight ? 'text-align:right;' : 'text-align:left;'
+  // Build columns in source order based on layout
+  // image-left: image then text
+  // image-right: text then image
+  const columnsHtml = isImageRight
+    ? `${msoStart}${textCol}<!--
+    -->${spacer}<!--
+    -->${msoMiddle}${imageCol}${msoEnd}`
+    : `${msoStart}${imageCol}<!--
+    -->${spacer}<!--
+    -->${msoMiddle}${textCol}${msoEnd}`
 
-  // Spacer div - creates gap on desktop for image-left sections only (image-right uses margin)
-  const spacerCol = isImageRight ? '' : `<div style="display:inline-block;vertical-align:middle;width:${GAP_WIDTH}px;max-width:100%;">&nbsp;</div>`
-
-  return `<div${dirAttr} style="font-size:0;line-height:0;margin:0 0 34px 0;${textAlign}">
-  ${msoStart}
-  ${imageCol}<!--
-  -->${spacerCol}<!--
-  -->${msoMiddle}<!--
-  -->${textCol}
+  return `<div style="font-size:0;line-height:0;margin:0 0 34px 0;">
+  ${columnsHtml}
   ${linksRow}
-  ${msoEnd}
 </div>`
 }
 
