@@ -50,9 +50,11 @@ const TITLE_SIZE = 'font-size:25px;font-size:clamp(18px,6.2vw,25px);'
 const LABEL_SIZE = 'font-size:16px;font-size:clamp(13px,4vw,16px);'
 const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
 
-// Column widths for fluid-hybrid (container is 564px after padding, gap is 18px)
-const COL_WIDTH = 273
-const GAP_WIDTH = 18
+// Column width for side-by-side layout
+// Note: Body text should be ~300 characters max for optimal layout
+const COL_WIDTH = 240
+const COL_GAP = 20
+
 
 
 function esc(input: string): string {
@@ -190,39 +192,41 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
     sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
   }
 
-  // Image column - inline-block for side-by-side on desktop, max-width:100% for mobile stacking
-  const imageCol = `<div style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;">
+  // Image column - fixed width for desktop, max-width:100% for mobile stacking
+  // For image-right: dir="ltr" resets text direction inside the RTL container
+  const imageCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;${isImageRight ? `margin-left:${COL_GAP}px;` : `margin-right:${COL_GAP}px;`}">
     ${imageHtml}
   </div>`
 
-  // Text column
-  const textCol = `<div style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
+  // Text column - fixed width for desktop, max-width:100% for mobile stacking
+  // For image-right: dir="ltr" resets text direction inside the RTL container
+  const textCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
     ${sectionBody}
   </div>`
 
-  // Spacer between columns (only visible on desktop)
-  const spacer = `<div style="display:inline-block;width:${GAP_WIDTH}px;max-width:100%;"></div>`
-
   // Links row - reset font-size/line-height (parent has font-size:0) and left-align
-  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
+  // For image-right, links appear under image (which is visually on right due to RTL)
+  const linksRow = isImageRight
+    ? `<div dir="ltr" style="display:inline-block;width:${COL_WIDTH}px;max-width:100%;margin-left:${COL_GAP}px;margin-top:8px;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div><!--
+    --><div dir="ltr" style="display:inline-block;width:${COL_WIDTH}px;max-width:100%;"></div>`
+    : `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
 
   // MSO table structure for Outlook
   const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
-  const msoMiddle = `<!--[if mso]></td><td width="${GAP_WIDTH}"></td><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
+  const msoMiddle = `<!--[if mso]></td><td width="${COL_GAP}"></td><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
   const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
 
-  // Build columns in source order based on layout
-  // image-left: image then text
-  // image-right: text then image
-  const columnsHtml = isImageRight
-    ? `${msoStart}${textCol}<!--
-    -->${spacer}<!--
-    -->${msoMiddle}${imageCol}${msoEnd}`
-    : `${msoStart}${imageCol}<!--
-    -->${spacer}<!--
+  // Image always first in source order (stacks on top on mobile)
+  // dir="rtl" on wrapper flips visual order for image-right on desktop
+  const columnsHtml = `${msoStart}${imageCol}<!--
     -->${msoMiddle}${textCol}${msoEnd}`
 
-  return `<div style="font-size:0;line-height:0;margin:0 0 34px 0;">
+  // Wrapper: dir="rtl" flips columns for image-right, text-align for positioning
+  const wrapperStyle = isImageRight
+    ? `font-size:0;line-height:0;width:100%;margin:0 0 34px 0;direction:rtl;text-align:left;`
+    : `font-size:0;line-height:0;width:100%;margin:0 0 34px 0;`
+
+  return `<div style="${wrapperStyle}">
   ${columnsHtml}
   ${linksRow}
 </div>`

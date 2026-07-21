@@ -102,7 +102,8 @@ export const newsletter = defineType({
               title: "Body Text",
               type: "text",
               rows: 5,
-              description: "Section content extracted from newsletter (for SEO & accessibility)",
+              description: "Section content (max 300 characters for optimal email layout)",
+              validation: (rule) => rule.max(300).warning("Body text should be under 300 characters for optimal email layout"),
             }),
             defineField({
               name: "moreInfo",
