@@ -10,7 +10,9 @@ export const imageFragment = /* groq */ `
     url,
     metadata { lqip, dimensions }
   },
-  alt
+  alt,
+  hotspot,
+  crop
 `
 
 // =============================================================================

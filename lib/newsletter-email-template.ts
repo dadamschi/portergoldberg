@@ -1,8 +1,7 @@
 /**
  * Newsletter email template generator for HubSpot.
- * Uses fluid-hybrid technique for responsive layouts without media queries.
- * - inline-block + max-width for auto-stacking columns on mobile
- * - Source order determines image-left vs image-right (no dir="rtl")
+ * Simple stacked layout - image on top, text below.
+ * - 100% width sections for consistent desktop and mobile experience
  * - MSO conditional comments for Outlook
  * - clamp() for responsive font sizes
  */
@@ -11,6 +10,9 @@ export interface NewsletterSection {
   heading: string // e.g. "FEATURED PROFESSIONAL" - parsed into eyebrow + title
   imageUrl: string
   imageAlt?: string
+  imageHotspot?: { x: number; y: number } // Focal point from Sanity (0-1 range)
+  imageCrop?: { top: number; bottom: number; left: number; right: number } // Crop from Sanity (0-1 range)
+  imageDimensions?: { width: number; height: number } // Original image dimensions for crop calculation
   body: string
   caption?: string
   linkUrl?: string
@@ -46,14 +48,11 @@ const FONT = 'font-family:Helvetica,Arial,sans-serif;'
 const HEADING_FONT = "font-family:'Century Gothic',Helvetica,Arial,sans-serif;"
 
 // Responsive font sizes using clamp()
-const TITLE_SIZE = 'font-size:25px;font-size:clamp(18px,6.2vw,25px);'
-const LABEL_SIZE = 'font-size:16px;font-size:clamp(13px,4vw,16px);'
+const TITLE_SIZE = 'font-size:32px;font-size:clamp(26px,6.2vw,32px);'
+const LABEL_SIZE = 'font-size:24px;font-size:clamp(20px,4vw,24px);'
 const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
 
-// Column width for side-by-side layout
 // Note: Body text should be ~300 characters max for optimal layout
-const COL_WIDTH = 240
-const COL_GAP = 20
 
 
 
@@ -161,23 +160,67 @@ function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: 
   return linkHtml
 }
 
+// Enforced aspect ratio: 509x454 (roughly 9:8)
+// For email, we scale up to 600px width while maintaining ratio
+const EMAIL_WIDTH = 600
+const EMAIL_HEIGHT = Math.round(EMAIL_WIDTH * (454 / 509)) // 535
+
 /**
- * Renders section content using fluid-hybrid technique
- * - inline-block columns auto-stack on narrow screens
- * - Source order changes for image-right (text first, then image)
- * - MSO comments ensure proper Outlook rendering
+ * Optimizes Sanity image URL with enforced aspect ratio, crop, and hotspot
+ * - Enforces 509:454 aspect ratio at 600px width (600x535)
+ * - q=80: slight quality reduction for smaller file size
+ * - auto=format: serves webp where supported
+ * - rect=x,y,w,h: applies manual crop from Sanity first
+ * - fit=crop: enforces aspect ratio
+ * - crop=focalpoint/center: uses hotspot or centers
+ */
+function optimizeSanityImageUrl(
+  url: string,
+  hotspot?: { x: number; y: number },
+  crop?: { top: number; bottom: number; left: number; right: number },
+  dimensions?: { width: number; height: number }
+): string {
+  if (!url.includes('cdn.sanity.io')) return url
+
+  const params: string[] = [`w=${EMAIL_WIDTH}`, `h=${EMAIL_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
+
+  // Apply manual crop first if set (rect is applied before fit=crop)
+  if (crop && dimensions) {
+    const rectX = Math.round(crop.left * dimensions.width)
+    const rectY = Math.round(crop.top * dimensions.height)
+    const rectW = Math.round(dimensions.width * (1 - crop.left - crop.right))
+    const rectH = Math.round(dimensions.height * (1 - crop.top - crop.bottom))
+    params.push(`rect=${rectX},${rectY},${rectW},${rectH}`)
+  }
+
+  // Use hotspot as focal point for the aspect ratio crop
+  if (hotspot) {
+    params.push('crop=focalpoint', `fp-x=${hotspot.x}`, `fp-y=${hotspot.y}`)
+  } else {
+    params.push('crop=center')
+  }
+
+  const separator = url.includes('?') ? '&' : '?'
+  return `${url}${separator}${params.join('&')}`
+}
+
+/**
+ * Renders section content in a simple stacked layout
+ * - Image on top, text below, links at bottom
+ * - 100% width for both desktop and mobile
  */
 function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
-  const layout = section.layout
   const alt = section.imageAlt || section.heading
-  const isImageRight = layout === 'image-right'
   const anchorStyle = `text-decoration:none;`
 
   const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
 
-  // Image content
-  let imageHtml = section.imageUrl
-    ? `<img src="${esc(section.imageUrl)}" alt="${esc(alt)}" width="100%" style="display:block;width:100%;height:auto;">`
+  // Image content - optimize Sanity URLs for email (with crop and hotspot if available)
+  const optimizedImageUrl = section.imageUrl
+    ? optimizeSanityImageUrl(section.imageUrl, section.imageHotspot, section.imageCrop, section.imageDimensions)
+    : ''
+  let imageHtml = optimizedImageUrl
+    ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(alt)}" width="600" style="border:0;display:block;height:auto;width:100%;max-width:600px;">`
     : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
 
   const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item)
@@ -192,43 +235,21 @@ function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
     sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
   }
 
-  // Image column - fixed width for desktop, max-width:100% for mobile stacking
-  // For image-right: dir="ltr" resets text direction inside the RTL container
-  const imageCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;${isImageRight ? `margin-left:${COL_GAP}px;` : `margin-right:${COL_GAP}px;`}">
-    ${imageHtml}
-  </div>`
+  // Stacked layout: image, then text, then links
+  const imageRow = `<div style="width:100%;margin:0 0 12px 0;">${imageHtml}</div>`
+  const textRow = `<div style="width:100%;text-align:left;">${sectionBody}</div>`
+  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
 
-  // Text column - fixed width for desktop, max-width:100% for mobile stacking
-  // For image-right: dir="ltr" resets text direction inside the RTL container
-  const textCol = `<div${isImageRight ? ' dir="ltr"' : ''} style="display:inline-block;vertical-align:middle;width:${COL_WIDTH}px;max-width:100%;text-align:left;">
-    ${sectionBody}
-  </div>`
-
-  // Links row - reset font-size/line-height (parent has font-size:0) and left-align
-  // For image-right, links appear under image (which is visually on right due to RTL)
-  const linksRow = isImageRight
-    ? `<div dir="ltr" style="display:inline-block;width:${COL_WIDTH}px;max-width:100%;margin-left:${COL_GAP}px;margin-top:8px;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div><!--
-    --><div dir="ltr" style="display:inline-block;width:${COL_WIDTH}px;max-width:100%;"></div>`
-    : `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
-
-  // MSO table structure for Outlook
-  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
-  const msoMiddle = `<!--[if mso]></td><td width="${COL_GAP}"></td><td width="${COL_WIDTH}" valign="middle"><![endif]-->`
+  // MSO table for Outlook
+  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="100%" valign="top"><![endif]-->`
   const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
 
-  // Image always first in source order (stacks on top on mobile)
-  // dir="rtl" on wrapper flips visual order for image-right on desktop
-  const columnsHtml = `${msoStart}${imageCol}<!--
-    -->${msoMiddle}${textCol}${msoEnd}`
-
-  // Wrapper: dir="rtl" flips columns for image-right, text-align for positioning
-  const wrapperStyle = isImageRight
-    ? `font-size:0;line-height:0;width:100%;margin:0 0 34px 0;direction:rtl;text-align:left;`
-    : `font-size:0;line-height:0;width:100%;margin:0 0 34px 0;`
-
-  return `<div style="${wrapperStyle}">
-  ${columnsHtml}
+  return `<div style="width:100%;margin:0 0 34px 0;">
+  ${msoStart}
+  ${imageRow}
+  ${textRow}
   ${linksRow}
+  ${msoEnd}
 </div>`
 }
 
@@ -295,8 +316,8 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
   <tr>
     <td style="padding:16px 10px;background-color:#000000;border-top:1px solid #444444;border-bottom:1px solid #444444;">
       <div style="font-size:0;line-height:0;text-align:center;">
-        <!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="285" valign="top"><![endif]-->
-        <div style="display:inline-block;vertical-align:top;width:285px;max-width:100%;text-align:left;line-height:1.4;">
+        <!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="270" valign="top"><![endif]-->
+        <div style="display:inline-block;vertical-align:top;width:270px;max-width:100%;text-align:left;line-height:1.4;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
             <tr>
               <td style="padding:6px 12px 6px 0;vertical-align:middle;"><img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20sporter.png" alt="Samantha Porter" width="58" style="display:block;border:0;"></td>
@@ -309,8 +330,8 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
             </tr>
           </table>
         </div><!--
-        --><!--[if mso]></td><td width="285" valign="top"><![endif]-->
-        <div style="display:inline-block;vertical-align:top;width:285px;max-width:100%;text-align:left;line-height:1.4;">
+        --><!--[if mso]></td><td width="270" valign="top"><![endif]-->
+        <div style="display:inline-block;vertical-align:top;width:270px;max-width:100%;text-align:left;line-height:1.4;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
             <tr>
               <td style="padding:6px 12px 6px 0;vertical-align:middle;"><img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Footer%20Headshot%20-%20lgoldberg.png" alt="Lauren Goldberg" width="58" style="display:block;border:0;"></td>
@@ -393,7 +414,7 @@ export function generateSectionsHtml(sections: NewsletterSection[]): string {
   // Wrap in content container
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-collapse:collapse;">
 <tr><td align="center" style="padding:0;">
-<div style="max-width:600px;margin:0 auto;padding:32px 18px 8px 18px;background-color:#ffffff;">
+<div style="max-width:600px;margin:0 auto;padding:32px 0 8px 0;background-color:#ffffff;">
 
 ${sectionsHtml}
 
@@ -407,7 +428,7 @@ ${sectionsHtml}
  */
 function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;padding:0 18px;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
     <tr><td style="padding:0 0 16px 0;text-align:center;">
       <a href="${url}" target="_blank" style="${FONT}font-size:14px;color:${INK};text-decoration:none;">View this newsletter on our website</a>
     </td></tr>
