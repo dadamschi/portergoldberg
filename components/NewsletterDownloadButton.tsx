@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { generateNewsletterEmailHtml, type NewsletterSection, type NewsletterType } from '@/lib/newsletter-email-template'
+import { generateNewsletterEmailHtml, type NewsletterSection, type NewsletterType, type NewsletterLayout } from '@/lib/newsletter-email-template'
 
 interface NewsletterDownloadButtonProps {
   sections: NewsletterSection[]
@@ -11,22 +11,24 @@ interface NewsletterDownloadButtonProps {
 }
 
 export function NewsletterDownloadButton({ sections, slug, filename = 'newsletter.html', type = 'weekly' }: NewsletterDownloadButtonProps) {
-  const [copied, setCopied] = useState(false)
+  const [copiedLayout, setCopiedLayout] = useState<NewsletterLayout | null>(null)
 
-  const handleDownload = async () => {
-    const html = generateNewsletterEmailHtml(sections, slug, type)
+  const handleDownload = async (layout: NewsletterLayout) => {
+    const html = generateNewsletterEmailHtml(sections, slug, type, undefined, layout)
 
     // Copy to clipboard
     await navigator.clipboard.writeText(html)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 3000)
+    setCopiedLayout(layout)
+    setTimeout(() => setCopiedLayout(null), 3000)
 
     // Also download the file
+    const layoutSuffix = layout === 'stacked' ? '-stacked' : ''
+    const downloadFilename = filename.replace('.html', `${layoutSuffix}.html`)
     const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = filename
+    a.download = downloadFilename
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -34,11 +36,19 @@ export function NewsletterDownloadButton({ sections, slug, filename = 'newslette
   }
 
   return (
-    <button
-      onClick={handleDownload}
-      className="pg-newsletter-download-btn"
-    >
-      {copied ? 'Copied to Clipboard!' : 'Copy & Download HTML'}
-    </button>
+    <div style={{ display: 'flex', gap: '8px' }}>
+      <button
+        onClick={() => handleDownload('default')}
+        className="pg-newsletter-download-btn"
+      >
+        {copiedLayout === 'default' ? 'Copied!' : 'Default HTML'}
+      </button>
+      <button
+        onClick={() => handleDownload('stacked')}
+        className="pg-newsletter-download-btn"
+      >
+        {copiedLayout === 'stacked' ? 'Copied!' : 'Stacked HTML'}
+      </button>
+    </div>
   )
 }

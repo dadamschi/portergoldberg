@@ -49,7 +49,8 @@ const HEADING_FONT = "font-family:'Century Gothic',Helvetica,Arial,sans-serif;"
 
 // Responsive font sizes using clamp()
 const TITLE_SIZE = 'font-size:32px;font-size:clamp(26px,6.2vw,32px);'
-const LABEL_SIZE = 'font-size:24px;font-size:clamp(20px,4vw,24px);'
+// const LABEL_SIZE = 'font-size:24px;font-size:clamp(20px,4vw,24px);'
+const LABEL_SIZE = TITLE_SIZE
 const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
 
 // Note: Body text should be ~300 characters max for optimal layout
@@ -160,10 +161,15 @@ function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: 
   return linkHtml
 }
 
-// Enforced aspect ratio: 509x454 (roughly 9:8)
+// Enforced aspect ratio for default layout: 509x454 (roughly 9:8)
 // For email, we scale up to 600px width while maintaining ratio
 const EMAIL_WIDTH = 600
 const EMAIL_HEIGHT = Math.round(EMAIL_WIDTH * (454 / 509)) // 535
+
+// Enforced aspect ratio for stacked layout: 660x460 (33:23, ~1.43:1)
+// Common ratio for stacked newsletter content
+const STACKED_WIDTH = 600
+const STACKED_HEIGHT = Math.round(STACKED_WIDTH * (460 / 660)) // 418
 
 /**
  * Optimizes Sanity image URL with enforced aspect ratio, crop, and hotspot
@@ -183,6 +189,39 @@ function optimizeSanityImageUrl(
   if (!url.includes('cdn.sanity.io')) return url
 
   const params: string[] = [`w=${EMAIL_WIDTH}`, `h=${EMAIL_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
+
+  // Apply manual crop first if set (rect is applied before fit=crop)
+  if (crop && dimensions) {
+    const rectX = Math.round(crop.left * dimensions.width)
+    const rectY = Math.round(crop.top * dimensions.height)
+    const rectW = Math.round(dimensions.width * (1 - crop.left - crop.right))
+    const rectH = Math.round(dimensions.height * (1 - crop.top - crop.bottom))
+    params.push(`rect=${rectX},${rectY},${rectW},${rectH}`)
+  }
+
+  // Use hotspot as focal point for the aspect ratio crop
+  if (hotspot) {
+    params.push('crop=focalpoint', `fp-x=${hotspot.x}`, `fp-y=${hotspot.y}`)
+  } else {
+    params.push('crop=center')
+  }
+
+  const separator = url.includes('?') ? '&' : '?'
+  return `${url}${separator}${params.join('&')}`
+}
+
+/**
+ * Optimizes Sanity image URL for stacked layout with 660:460 aspect ratio
+ */
+function optimizeSanityImageUrlStacked(
+  url: string,
+  hotspot?: { x: number; y: number },
+  crop?: { top: number; bottom: number; left: number; right: number },
+  dimensions?: { width: number; height: number }
+): string {
+  if (!url.includes('cdn.sanity.io')) return url
+
+  const params: string[] = [`w=${STACKED_WIDTH}`, `h=${STACKED_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
 
   // Apply manual crop first if set (rect is applied before fit=crop)
   if (crop && dimensions) {
@@ -259,6 +298,63 @@ ${sectionBlockHtml(section)}`
 }
 
 /**
+ * Renders section in stacked layout: Image → Title → Content → Links
+ * Title appears below the image instead of above
+ * Uses 660:460 aspect ratio (wider than default)
+ */
+function renderSectionEmailStacked(section: NewsletterSectionWithLayout): string {
+  const alt = section.imageAlt || section.heading
+  const anchorStyle = `text-decoration:none;`
+
+  const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
+
+  // Image content - uses stacked aspect ratio (660:460)
+  const optimizedImageUrl = section.imageUrl
+    ? optimizeSanityImageUrlStacked(section.imageUrl, section.imageHotspot, section.imageCrop, section.imageDimensions)
+    : ''
+  let imageHtml = optimizedImageUrl
+    ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(alt)}" width="600" style="border:0;display:block;height:auto;width:100%;max-width:600px;">`
+    : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
+
+  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item)
+
+  if (imageContentLink) {
+    imageHtml = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${imageHtml}</a>`
+  }
+
+  // Text content
+  let sectionBody = paragraphsHtml(section.body)
+  if (imageContentLink) {
+    sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
+  }
+
+  // Stacked layout: image (600px), then content area (550px centered)
+  const imageRow = `<div style="width:100%;margin:0 0 12px 0;">${imageHtml}</div>`
+
+  // Content wrapper: 550px wide, centered with 25px padding on each side
+  const contentStyle = `max-width:550px;margin:0 auto;padding:0 25px;`
+  const headingRow = section.heading ? `<div style="margin:0 0 12px 0;">${sectionHeadHtml(section)}</div>` : ''
+  const textRow = `<div style="text-align:left;">${sectionBody}</div>`
+  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
+
+  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="100%" valign="top"><![endif]-->`
+  const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
+
+  return `<div style="width:100%;margin:0 0 34px 0;">
+  ${msoStart}
+  <div>
+    ${headingRow}
+  </div>
+  ${imageRow}
+  <div style="${contentStyle}">
+    ${textRow}
+    ${linksRow}
+  </div>
+  ${msoEnd}
+</div>`
+}
+
+/**
  * Halcyon e-blast header - logos only
  */
 const HEADER_HALCYON = `<table style="width: 100%; max-width: 600px; background-color: #000000; padding: 30px 20px; border-collapse: collapse; -webkit-font-smoothing: antialiased;">
@@ -280,6 +376,7 @@ const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" targ
 </a>`
 
 export type NewsletterType = 'weekly' | 'halcyon'
+export type NewsletterLayout = 'default' | 'stacked'
 
 const HEADERS: Record<NewsletterType, string> = {
   weekly: HEADER_WEEKLY,
@@ -397,9 +494,9 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
 /**
  * Generates sections HTML for the newsletter.
  * Returns just the sections - header/footer handled separately in HubSpot.
- * Forces alternating layouts: even index = image-left, odd index = image-right
+ * @param layout - 'default' (title above image) or 'stacked' (image, then title below)
  */
-export function generateSectionsHtml(sections: NewsletterSection[]): string {
+export function generateSectionsHtml(sections: NewsletterSection[], layout: NewsletterLayout = 'default'): string {
   const sectionsHtml = sections
     .map((section, index) => {
       // Force alternating layout regardless of what's stored in Sanity
@@ -407,7 +504,10 @@ export function generateSectionsHtml(sections: NewsletterSection[]): string {
         ...section,
         layout: index % 2 === 0 ? 'image-left' : 'image-right',
       }
-      return renderSectionEmail(alternatingSection)
+      // Use stacked renderer if layout is 'stacked'
+      return layout === 'stacked'
+        ? renderSectionEmailStacked(alternatingSection)
+        : renderSectionEmail(alternatingSection)
     })
     .join('\n\n')
 
@@ -450,12 +550,14 @@ function preheaderHtml(text: string): string {
  * @param slug - Optional slug for "View on Website" link
  * @param type - Newsletter type: 'weekly' (default) or 'halcyon'
  * @param previewText - Optional preheader/preview text
+ * @param layout - 'default' (title above image) or 'stacked' (image, then title below)
  */
 export function generateNewsletterEmailHtml(
   sections: NewsletterSection[],
   slug?: string,
   type: NewsletterType = 'weekly',
-  previewText?: string
+  previewText?: string,
+  layout: NewsletterLayout = 'default'
 ): string {
   const header = HEADERS[type]
   const viewOnWebsite = slug ? viewOnWebsiteHtml(slug) : ''
@@ -467,7 +569,7 @@ export function generateNewsletterEmailHtml(
 <tr><td align="center" style="padding:0;">
 
 ${header}
-${generateSectionsHtml(sections)}
+${generateSectionsHtml(sections, layout)}
 ${viewOnWebsite}
 ${FOOTER_HTML}
 

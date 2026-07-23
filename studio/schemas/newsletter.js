@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { PreviewLink } from "../components/PreviewLink";
 
 export const newsletter = defineType({
   name: "newsletter",
@@ -29,11 +30,20 @@ export const newsletter = defineType({
         source: (doc) => {
           const date = doc.publishedAt;
           const title = doc.title;
-          return `${date}-${title}`.toLowerCase().replace(/\s+/g, "-");
+          return `${title}-${date}`.toLowerCase().replace(/\s+/g, "-");
         }
       },
       validation: (rule) => rule.required(),
       hidden: ({parent}) => !parent?.publishedAt,
+    }),
+    defineField({
+      name: "previewLinks",
+      title: "Preview Links",
+      type: "string",
+      components: {
+        input: PreviewLink,
+      },
+      hidden: ({parent}) => !parent?.slug?.current,
     }),
     defineField({
       name: "summary",

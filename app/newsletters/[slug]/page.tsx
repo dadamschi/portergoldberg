@@ -16,7 +16,7 @@ export const revalidate = 2592000 // 1 month - webhook handles on-demand revalid
 
 type Props = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ preview?: string }>
+  searchParams: Promise<{ preview?: string; layout?: string }>
 }
 
 // Cached to deduplicate requests between generateMetadata and page component
@@ -78,12 +78,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+/**
+ * Original side-by-side layout with alternating image position
+ */
 function SectionRows({ section, index, isImageRight }: {
   section: NewsletterImageSection
   index: number
   isImageRight: boolean
 }) {
-  console.log('section', section)
   const image = (
     <SectionImage
       image={section.image ?? null}
@@ -131,7 +133,7 @@ function SectionRows({ section, index, isImageRight }: {
           <>
             <td className="pg-newsletter-cell pg-newsletter-cell--image-left">{image}</td>
             <td className="pg-newsletter-cell pg-newsletter-cell--content-right">{content}</td>
-</>
+          </>
         )}
       </tr>
 
@@ -139,30 +141,81 @@ function SectionRows({ section, index, isImageRight }: {
         <tr className="pg-newsletter-row pg-newsletter-row--links">
           {isImageRight ? (
             <>
-              {/* <td className="pg-newsletter-cell pg-newsletter-cell--empty" /> */}
-              <td width='5%'></td>
+              <td width="5%"></td>
               <td>{links}</td>
             </>
           ) : (
             <>
               <td colSpan={2}>{links}</td>
-              {/* <td className="pg-newsletter-cell pg-newsletter-cell--empty"></td> */}
             </>
           )}
         </tr>
       ) : (
         <tr className="pg-newsletter-row pg-newsletter-row--heading">
-          <td colSpan={2}  className="pg-newsletter-cell pg-newsletter-cell--empty">&nbsp;</td>
+          <td colSpan={2} className="pg-newsletter-cell pg-newsletter-cell--empty">&nbsp;</td>
         </tr>
       )}
     </>
   )
 }
 
+/**
+ * Stacked section layout: Image → Title → Content → Links
+ * Use with ?layout=stacked query param
+ */
+function StackedSection({ section, index }: {
+  section: NewsletterImageSection
+  index: number
+}) {
+  const hasLinks = section.linkUrl || section.instagram || section.email || section.facebookHandle
+
+  return (
+    <div className="pg-newsletter-stacked-section" style={{ marginBottom: 32, maxWidth: 600 }}>
+      {/* Image */}
+      <div style={{ marginBottom: 12 }}>
+        <SectionImage
+          image={section.image ?? null}
+          alt={section.alt}
+          linkUrl={section.linkUrl}
+        />
+      </div>
+
+      {/* Title (under image) */}
+      {section.heading && (
+        <div style={{ marginBottom: 12 }}>
+          <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
+        </div>
+      )}
+
+      {/* Content */}
+      <div style={{ marginBottom: hasLinks ? 8 : 0 }}>
+        <SectionContent
+          body={section.body}
+          moreInfo={section.moreInfo}
+          linkUrl={section.linkUrl}
+        />
+      </div>
+
+      {/* Links */}
+      {hasLinks && (
+        <div>
+          <SectionLinks
+            linkUrl={section.linkUrl}
+            instagram={section.instagram}
+            email={section.email}
+            facebookHandle={section.facebookHandle}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default async function NewsletterPage({ params, searchParams }: Props) {
   const { slug } = await params
-  const { preview } = await searchParams
+  const { preview, layout } = await searchParams
   const isPreview = preview === 'true'
+  const isStacked = layout === 'stacked'
 
   const [newsletter, allNewsletters] = await Promise.all([
     getNewsletter(slug, isPreview),
@@ -226,23 +279,35 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
                 <h1 className="pg-newsletter-detail-title">{newsletter.title}</h1>
               </header>
 
-              {/* Image sections - table-based layout for alignment */}
+              {/* Image sections - toggle between stacked (?layout=stacked) and side-by-side */}
               {newsletter.imageSections && newsletter.imageSections.length > 0 && (
-                <table className="pg-newsletter-table">
-                  <tbody>
-                    {newsletter.imageSections.map((section, index) => {
-                      const isImageRight = index % 2 === 1
-                      return (
-                        <SectionRows
-                          key={section._key}
-                          section={section}
-                          index={index}
-                          isImageRight={isImageRight}
-                        />
-                      )
-                    })}
-                  </tbody>
-                </table>
+                isStacked ? (
+                  <div className="pg-newsletter-sections-stacked">
+                    {newsletter.imageSections.map((section, index) => (
+                      <StackedSection
+                        key={section._key}
+                        section={section}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <table className="pg-newsletter-table">
+                    <tbody>
+                      {newsletter.imageSections.map((section, index) => {
+                        const isImageRight = index % 2 === 1
+                        return (
+                          <SectionRows
+                            key={section._key}
+                            section={section}
+                            index={index}
+                            isImageRight={isImageRight}
+                          />
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                )
               )}
             </article>
           </div>
