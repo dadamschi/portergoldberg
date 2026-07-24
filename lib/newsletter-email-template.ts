@@ -515,6 +515,11 @@ export function generateSectionsHtml(sections: NewsletterSection[], layout: News
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-collapse:collapse;">
 <tr><td align="center" style="padding:0;">
 <div style="max-width:600px;margin:0 auto;padding:32px 0 8px 0;background-color:#ffffff;">
+<div style="max-width:600px;margin-bottom:32px;padding:0px 0 0px 0;text-align:center;background-color:#ffffff;">
+  <hr/>
+  <p style="margin:18px 19px 22px 20 px;${FONT}font-size:14px;font-style:italic;color:${INK};">Market updates, tips, and insights from Lauren and Samantha</p>
+  <hr/>
+</div>
 
 ${sectionsHtml}
 
