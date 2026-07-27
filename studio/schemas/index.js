@@ -10,6 +10,7 @@ import { newsletter } from "./newsletter";
 import { press } from "./press";
 import { halcyonPage } from "./halcyonPage";
 import { clientPage } from "./clientPage";
+import { zillowReview } from "./zillowReview";
 
 export const schemaTypes = [
   listing,
@@ -24,4 +25,5 @@ export const schemaTypes = [
   press,
   halcyonPage,
   clientPage,
+  zillowReview,
 ];

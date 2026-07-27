@@ -61,6 +61,15 @@ export type Testimonial = {
   order?: number
 }
 
+export type ZillowReview = {
+  _id: string
+  reviewerName: string
+  reviewDate?: string
+  rating: number
+  reviewText: string
+  transactionType?: string
+}
+
 export type Agent = {
   _id: string
   name: string

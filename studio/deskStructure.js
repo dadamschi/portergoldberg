@@ -15,6 +15,7 @@ export const structure = (S) =>
         ),
       S.documentTypeListItem("event").title("Events"),
 
+      S.documentTypeListItem("zillowReview").title("Zillow Reviews"),
       S.divider(),
 
       // === PAGES ===

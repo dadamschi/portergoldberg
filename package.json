@@ -20,6 +20,7 @@
     "@sanity/client": "^6.28.0",
     "@sanity/image-url": "^2.0.3",
     "@types/nodemailer": "^8.0.0",
+    "dotenv": "17.4.2",
     "next": "^15.3.3",
     "next-sanity": "^10.1.4",
     "nodemailer": "^8.0.7",

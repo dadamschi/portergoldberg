@@ -21,6 +21,7 @@ export const metadata = createMetadata({
 async function getInventoryData(): Promise<InventoryData> {
   try {
     const data = await client.fetch<InventoryData>(ALL_LISTINGS_QUERY)
+    console.log('data', data)
     return data
   } catch (error) {
     console.error('Failed to fetch from Sanity:', error)

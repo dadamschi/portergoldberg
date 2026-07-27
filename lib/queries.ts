@@ -39,7 +39,7 @@ export const LISTINGS_QUERY = defineQuery(/* groq */ `
 
 export const ALL_LISTINGS_QUERY = defineQuery(/* groq */ `
  {
-    "available": *[_type == "listing" && statusType in ["active", "coming", "underContract"]] {
+    "available": *[_type == "listing" && statusType in ["active", "coming", "underContract"]] | order(featuredOrder asc) {
           _id,
           address,
           neighborhood,
@@ -528,5 +528,20 @@ export const CLIENT_PAGE_BY_SLUG_QUERY = defineQuery(/* groq */ `
     pageTitle,
     markdownContent,
     noIndex
+  }
+`)
+
+// =============================================================================
+// ZILLOW REVIEWS
+// =============================================================================
+
+export const ZILLOW_REVIEWS_QUERY = defineQuery(/* groq */ `
+  *[_type == "zillowReview" && approved == true] | order(reviewDate desc) {
+    _id,
+    reviewerName,
+    reviewDate,
+    rating,
+    reviewText,
+    transactionType
   }
 `)
