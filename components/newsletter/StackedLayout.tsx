@@ -30,6 +30,13 @@ function StackedSection({ section, index }: {
 
   return (
     <div className="pg-newsletter-stacked-section" style={{ marginBottom: 32, maxWidth: 600 }}>
+      {/* Title (above image) */}
+      {section.heading && (
+        <div style={{ marginBottom: 12 }}>
+          <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
+        </div>
+      )}
+
       {/* Image */}
       <div style={{ marginBottom: 12 }}>
         <SectionImage
@@ -38,13 +45,6 @@ function StackedSection({ section, index }: {
           linkUrl={section.linkUrl}
         />
       </div>
-
-      {/* Title (under image) */}
-      {section.heading && (
-        <div style={{ marginBottom: 12 }}>
-          <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
-        </div>
-      )}
 
       {/* Content */}
       <div style={{ marginBottom: hasLinks ? 8 : 0 }}>
