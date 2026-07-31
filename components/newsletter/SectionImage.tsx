@@ -4,25 +4,39 @@ import { ContactLink } from '@/components'
 import { addUtmParams } from '@/lib/utils/utm'
 import type { SanityImage } from '@/types'
 
+/**
+ * Which newsletter layout the image is rendered in.
+ * Each layout has its own enforced aspect ratio, and the value here MUST stay in
+ * sync with the matching constant in lib/newsletter-email-template.ts and with
+ * .pg-newsletter-section-image in styles/globals.css. If the three disagree, the
+ * CDN returns one ratio and the CSS box squashes it into another.
+ */
+export type SectionImageVariant = 'default' | 'stacked'
+
 interface SectionImageProps {
   image: SanityImage | null
   alt?: string
   linkUrl?: string
+  variant?: SectionImageVariant
 }
 
-// Enforced aspect ratio: 509x454 (roughly 9:8)
-const ASPECT_WIDTH = 509
-const ASPECT_HEIGHT = 454
+// Enforced aspect ratios, keyed by layout.
+// - default (side-by-side, newsletters before 2026-07-27): 509x454 (~1.12:1)
+// - stacked (newsletters on/after 2026-07-27):             600x400 (3:2)
+const ASPECT: Record<SectionImageVariant, { width: number; height: number }> = {
+  default: { width: 600, height: 535 },
+  stacked: { width: 600, height: 400 },
+}
 
 /**
  * Build Sanity image URL with enforced aspect ratio, crop, and hotspot
- * All images are cropped to 509:454 ratio regardless of original dimensions
  */
-function getSanityImageUrl(image: SanityImage): string {
+function getSanityImageUrl(image: SanityImage, variant: SectionImageVariant): string {
   const baseUrl = image.asset.url
   if (!baseUrl.includes('cdn.sanity.io')) return baseUrl
 
-  const params: string[] = [`w=${ASPECT_WIDTH}`, `h=${ASPECT_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
+  const { width, height } = ASPECT[variant]
+  const params: string[] = [`w=${width}`, `h=${height}`, 'q=80', 'auto=format', 'fit=crop']
 
   // Apply manual crop first if set (rect is applied before fit=crop)
   if (image.crop && image.asset.metadata?.dimensions) {
@@ -48,7 +62,7 @@ function getSanityImageUrl(image: SanityImage): string {
   return `${baseUrl}${separator}${params.join('&')}`
 }
 
-export function SectionImage({ image, alt, linkUrl }: SectionImageProps) {
+export function SectionImage({ image, alt, linkUrl, variant = 'default' }: SectionImageProps) {
   if (!image?.asset?.url) {
     return (<div className="pg-newsletter-card-placeholder">
             <span>YWWT</span>
@@ -57,15 +71,16 @@ export function SectionImage({ image, alt, linkUrl }: SectionImageProps) {
   }
 
   // Get URL with crop/hotspot applied via Sanity CDN
-  const imageUrl = getSanityImageUrl(image)
+  const imageUrl = getSanityImageUrl(image, variant)
+  const { width, height } = ASPECT[variant]
 
   const imageElement = (
     <Image
       src={imageUrl}
       alt={alt || 'Newsletter section'}
-      width={509}
-      height={454}
-      className="pg-newsletter-section-image"
+      width={width}
+      height={height}
+      className={`pg-newsletter-section-image pg-newsletter-section-image--${variant}`}
       style={{ border: 0, display: 'block', height: 'auto', width: '100%', maxWidth: 600 }}
     />
   )

@@ -43,6 +43,7 @@ function StackedSection({ section, index }: {
           image={section.image ?? null}
           alt={section.alt}
           linkUrl={section.linkUrl}
+          variant="stacked"
         />
       </div>
 

@@ -5322,12 +5322,26 @@ ul {
   padding: 0;
 }
 
+/* Aspect ratios below MUST stay in sync with `ASPECT` in
+   components/newsletter/SectionImage.tsx and the EMAIL_HEIGHT / STACKED_HEIGHT
+   constants in lib/newsletter-email-template.ts. The Sanity CDN already returns
+   the image pre-cropped to these ratios; if the CSS box disagrees the image gets
+   squashed. */
 .pg-newsletter-section-image {
   display: block;
   width: 100%;
   height: auto;
+  object-fit: cover;
+}
+
+/* Side-by-side layout (newsletters before 2026-07-27): 509x454, ~1.12:1 */
+.pg-newsletter-section-image--default {
   aspect-ratio: 509 / 454;
-  /* object-fit: cover; */
+}
+
+/* Stacked layout (newsletters on/after 2026-07-27): 3:2 landscape */
+.pg-newsletter-section-image--stacked {
+  aspect-ratio: 3 / 2;
 }
 
 .pg-newsletter-section-link {

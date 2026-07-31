@@ -138,12 +138,11 @@ Two clients are available in `lib/client.ts`:
 
 ### Newsletter Images
 
-Newsletter section images (`newsletter.imageSections[].image`) are displayed at **509x454 pixels (9:8 aspect ratio)** on the website.
+Newsletter section images (`newsletter.imageSections[].image`) are displayed at **600x400 pixels (3:2 aspect ratio)** on the website.
 
 **Important**: When cropping images in Sanity Studio for newsletters:
-- Avoid using "Panorama" (16:9) preset - it will be distorted
-- Use crop handles to create an approximately **9:8 ratio** (slightly wider than square)
-- The aspect ratio is 509:454 = 1.12:1
+- Use crop handles to create a **3:2 ratio** (landscape)
+- The aspect ratio is 600:400 = 1.5:1
 - Crop and hotspot settings are respected via `components/newsletter/SectionImage.tsx`
 
 ### Newsletter Layouts

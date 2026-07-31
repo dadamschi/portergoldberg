@@ -166,10 +166,11 @@ function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: 
 const EMAIL_WIDTH = 600
 const EMAIL_HEIGHT = Math.round(EMAIL_WIDTH * (454 / 509)) // 535
 
-// Enforced aspect ratio for stacked layout: 660x460 (33:23, ~1.43:1)
-// Common ratio for stacked newsletter content
+// Enforced aspect ratio for stacked layout: 3:2 landscape (600x400)
+// MUST stay in sync with ASPECT.stacked in components/newsletter/SectionImage.tsx
+// and .pg-newsletter-section-image--stacked in styles/globals.css
 const STACKED_WIDTH = 600
-const STACKED_HEIGHT = Math.round(STACKED_WIDTH * (460 / 660)) // 418
+const STACKED_HEIGHT = Math.round(STACKED_WIDTH * (2 / 3)) // 400
 
 /**
  * Optimizes Sanity image URL with enforced aspect ratio, crop, and hotspot
@@ -211,7 +212,7 @@ function optimizeSanityImageUrl(
 }
 
 /**
- * Optimizes Sanity image URL for stacked layout with 660:460 aspect ratio
+ * Optimizes Sanity image URL for stacked layout with 3:2 aspect ratio
  */
 function optimizeSanityImageUrlStacked(
   url: string,
