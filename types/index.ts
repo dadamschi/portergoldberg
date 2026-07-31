@@ -63,11 +63,28 @@ export type Testimonial = {
 
 export type ZillowReview = {
   _id: string
+  _createdAt?: string
   reviewerName: string
   reviewDate?: string
   rating: number
   reviewText: string
   transactionType?: string
+  zillowProfileUrl?: string
+}
+
+export type UnifiedReview = {
+  _id: string
+  _type: 'testimonial' | 'zillowReview'
+  _createdAt: string
+  name: string
+  title?: string
+  date?: string
+  content: PortableTextBlock[] | string
+  source: 'cms' | 'zillow'
+  pinOnHomePage?: boolean
+  order?: number
+  rating?: number
+  sourceUrl?: string
 }
 
 export type Agent = {
