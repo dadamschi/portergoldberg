@@ -200,6 +200,21 @@ Testimonials use an `order` field for custom sorting:
 cd studio && npm run deploy
 ```
 
+### Newsletter Layouts
+
+Newsletters use date-based layout rendering:
+
+- **Before July 27, 2026**: Side-by-side layout (`SideBySideLayout.tsx`) - legacy format
+- **On/after July 27, 2026**: Stacked layout (`StackedLayout.tsx`) - matches exported email newsletter
+
+**To deprecate the side-by-side layout** (when all newsletters use stacked):
+
+1. Delete `components/newsletter/SideBySideLayout.tsx`
+2. In `app/newsletters/[slug]/page.tsx`:
+   - Remove `SideBySideLayout` import
+   - Remove date check logic (lines 228-233)
+   - Replace conditional rendering with: `<StackedLayout sections={newsletter.imageSections} />`
+
 ## API Routes
 
 | Route | Method | Purpose |

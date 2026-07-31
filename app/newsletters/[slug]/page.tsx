@@ -6,17 +6,16 @@ import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { formatDateOnly } from '@/lib/utils/dateTime'
 import Link from 'next/link'
-import { SectionHeader, NewsletterDownloadButton } from '@/components'
-import { SectionImage } from '@/components/newsletter/SectionImage'
-import { SectionContent } from '@/components/newsletter/SectionContent'
-import { SectionLinks } from '@/components/newsletter/SectionLinks'
+import { NewsletterDownloadButton } from '@/components'
+import { SideBySideLayout } from '@/components/newsletter/SideBySideLayout'
+import { StackedLayout } from '@/components/newsletter/StackedLayout'
 import type { NewsletterSection } from '@/lib/newsletter-email-template'
 
 export const revalidate = 2592000 // 1 month - webhook handles on-demand revalidation
 
 type Props = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ preview?: string; layout?: string }>
+  searchParams: Promise<{ preview?: string }>
 }
 
 // Cached to deduplicate requests between generateMetadata and page component
@@ -78,157 +77,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-/**
- * Original side-by-side layout with alternating image position
- */
-function SectionRows({ section, index, isImageRight }: {
-  section: NewsletterImageSection
-  index: number
-  isImageRight: boolean
-}) {
-  const image = (
-    <SectionImage
-      image={section.image ?? null}
-      alt={section.alt}
-      linkUrl={section.linkUrl}
-    />
-  )
-
-  const content = (
-    <SectionContent
-      body={section.body}
-      moreInfo={section.moreInfo}
-      linkUrl={section.linkUrl}
-    />
-  )
-
-  const links = (
-    <SectionLinks
-      linkUrl={section.linkUrl}
-      instagram={section.instagram}
-      email={section.email}
-      facebookHandle={section.facebookHandle}
-    />
-  )
-
-  const hasLinks = section.linkUrl || section.instagram || section.email || section.facebookHandle
-
-  return (
-    <>
-      {section.heading && (
-        <tr className="pg-newsletter-row pg-newsletter-row--heading">
-          <td colSpan={2}>
-            <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
-          </td>
-        </tr>
-      )}
-
-      <tr className="pg-newsletter-row pg-newsletter-row">
-        {isImageRight ? (
-          <>
-            <td className="pg-newsletter-cell pg-newsletter-cell--content-left">{content}</td>
-            <td className="pg-newsletter-cell pg-newsletter-cell--image-right">{image}</td>
-          </>
-        ) : (
-          <>
-            <td className="pg-newsletter-cell pg-newsletter-cell--image-left">{image}</td>
-            <td className="pg-newsletter-cell pg-newsletter-cell--content-right">{content}</td>
-          </>
-        )}
-      </tr>
-
-      {hasLinks ? (
-        <tr className="pg-newsletter-row pg-newsletter-row--links">
-          {isImageRight ? (
-            <>
-              <td width="5%"></td>
-              <td>{links}</td>
-            </>
-          ) : (
-            <>
-              <td colSpan={2}>{links}</td>
-            </>
-          )}
-        </tr>
-      ) : (
-        <tr className="pg-newsletter-row pg-newsletter-row--heading">
-          <td colSpan={2} className="pg-newsletter-cell pg-newsletter-cell--empty">&nbsp;</td>
-        </tr>
-      )}
-    </>
-  )
-}
-
-/**
- * Stacked section layout: Image → Title → Content → Links
- * Use with ?layout=stacked query param
- */
-function StackedSection({ section, index }: {
-  section: NewsletterImageSection
-  index: number
-}) {
-  const hasLinks = section.linkUrl || section.instagram || section.email || section.facebookHandle
-
-  return (
-    <div className="pg-newsletter-stacked-section" style={{ marginBottom: 32, maxWidth: 600 }}>
-      {/* Image */}
-      <div style={{ marginBottom: 12 }}>
-        <SectionImage
-          image={section.image ?? null}
-          alt={section.alt}
-          linkUrl={section.linkUrl}
-        />
-      </div>
-
-      {/* Title (under image) */}
-      {section.heading && (
-        <div style={{ marginBottom: 12 }}>
-          <SectionHeader heading={section.heading} index={index} titleLarger={section.titleLarger} />
-        </div>
-      )}
-
-      {/* Content */}
-      <div style={{ marginBottom: hasLinks ? 8 : 0 }}>
-        <SectionContent
-          body={section.body}
-          moreInfo={section.moreInfo}
-          linkUrl={section.linkUrl}
-        />
-      </div>
-
-      {/* Links */}
-      {hasLinks && (
-        <div>
-          <SectionLinks
-            linkUrl={section.linkUrl}
-            instagram={section.instagram}
-            email={section.email}
-            facebookHandle={section.facebookHandle}
-          />
-        </div>
-      )}
-    </div>
-  )
-}
-
 export default async function NewsletterPage({ params, searchParams }: Props) {
   const { slug } = await params
-  const { preview, layout } = await searchParams
+  const { preview } = await searchParams
   const isPreview = preview === 'true'
-  const isStacked = layout === 'stacked'
 
   const [newsletter, allNewsletters] = await Promise.all([
     getNewsletter(slug, isPreview),
     getAllNewsletters()
   ])
 
+  if (!newsletter) {
+    redirect('/newsletters')
+  }
+
+  // Determine layout based on publish date
+  // Newsletters on/after July 27, 2026 use stacked layout
+  // Newsletters before July 27, 2026 use side-by-side layout
+  const STACKED_CUTOFF_DATE = new Date('2026-07-27')
+  const publishedDate = new Date(newsletter.publishedAt)
+  const isStacked = publishedDate >= STACKED_CUTOFF_DATE
+
   if (isPreview) {
     console.log('[Newsletter] Preview mode enabled for newsletter:', slug)
     console.log('[Newsletter] Preview mode enabled for newsletter:', newsletter)
-  }
-
-  if (!newsletter) {
-    redirect('/newsletters')
   }
 
   // Filter out current newsletter from sidebar list
@@ -279,34 +151,12 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
                 <h1 className="pg-newsletter-detail-title">{newsletter.title}</h1>
               </header>
 
-              {/* Image sections - toggle between stacked (?layout=stacked) and side-by-side */}
+              {/* Image sections - layout based on publish date */}
               {newsletter.imageSections && newsletter.imageSections.length > 0 && (
                 isStacked ? (
-                  <div className="pg-newsletter-sections-stacked">
-                    {newsletter.imageSections.map((section, index) => (
-                      <StackedSection
-                        key={section._key}
-                        section={section}
-                        index={index}
-                      />
-                    ))}
-                  </div>
+                  <StackedLayout sections={newsletter.imageSections} />
                 ) : (
-                  <table className="pg-newsletter-table">
-                    <tbody>
-                      {newsletter.imageSections.map((section, index) => {
-                        const isImageRight = index % 2 === 1
-                        return (
-                          <SectionRows
-                            key={section._key}
-                            section={section}
-                            index={index}
-                            isImageRight={isImageRight}
-                          />
-                        )
-                      })}
-                    </tbody>
-                  </table>
+                  <SideBySideLayout sections={newsletter.imageSections} />
                 )
               )}
             </article>

@@ -28,8 +28,10 @@ npm run test             # Playwright tests
 npm run test:screenshots # Screenshot tests only
 npx playwright test tests/screenshots.spec.ts --grep "homepage" # Run single test
 
-# Scripts (run from project root)
-npx ts-node scripts/<script-name>.ts
+# Utility Scripts
+npm run check:sitemap    # Verify sitemap.xml is up-to-date
+npx tsx scripts/<script-name>.ts  # Run TypeScript scripts directly (preferred)
+npx ts-node scripts/<script-name>.ts  # Alternative script runner
 
 # Sanity Studio deployment
 cd studio && npm run deploy
@@ -106,9 +108,16 @@ On-demand revalidation via `/api/revalidate` webhook from Sanity (requires `SANI
 
 ## Sanity
 
-**Project ID**: `mw8duas2` | **Dataset**: `production`
+**Project ID**: `mw8duas2` | **Dataset**: `production` | **API Version**: `2026-02-01`
 
 Studio is standalone in `/studio` with separate `package.json`.
+
+### Sanity Clients
+
+Two clients are available in `lib/client.ts`:
+
+- **`client`** - Read-only client for fetching data (uses `SANITY_API_READ_TOKEN`)
+- **`writeClient`** - Write client for creating/updating documents (uses `SANITY_API_WRITE_TOKEN`, server-side only)
 
 ### Singleton vs Collection Schemas
 
@@ -118,7 +127,7 @@ Studio is standalone in `/studio` with separate `package.json`.
 
 **Collections** (multiple documents):
 
-- `listing`, `testimonial`, `agent`, `event`, `newsletter`, `vendor`
+- `listing`, `testimonial`, `zillowReview`, `agent`, `event`, `newsletter`, `vendor`
 
 ### Key Schema Fields
 
@@ -126,6 +135,32 @@ Studio is standalone in `/studio` with separate `package.json`.
 - `listing.featured`: boolean - shows on homepage
 - `listing.isHalcyonProject`: boolean - shows on Halcyon page
 - `testimonial.pinOnHomePage`: boolean - prioritized on homepage
+
+### Newsletter Images
+
+Newsletter section images (`newsletter.imageSections[].image`) are displayed at **509x454 pixels (9:8 aspect ratio)** on the website.
+
+**Important**: When cropping images in Sanity Studio for newsletters:
+- Avoid using "Panorama" (16:9) preset - it will be distorted
+- Use crop handles to create an approximately **9:8 ratio** (slightly wider than square)
+- The aspect ratio is 509:454 = 1.12:1
+- Crop and hotspot settings are respected via `components/newsletter/SectionImage.tsx`
+
+### Newsletter Layouts
+
+Newsletters use **date-based layout rendering**:
+- **Before July 27, 2026**: Side-by-side layout (`components/newsletter/SideBySideLayout.tsx`) - legacy
+- **On/after July 27, 2026**: Stacked layout (`components/newsletter/StackedLayout.tsx`) - matches exported email
+
+The cutoff date is defined in `app/newsletters/[slug]/page.tsx:231`.
+
+**Deprecation path**: When ready to remove side-by-side layout:
+1. Delete `components/newsletter/SideBySideLayout.tsx`
+2. In `app/newsletters/[slug]/page.tsx`: remove date check and always use `StackedLayout`
+
+Routes:
+- `/newsletters` - Archive page (grid of newsletter cards)
+- `/newsletters/[slug]` - Individual newsletter detail page
 
 ## Email (Resend)
 
@@ -199,7 +234,8 @@ Scripts in `scripts/` for HubSpot and data operations (run with `npx ts-node scr
 ```env
 NEXT_PUBLIC_SANITY_PROJECT_ID=mw8duas2
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_READ_TOKEN=       # Server-side fetches
+SANITY_API_READ_TOKEN=       # Server-side fetches (read-only)
+SANITY_API_WRITE_TOKEN=      # Server-side writes (creating/updating documents)
 SANITY_REVALIDATE_SECRET=    # Webhook auth
 HUBSPOT_API_KEY=             # HubSpot API access
 RESEND_API_KEY=              # Resend email API

@@ -38,12 +38,6 @@ export function NewsletterDownloadButton({ sections, slug, filename = 'newslette
   return (
     <div style={{ display: 'flex', gap: '8px' }}>
       <button
-        onClick={() => handleDownload('default')}
-        className="pg-newsletter-download-btn"
-      >
-        {copiedLayout === 'default' ? 'Copied!' : 'Default HTML'}
-      </button>
-      <button
         onClick={() => handleDownload('stacked')}
         className="pg-newsletter-download-btn"
       >
