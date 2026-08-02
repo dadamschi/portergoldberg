@@ -28,13 +28,14 @@ export type NewsletterLayout = 'default' | 'stacked'
 
 // Color palette matching Claude design
 const INK = '#1A1917'
+const GOLD = '#000000'
 const SAGE = '#79a52c'
 const DIVIDER_LIGHT = '#dedbd6'
 
 // Typography - responsive with clamp, no explicit color for dark mode
 const FONT = "font-family:'Quicksand',Helvetica,Arial,sans-serif;"
-const HEADING_LARGE = `font-size:clamp(18px, 6vw, 38px);font-weight:300;letter-spacing:0.02em;`
-const HEADING_SMALL = `font-size:clamp(11px, 3vw, 19px);font-weight:500;letter-spacing:0.16em;`
+const HEADING_LARGE = `font-size:clamp(18px, 6vw, 38px);font-weight:600;letter-spacing:0.02em;`
+const HEADING_SMALL = `font-size:clamp(11px, 3vw, 19px);font-weight:600;letter-spacing:0.16em;`
 const BODY_TEXT = `font-size:clamp(14px, 2.5vw, 16px);line-height:1.58;`
 
 // Utility functions
@@ -100,7 +101,13 @@ function optimizeSanityImageUrl(
  */
 const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration:none;display:block;">
   <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20Footer%20Content/ywwt-header.png" alt="Your Weekly Walk-Through — PorterGoldberg Residential" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
-</a>`
+</a>
+
+<div style="max-width:600px;margin:32px 15px;text-align:center">
+  <hr>
+  <p style="margin:0px 19px;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-style:italic;color:#1a1a1a;">Market updates, tips, and insights from Lauren and Samantha</p>
+  <hr>
+</div>`
 
 /**
  * Halcyon e-blast header - logos only
@@ -137,9 +144,9 @@ function generateSectionHeading(heading: string, index: number, titleLarger?: bo
     // Left-aligned: large word | small word | line
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}">${esc(largeWord.toUpperCase())}</span></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}color:${GOLD};">${esc(largeWord.toUpperCase())}</span></td>
     <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}">${esc(smallWord.toUpperCase())}</span></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}color:${GOLD};">${esc(smallWord.toUpperCase())}</span></td>
     <td style="width:16px;"></td>
     <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
   </tr>
@@ -150,9 +157,9 @@ function generateSectionHeading(heading: string, index: number, titleLarger?: bo
   <tr>
     <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
     <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}">${esc(smallWord.toUpperCase())}</span></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}color:${GOLD};">${esc(smallWord.toUpperCase())}</span></td>
     <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}">${esc(largeWord.toUpperCase())}</span></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}color:${GOLD};">${esc(largeWord.toUpperCase())}</span></td>
   </tr>
 </table>`
   }
@@ -230,28 +237,50 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
 function renderSection(section: NewsletterSection, index: number): string {
   const headingHtml = section.heading ? generateSectionHeading(section.heading, index, section.titleLarger) : ''
 
+  // Priority: linkUrl → instagram → facebook
+  let wrapUrl: string | undefined
+  const linkUrlValue = typeof section.linkUrl === 'string' ? section.linkUrl : section.linkUrl?.url
+
+  if (linkUrlValue) {
+    wrapUrl = linkUrlValue
+  } else if (section.instagram) {
+    wrapUrl = `https://www.instagram.com/${section.instagram.replace('@', '')}`
+  } else if (section.facebookHandle) {
+    wrapUrl = `https://www.facebook.com/${section.facebookHandle.replace('@', '')}`
+  }
+
   const optimizedImageUrl = section.imageUrl
     ? optimizeSanityImageUrl(section.imageUrl, 600, 400, section.imageHotspot, section.imageCrop, section.imageDimensions)
     : ''
 
-  const imageHtml = optimizedImageUrl
+  // Wrap image in link if we have a URL
+  const imageElement = optimizedImageUrl
     ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(section.imageAlt || section.heading)}" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;">`
     : ''
 
-  const bodyHtml = `<p style="margin:0;${BODY_TEXT}${FONT}">${typographic(section.body)}</p>`
+  const imageHtml = imageElement && wrapUrl
+    ? `<a href="${esc(wrapUrl)}" target="_blank" style="display:block;text-decoration:none;">${imageElement}</a>`
+    : imageElement
+
+  // Wrap body text in link if we have a URL
+  const bodyElement = `<p style="margin:0;${BODY_TEXT}${FONT}color:${INK};">${typographic(section.body)}</p>`
+
+  const bodyHtml = wrapUrl
+    ? `<a href="${esc(wrapUrl)}" target="_blank" style="text-decoration:none;color:inherit;">${bodyElement}</a>`
+    : bodyElement
 
   const linksHtml = generateLinks(section.linkUrl, section.instagram, section.facebookHandle, section.email)
 
-  const topPadding = index === 0 ? '44px' : '40px'
+  const topPadding = index === 0 ? '0px' : '10px'
 
   // Use table for Outlook compatibility
   return `<!--[if mso]>
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;">
 <tr><td style="padding:${topPadding} 0 0 0;">
 <![endif]-->
-<div style="padding:${topPadding} 0 0 0;">
+<div style="padding:${topPadding} 0 16px 0;">
   ${headingHtml}
-  <div style="padding-top:24px;">
+  <div>
     ${imageHtml}
   </div>
   <div style="padding-top:22px;">
@@ -270,8 +299,8 @@ function renderSection(section: NewsletterSection, index: number): string {
  */
 function viewOnWebsiteHtml(slug: string): string {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
-    <tr><td style="padding:0 0 16px 0;text-align:center;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:32px auto;">
+    <tr><td style="padding:0;text-align:center;">
       <a href="${url}" target="_blank" style="font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1a1a1a;text-decoration:none;">View this newsletter on our website</a>
     </td></tr>
   </table>`
@@ -286,8 +315,8 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
 
   <!-- Top band: white, PORTERGOLDBERG.COM centered with gold rules -->
   <tr>
-    <td style="padding:0;background-color:#ffffff;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#ffffff;border-collapse:collapse;">
+    <td style="padding:0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
         <tr><td style="padding:20px 18px;">
           <a href="https://www.portergoldberg.com" target="_blank" style="text-decoration:none;display:block;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
@@ -411,7 +440,7 @@ export function generateNewsletterEmailHtml(
 
   // Email content - pure inline styles, no CSS
   return `${preheader}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e7e2;border-collapse:collapse;margin:0;padding:0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0;padding:0;">
 <tr><td align="center" style="padding:32px 0;">
 
 ${header}
@@ -430,7 +459,7 @@ export function generateSectionsHtml(sections: NewsletterSection[]): string {
   const sectionsHtml = sections.map((section, index) => renderSection(section, index)).join('\n\n')
 
   // Wrap in content container - use width attribute for Outlook, max-width for responsive
-  return `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-collapse:collapse;margin:0 auto;">
+  return `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;border-collapse:collapse;margin:0 auto;">
 <tr><td style="padding:0;">
 
 ${sectionsHtml}
