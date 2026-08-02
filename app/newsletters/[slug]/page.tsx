@@ -120,6 +120,7 @@ export default async function NewsletterPage({ params, searchParams }: Props) {
     caption: s.moreInfo ?? '',
     linkUrl: s.linkUrl,
     instagram: s.instagram,
+    email: s.email,
     titleLarger: s.titleLarger,
     facebookHandle: s.facebookHandle
   }))

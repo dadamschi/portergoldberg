@@ -207,12 +207,12 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
   const links: string[] = []
 
   if (email) {
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">email us: <a href="mailto:${esc(email)}" style="color:${SAGE};text-decoration:none;">${esc(email)}</a></p>`)
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">Connect via email: <a href="mailto:${esc(email)}" style="color:${SAGE};text-decoration:none;">${esc(email)}</a></p>`)
   }
 
   if (url) {
-    const linkText = customText || 'HERE'
     if (url.startsWith('/') || url.includes('portergoldberg.com')) {
+      const linkText = customText || 'Check it out on portergoldberg.com'
       links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">click <a href="${esc(url)}" style="color:${SAGE};text-decoration:none;">${esc(linkText)}</a> for more information</p>`)
     } else {
       // If no custom text and URL is long, show just the domain
@@ -226,11 +226,14 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
 
   if (instagram) {
     const handle = instagram.replace('@', '')
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">ig: ${esc(handle)}</p>`)
+    const instagramUrl = `https://www.instagram.com/${handle}`
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(instagramUrl)}" style="color:${SAGE};text-decoration:none;" target="_blank">IG: ${esc(handle)}</a></p>`)
   }
 
   if (facebookHandle) {
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">fb: ${esc(facebookHandle)}</p>`)
+    const fbHandle = facebookHandle.replace('@', '')
+    const facebookUrl = `https://www.facebook.com/${fbHandle}`
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(facebookUrl)}" style="color:${SAGE};text-decoration:none;" target="_blank">FB: ${esc(fbHandle)}</a></p>`)
   }
 
   return `<div style="padding-top:14px;">
