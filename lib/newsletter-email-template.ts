@@ -132,34 +132,41 @@ const HEADERS: Record<NewsletterType, string> = {
  * Uses table structure for Outlook compatibility
  */
 function generateSectionHeading(heading: string, index: number, titleLarger?: boolean): string {
-  const { eyebrow, title } = parseHeading(heading)
+  const words = heading.trim().split(/\s+/)
+
+  // Match React component convention: label = first word(s), title = last word
+  const label = words.slice(0, -1).join(' ')
+  const title = words[words.length - 1] || ''
+
   const isEven = index % 2 === 0
 
-  // Determine which word is larger
+  // Determine which word is larger based on titleLarger
   const isTitleLarger = titleLarger !== undefined ? titleLarger : !isEven
-  const largeWord = isTitleLarger ? title : eyebrow
-  const smallWord = isTitleLarger ? eyebrow : title
+
+  // When titleLarger is true, title (last word) gets large font
+  const titleStyle = isTitleLarger ? HEADING_LARGE : HEADING_SMALL
+  const labelStyle = isTitleLarger ? HEADING_SMALL : HEADING_LARGE
 
   if (isEven) {
-    // Left-aligned: large word | small word | line
+    // Left-aligned: label | title | line
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}color:${GOLD};">${esc(largeWord.toUpperCase())}</span></td>
-    <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}color:${GOLD};">${esc(smallWord.toUpperCase())}</span></td>
+    ${label ? `<td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${labelStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(label.toUpperCase())}</span></td>
+    <td style="width:16px;"></td>` : ''}
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${titleStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(title.toUpperCase())}</span></td>
     <td style="width:16px;"></td>
     <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
   </tr>
 </table>`
   } else {
-    // Right-aligned: line | small word | large word
+    // Right-aligned: line | label | title
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
     <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
     <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}color:${GOLD};">${esc(smallWord.toUpperCase())}</span></td>
-    <td style="width:16px;"></td>
-    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}color:${GOLD};">${esc(largeWord.toUpperCase())}</span></td>
+    ${label ? `<td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${labelStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(label.toUpperCase())}</span></td>
+    <td style="width:16px;"></td>` : ''}
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${titleStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(title.toUpperCase())}</span></td>
   </tr>
 </table>`
   }
