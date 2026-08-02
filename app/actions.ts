@@ -50,7 +50,8 @@ export async function submitConnectForm(data: ConnectFormData): Promise<ConnectR
   const { contact } = await addContact({
           email,
           firstName,
-          lastName
+          lastName,
+          asMarketingContact: subscribeNewsletter
         })
   
   const propertiesArray = [

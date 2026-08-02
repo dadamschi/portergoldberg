@@ -263,6 +263,7 @@ export type AddContactOptions = {
   email: string
   firstName?: string
   lastName?: string
+  asMarketingContact?: boolean
 }
 
 export type AddContactResult = {
@@ -274,19 +275,26 @@ export type AddContactResult = {
 export async function createContact(
   email: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  asMarketingContact = false
 ): Promise<{ success: boolean; conflict?: boolean; error?: string }> {
+  const properties: Record<string, string> = {
+    email,
+    firstname: firstName,
+    lastname: lastName,
+    hs_lead_status: 'NEW',
+  }
+
+  // Mark as Marketing Contact if requested (for newsletter subscribers)
+  if (asMarketingContact) {
+    properties.hs_marketable_status = 'true'
+    properties.hs_marketable_reason = 'Newsletter subscription via website'
+  }
+
   const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts`, {
     method: 'POST',
     headers: getHeaders(),
-    body: JSON.stringify({
-      properties: {
-        email,
-        firstname: firstName,
-        lastname: lastName,
-        hs_lead_status: 'NEW',
-      },
-    }),
+    body: JSON.stringify({ properties }),
   })
 
   if (response.ok) {
@@ -307,16 +315,24 @@ export async function createContact(
   async function getOrCreateContact(
     email: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    asMarketingContact = false
   ): Promise<{ contact: HubSpotContact; created: boolean }> {
     // Try to find existing
     const existing = await searchContactByEmail(email)
     if (existing) {
+      // If contact exists and we need them as Marketing Contact, update their status
+      if (asMarketingContact) {
+        await updateContactProperties(existing.id, [
+          { property: 'hs_marketable_status', value: 'true' },
+          { property: 'hs_marketable_reason', value: 'Newsletter subscription via website' }
+        ])
+      }
       return { contact: existing, created: false }
     }
 
     // Create new
-    const result = await createContact(email, firstName, lastName)
+    const result = await createContact(email, firstName, lastName, asMarketingContact)
     if (!result.success) {
       throw new Error(result.error || 'Failed to create contact')
     }
@@ -333,10 +349,11 @@ export async function createContact(
 /**
  * Add or update a contact in HubSpot with specified tiers.
  * If contact exists, adds the tiers to their existing tiers.
+ * If asMarketingContact is true, marks the contact as a Marketing Contact in HubSpot.
  */
 export async function addContact(options: AddContactOptions): Promise<AddContactResult> {
-  const { email, firstName = '', lastName = '' } = options
-  const { contact } = await getOrCreateContact(email, firstName, lastName)
+  const { email, firstName = '', lastName = '', asMarketingContact = false } = options
+  const { contact } = await getOrCreateContact(email, firstName, lastName, asMarketingContact)
 
   return { success: true, contact }
 }
