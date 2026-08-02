@@ -112,8 +112,7 @@ export const newsletter = defineType({
               title: "Body Text",
               type: "text",
               rows: 5,
-              description: "Section content (max 300 characters for optimal email layout)",
-              validation: (rule) => rule.max(300).warning("Body text should be under 300 characters for optimal email layout"),
+              description: "Section content",
             }),
             defineField({
               name: "moreInfo",
@@ -166,6 +165,7 @@ export const newsletter = defineType({
               heading: "heading",
               alt: "alt",
               link: "linkUrl",
+              titleLarger: "titleLarger",
             },
             prepare({ media, heading, link, titleLarger }) {
               if (!heading) return { title: "Image section", media }
@@ -177,7 +177,7 @@ export const newsletter = defineType({
               // Show which part will be larger
               const preview = titleLarger
                 ? `${firstWords} ${lastWord.toUpperCase()}`  // last word larger
-                : `[${firstWords.toUpperCase()}] ${lastWord}`  // first words larger
+                : `${firstWords.toUpperCase()} ${lastWord}`  // first words larger
 
               return {
                 title: preview,
