@@ -3,19 +3,27 @@ import { addUtmParams } from '@/lib/utils/utm'
 import { ContactLink } from '@/components/ContactLink'
 
 interface SectionLinksProps {
-  linkUrl?: string
+  linkUrl?: string | {
+    url?: string
+    customText?: string
+  }
   instagram?: string
   email?: string
   facebookHandle?: string
 }
 
 export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: SectionLinksProps) {
-  console.log('urlLink', linkUrl)
+  // Handle both old (string) and new (object) formats
+  const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
+  const customText = typeof linkUrl === 'string' ? undefined : linkUrl?.customText
+
+  console.log('urlLink', url)
+  console.log('customText', customText)
   console.log('instagramLink', instagram)
   console.log('email', email)
   console.log('facebook', facebookHandle)
 
-  if (!linkUrl && !instagram && !email) {
+  if (!url && !instagram && !email) {
     return null
   }
 
@@ -59,15 +67,15 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
     return 'external'
   }
 
-  const linkType = getLinkType(linkUrl);
+  const linkType = getLinkType(url);
 
   let urlLink: React.ReactNode = null
 
-  if (linkType !== 'none' && linkUrl) {
+  if (linkType !== 'none' && url) {
     if (linkType === 'local') {
-      const localPath = linkUrl.startsWith('/')
-        ? linkUrl
-        : new URL(linkUrl).pathname
+      const localPath = url.startsWith('/')
+        ? url
+        : new URL(url).pathname
 
       const pathMap: Record<string, string> = {
         '/': '',
@@ -79,7 +87,7 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
         '/testimonials': 'Checkout Testimonials from our valued clients',
       }
 
-      const linkText = pathMap[localPath] ?? 'Learn More'
+      const linkText = customText || pathMap[localPath] || 'Learn More'
 
       urlLink = (
         <Link href={localPath} className="pg-newsletter-url-link">
@@ -88,13 +96,13 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
       )
     } else if (linkType === 'brochure') {
       // Check if it's a Jameson property brochure
-      const isBrochure = linkUrl.includes('jamesonps.com')
-      let linkText = isBrochure ? 'Check out the property brochure' : linkUrl
-      linkText = (linkUrl.length > 50) ? 'Learn More' : linkText
+      const isBrochure = url.includes('jamesonps.com')
+      let linkText = customText || (isBrochure ? 'Check out the property brochure' : url)
+      linkText = (!customText && url.length > 50) ? 'Learn More' : linkText
 
       urlLink = (
         <a
-          href={addUtmParams(linkUrl, { campaign: 'newsletter' })}
+          href={addUtmParams(url, { campaign: 'newsletter' })}
           target="_blank"
           rel="noreferrer"
           className="pg-newsletter-url-link"
@@ -104,14 +112,14 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
       )
     } else if (linkType === 'contact') {
       urlLink = (
-        <ContactLink message={linkUrl.replace('#contact:', '')} className="pg-newsletter-url-link">
-          Contact Us
+        <ContactLink message={url.replace('#contact:', '')} className="pg-newsletter-url-link">
+          {customText || 'Contact Us'}
         </ContactLink>
       )
     } else {
-      const linkText = (linkUrl.length > 50) ? 'Learn More' : linkUrl
+      const linkText = customText || (url.length > 50 ? 'Learn More' : url)
       urlLink = (
-        <Link href={linkUrl} className="pg-newsletter-url-link">
+        <Link href={url} className="pg-newsletter-url-link">
           {linkText}
         </Link>
       )

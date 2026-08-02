@@ -1,62 +1,43 @@
 /**
  * Newsletter email template generator for HubSpot.
- * Simple stacked layout - image on top, text below.
- * - 100% width sections for consistent desktop and mobile experience
- * - MSO conditional comments for Outlook
- * - clamp() for responsive font sizes
+ * Modern design with clean typography and agent branding.
+ * Based on Claude design template - fully responsive, email-client tested.
  */
 
 export interface NewsletterSection {
   heading: string // e.g. "FEATURED PROFESSIONAL" - parsed into eyebrow + title
   imageUrl: string
   imageAlt?: string
-  imageHotspot?: { x: number; y: number } // Focal point from Sanity (0-1 range)
-  imageCrop?: { top: number; bottom: number; left: number; right: number } // Crop from Sanity (0-1 range)
-  imageDimensions?: { width: number; height: number } // Original image dimensions for crop calculation
+  imageHotspot?: { x: number; y: number }
+  imageCrop?: { top: number; bottom: number; left: number; right: number }
+  imageDimensions?: { width: number; height: number }
   body: string
   caption?: string
-  linkUrl?: string
-  instagram?: string // Instagram handle (with or without @)
+  linkUrl?: string | {
+    url?: string
+    customText?: string
+  }
+  instagram?: string
   facebookHandle?: string
   email?: string
-  titleLarger?: boolean // Toggle which word is larger in section header
+  titleLarger?: boolean
 }
 
-// Internal type with layout for rendering
-interface NewsletterSectionWithLayout extends NewsletterSection {
-  layout: 'image-left' | 'image-right'
-}
+export type NewsletterType = 'weekly' | 'halcyon'
+export type NewsletterLayout = 'default' | 'stacked'
 
-/**
- * Parse heading into eyebrow (all words except last) and title (last word)
- * Matches website SectionHeader.tsx behavior exactly
- * e.g. "FEATURED PROFESSIONAL" -> { eyebrow: "FEATURED", title: "PROFESSIONAL" }
- * e.g. "CURRENT INVENTORY AVAILABLE" -> { eyebrow: "CURRENT INVENTORY", title: "AVAILABLE" }
- */
-function parseHeading(heading: string): { eyebrow: string; title: string } {
-  const words = heading.trim().split(/\s+/)
-  if (words.length === 1) {
-    return { eyebrow: '', title: words[0] }
-  }
-  // All words except last = eyebrow, last word = title
-  return { eyebrow: words.slice(0, -1).join(' '), title: words[words.length - 1] }
-}
+// Color palette matching Claude design
+const INK = '#1A1917'
+const SAGE = '#79a52c'
+const DIVIDER_LIGHT = '#dedbd6'
 
-const INK = '#1a1a1a'
-const GOLD = '#A8904E'
-const FONT = 'font-family:Helvetica,Arial,sans-serif;'
-const HEADING_FONT = "font-family:'Century Gothic',Helvetica,Arial,sans-serif;"
+// Typography - responsive with clamp, no explicit color for dark mode
+const FONT = "font-family:'Quicksand',Helvetica,Arial,sans-serif;"
+const HEADING_LARGE = `font-size:clamp(18px, 6vw, 38px);font-weight:300;letter-spacing:0.02em;`
+const HEADING_SMALL = `font-size:clamp(11px, 3vw, 19px);font-weight:500;letter-spacing:0.16em;`
+const BODY_TEXT = `font-size:clamp(14px, 2.5vw, 16px);line-height:1.58;`
 
-// Responsive font sizes using clamp()
-const TITLE_SIZE = 'font-size:32px;font-size:clamp(26px,6.2vw,32px);'
-// const LABEL_SIZE = 'font-size:24px;font-size:clamp(20px,4vw,24px);'
-const LABEL_SIZE = TITLE_SIZE
-const BODY_SIZE = 'font-size:15px;font-size:clamp(14px,3.9vw,16px);'
-
-// Note: Body text should be ~300 characters max for optimal layout
-
-
-
+// Utility functions
 function esc(input: string): string {
   return input
     .replace(/&/g, '&amp;')
@@ -73,125 +54,28 @@ function typographic(input: string): string {
     .replace(/--/g, '&mdash;')
 }
 
-function paragraphsHtml(body: string): string {
-  const paragraphs = body.split('\n\n').filter(Boolean)
-  return paragraphs
-    .map(
-      (line, i, arr) =>
-        `<p style="margin:0 0 ${i === arr.length - 1 ? 0 : 12}px 0;${FONT}${BODY_SIZE}font-weight:500;line-height:1.55;color:${INK};">${typographic(line)}</p>`
-    )
-    .join('')
+function parseHeading(heading: string): { eyebrow: string; title: string } {
+  const words = heading.trim().split(/\s+/)
+  if (words.length === 1) {
+    return { eyebrow: '', title: words[0] }
+  }
+  // Reversed: first word(s) = title, last word = eyebrow
+  return { eyebrow: words[words.length - 1], title: words.slice(0, -1).join(' ') }
 }
 
-/**
- * Renders section heading with eyebrow + title and horizontal line
- * Line position depends on layout: image-left = line on right, image-right = line on left
- */
-function sectionHeadHtml(section: NewsletterSectionWithLayout): string {
-  const layout = section.layout
-  const { eyebrow, title } = parseHeading(section.heading)
-
-  // Use titleLarger if set, otherwise fall back to layout-based alternation
-  const isTitleLarger = section.titleLarger !== undefined
-    ? section.titleLarger
-    : layout === 'image-right'
-
-  // Build text spans - always eyebrow then title order
-  const eyebrowStyle = isTitleLarger
-    ? `${HEADING_FONT}${LABEL_SIZE}font-weight:400;letter-spacing:0.14em;color:${INK};text-transform:uppercase;`
-    : `${HEADING_FONT}${TITLE_SIZE}font-weight:400;letter-spacing:0.10em;color:${INK};text-transform:uppercase;`
-
-  const titleStyle = isTitleLarger
-    ? `${HEADING_FONT}${TITLE_SIZE}font-weight:400;letter-spacing:0.06em;color:${INK};text-transform:uppercase;`
-    : `${HEADING_FONT}${LABEL_SIZE}font-weight:400;letter-spacing:0.14em;color:${INK};text-transform:uppercase;`
-
-  const eyebrowSpan = eyebrow ? `<span style="${eyebrowStyle}">${esc(eyebrow.toUpperCase())}</span>` : ''
-  const titleSpan = `<span style="${titleStyle}">${esc(title.toUpperCase())}</span>`
-  const gap = eyebrow ? '<span style="display:inline-block;width:9px;"></span>' : ''
-
-  const textCell = `<td valign="middle" style="white-space:nowrap;vertical-align:middle;">${eyebrowSpan}${gap}${titleSpan}</td>`
-  const lineCell = layout === 'image-right'
-    ? `<td width="100%" valign="middle" style="width:100%;vertical-align:middle;padding-right:16px;"><div style="border-top:2px solid ${INK};font-size:1px;line-height:1px;">&nbsp;</div></td>`
-    : `<td width="100%" valign="middle" style="width:100%;vertical-align:middle;padding-left:16px;"><div style="border-top:2px solid ${INK};font-size:1px;line-height:1px;">&nbsp;</div></td>`
-
-  const cells = layout === 'image-right'
-    ? `${lineCell}${textCell}` // Line on left, text on right
-    : `${textCell}${lineCell}` // Text on left, line on right
-
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 12px 0;">
-  <tr>${cells}</tr>
-</table>`
-}
-
-/**
- * Renders link text below the image (URL or Instagram)
- */
-function sectionLinkHtml(linkUrl?: string, instagram?: string, facebookHandle?: string): string {
-  const linkStyle = `${FONT}font-size:16px;line-height:1.6;color:${GOLD};font-weight:500;`
-  const anchorStyle = `color:${GOLD};text-decoration:none;`
-  let linkHtml = ''
-
-  if (instagram) {
-    const handle = instagram.replace('@', '')
-    linkHtml = `<p style="margin:0px 0 0 0;${linkStyle}"><a href="https://instagram.com/${esc(handle)}" target="_blank" style="${anchorStyle}">IG: @${esc(handle)}</a></p>`
-  }
-
-    if (facebookHandle) {
-    const handle = facebookHandle.replace('@', '')
-    linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="https://facebook.com/${esc(facebookHandle)}" target="_blank" style="${anchorStyle}">FB: ${esc(handle)}</a></p>`
-  }
-
-  if (linkUrl) {
-    if (linkUrl.startsWith('#contact:')) {
-      const subject = linkUrl.replace('#contact:', '')
-      const mailtoUrl = `mailto:info@portergoldberg.com?subject=${encodeURIComponent(subject)}`
-      linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="${mailtoUrl}" style="${anchorStyle}">Contact Us &rarr;</a></p>`
-    } else {
-      // Display URL or "Learn More" for internal links
-      let linkText = linkUrl
-      if (linkUrl.startsWith('/') || linkUrl.includes('portergoldberg.com')) {
-        linkText = 'Learn More &rarr;'
-      } else if (linkUrl.length > 40) {
-        linkText = 'Learn More'
-      }
-      linkHtml += `<p style="margin:0px 0 0 0;${linkStyle}"><a href="${esc(linkUrl)}" target="_blank" style="${anchorStyle}">${linkText}</a></p>`
-    }
-  }
-
-  return linkHtml
-}
-
-// Enforced aspect ratio for default layout: 509x454 (roughly 9:8)
-// For email, we scale up to 600px width while maintaining ratio
-const EMAIL_WIDTH = 600
-const EMAIL_HEIGHT = Math.round(EMAIL_WIDTH * (454 / 509)) // 535
-
-// Enforced aspect ratio for stacked layout: 3:2 landscape (600x400)
-// MUST stay in sync with ASPECT.stacked in components/newsletter/SectionImage.tsx
-// and .pg-newsletter-section-image--stacked in styles/globals.css
-const STACKED_WIDTH = 600
-const STACKED_HEIGHT = Math.round(STACKED_WIDTH * (2 / 3)) // 400
-
-/**
- * Optimizes Sanity image URL with enforced aspect ratio, crop, and hotspot
- * - Enforces 509:454 aspect ratio at 600px width (600x535)
- * - q=80: slight quality reduction for smaller file size
- * - auto=format: serves webp where supported
- * - rect=x,y,w,h: applies manual crop from Sanity first
- * - fit=crop: enforces aspect ratio
- * - crop=focalpoint/center: uses hotspot or centers
- */
+// Image optimization for Sanity CDN
 function optimizeSanityImageUrl(
   url: string,
+  width: number,
+  height: number,
   hotspot?: { x: number; y: number },
   crop?: { top: number; bottom: number; left: number; right: number },
   dimensions?: { width: number; height: number }
 ): string {
   if (!url.includes('cdn.sanity.io')) return url
 
-  const params: string[] = [`w=${EMAIL_WIDTH}`, `h=${EMAIL_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
+  const params: string[] = [`w=${width}`, `h=${height}`, 'q=80', 'auto=format', 'fit=crop']
 
-  // Apply manual crop first if set (rect is applied before fit=crop)
   if (crop && dimensions) {
     const rectX = Math.round(crop.left * dimensions.width)
     const rectY = Math.round(crop.top * dimensions.height)
@@ -200,7 +84,6 @@ function optimizeSanityImageUrl(
     params.push(`rect=${rectX},${rectY},${rectW},${rectH}`)
   }
 
-  // Use hotspot as focal point for the aspect ratio crop
   if (hotspot) {
     params.push('crop=focalpoint', `fp-x=${hotspot.x}`, `fp-y=${hotspot.y}`)
   } else {
@@ -212,148 +95,12 @@ function optimizeSanityImageUrl(
 }
 
 /**
- * Optimizes Sanity image URL for stacked layout with 3:2 aspect ratio
+ * Weekly Walk-Through header - agent photos + branding
+ * Note: This is typically static in HubSpot, not dynamically generated
  */
-function optimizeSanityImageUrlStacked(
-  url: string,
-  hotspot?: { x: number; y: number },
-  crop?: { top: number; bottom: number; left: number; right: number },
-  dimensions?: { width: number; height: number }
-): string {
-  if (!url.includes('cdn.sanity.io')) return url
-
-  const params: string[] = [`w=${STACKED_WIDTH}`, `h=${STACKED_HEIGHT}`, 'q=80', 'auto=format', 'fit=crop']
-
-  // Apply manual crop first if set (rect is applied before fit=crop)
-  if (crop && dimensions) {
-    const rectX = Math.round(crop.left * dimensions.width)
-    const rectY = Math.round(crop.top * dimensions.height)
-    const rectW = Math.round(dimensions.width * (1 - crop.left - crop.right))
-    const rectH = Math.round(dimensions.height * (1 - crop.top - crop.bottom))
-    params.push(`rect=${rectX},${rectY},${rectW},${rectH}`)
-  }
-
-  // Use hotspot as focal point for the aspect ratio crop
-  if (hotspot) {
-    params.push('crop=focalpoint', `fp-x=${hotspot.x}`, `fp-y=${hotspot.y}`)
-  } else {
-    params.push('crop=center')
-  }
-
-  const separator = url.includes('?') ? '&' : '?'
-  return `${url}${separator}${params.join('&')}`
-}
-
-/**
- * Renders section content in a simple stacked layout
- * - Image on top, text below, links at bottom
- * - 100% width for both desktop and mobile
- */
-function sectionBlockHtml(section: NewsletterSectionWithLayout): string {
-  const alt = section.imageAlt || section.heading
-  const anchorStyle = `text-decoration:none;`
-
-  const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
-
-  // Image content - optimize Sanity URLs for email (with crop and hotspot if available)
-  const optimizedImageUrl = section.imageUrl
-    ? optimizeSanityImageUrl(section.imageUrl, section.imageHotspot, section.imageCrop, section.imageDimensions)
-    : ''
-  let imageHtml = optimizedImageUrl
-    ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(alt)}" width="600" style="border:0;display:block;height:auto;width:100%;max-width:600px;">`
-    : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
-
-  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item)
-
-  if (imageContentLink) {
-    imageHtml = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${imageHtml}</a>`
-  }
-
-  // Text content
-  let sectionBody = paragraphsHtml(section.body)
-  if (imageContentLink) {
-    sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
-  }
-
-  // Stacked layout: image, then text, then links
-  const imageRow = `<div style="width:100%;margin:0 0 12px 0;">${imageHtml}</div>`
-  const textRow = `<div style="width:100%;text-align:left;">${sectionBody}</div>`
-  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
-
-  // MSO table for Outlook
-  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="100%" valign="top"><![endif]-->`
-  const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
-
-  return `<div style="width:100%;margin:0 0 34px 0;">
-  ${msoStart}
-  ${imageRow}
-  ${textRow}
-  ${linksRow}
-  ${msoEnd}
-</div>`
-}
-
-function renderSectionEmail(section: NewsletterSectionWithLayout): string {
-  return `${sectionHeadHtml(section)}
-${sectionBlockHtml(section)}`
-}
-
-/**
- * Renders section in stacked layout: Image → Title → Content → Links
- * Title appears below the image instead of above
- * Uses 660:460 aspect ratio (wider than default)
- */
-function renderSectionEmailStacked(section: NewsletterSectionWithLayout): string {
-  const alt = section.imageAlt || section.heading
-  const anchorStyle = `text-decoration:none;`
-
-  const linkHtml = sectionLinkHtml(section.linkUrl, section.instagram, section.facebookHandle)
-
-  // Image content - uses stacked aspect ratio (660:460)
-  const optimizedImageUrl = section.imageUrl
-    ? optimizeSanityImageUrlStacked(section.imageUrl, section.imageHotspot, section.imageCrop, section.imageDimensions)
-    : ''
-  let imageHtml = optimizedImageUrl
-    ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(alt)}" width="600" style="border:0;display:block;height:auto;width:100%;max-width:600px;">`
-    : `<div style="display:block;width:100%;aspect-ratio:1/1;background-color:#1a1a1a;"></div>`
-
-  const imageContentLink = [section.linkUrl, section.email, section.instagram, section.facebookHandle].find(item => item)
-
-  if (imageContentLink) {
-    imageHtml = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${imageHtml}</a>`
-  }
-
-  // Text content
-  let sectionBody = paragraphsHtml(section.body)
-  if (imageContentLink) {
-    sectionBody = `<a href="${esc(imageContentLink)}" target="_blank" style="${anchorStyle}">${sectionBody}</a>`
-  }
-
-  // Stacked layout: image (600px), then content area (550px centered)
-  const imageRow = `<div style="width:100%;margin:0 0 12px 0;">${imageHtml}</div>`
-
-  // Content wrapper: 550px wide, centered with 25px padding on each side
-  const contentStyle = `max-width:550px;margin:0 auto;padding:0 25px;`
-  const headingRow = section.heading ? `<div style="margin:0 0 12px 0;">${sectionHeadHtml(section)}</div>` : ''
-  const textRow = `<div style="text-align:left;">${sectionBody}</div>`
-  const linksRow = `<div style="margin:8px 0 0 0;font-size:16px;line-height:1.6;text-align:left;">${linkHtml}</div>`
-
-  const msoStart = `<!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="100%" valign="top"><![endif]-->`
-  const msoEnd = `<!--[if mso]></td></tr></table><![endif]-->`
-
-  return `<div style="width:100%;margin:0 0 34px 0;">
-  ${msoStart}
-  <div>
-    ${headingRow}
-  </div>
-  ${imageRow}
-  <div style="${contentStyle}">
-    ${textRow}
-    ${linksRow}
-  </div>
-  ${msoEnd}
-</div>`
-}
+const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration:none;display:block;">
+  <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20Footer%20Content/ywwt-header.png" alt="Your Weekly Walk-Through — PorterGoldberg Residential" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+</a>`
 
 /**
  * Halcyon e-blast header - logos only
@@ -368,20 +115,166 @@ const HEADER_HALCYON = `<table style="width: 100%; max-width: 600px; background-
 </tbody>
 </table>`
 
-/**
- * Weekly Walk-Through header - agent photos + branding
- * Note: This is typically static in HubSpot, not dynamically generated
- */
-const HEADER_WEEKLY = `<a href="https://www.portergoldberg.com/newsletters" target="_blank" style="text-decoration:none;display:block;">
-  <img src="https://46095216.fs1.hubspotusercontent-na1.net/hubfs/46095216/Email%20Header%20Footer%20Content/ywwt-header.png" alt="Your Weekly Walk-Through — PorterGoldberg Residential" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
-</a>`
-
-export type NewsletterType = 'weekly' | 'halcyon'
-export type NewsletterLayout = 'default' | 'stacked'
-
 const HEADERS: Record<NewsletterType, string> = {
   weekly: HEADER_WEEKLY,
   halcyon: HEADER_HALCYON,
+}
+
+/**
+ * Section heading with decorative line (alternating left/right alignment)
+ * Uses table structure for Outlook compatibility
+ */
+function generateSectionHeading(heading: string, index: number, titleLarger?: boolean): string {
+  const { eyebrow, title } = parseHeading(heading)
+  const isEven = index % 2 === 0
+
+  // Determine which word is larger
+  const isTitleLarger = titleLarger !== undefined ? titleLarger : !isEven
+  const largeWord = isTitleLarger ? title : eyebrow
+  const smallWord = isTitleLarger ? eyebrow : title
+
+  if (isEven) {
+    // Left-aligned: large word | small word | line
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+  <tr>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}">${esc(largeWord.toUpperCase())}</span></td>
+    <td style="width:16px;"></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}">${esc(smallWord.toUpperCase())}</span></td>
+    <td style="width:16px;"></td>
+    <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
+  </tr>
+</table>`
+  } else {
+    // Right-aligned: line | small word | large word
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+  <tr>
+    <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
+    <td style="width:16px;"></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_SMALL}text-transform:uppercase;${FONT}">${esc(smallWord.toUpperCase())}</span></td>
+    <td style="width:16px;"></td>
+    <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${HEADING_LARGE}text-transform:uppercase;${FONT}">${esc(largeWord.toUpperCase())}</span></td>
+  </tr>
+</table>`
+  }
+}
+
+/**
+ * Section divider line - uses table for Outlook compatibility
+ */
+function generateDivider(): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:40px;">
+  <tr><td style="padding:0;"><div style="height:1px;background:${DIVIDER_LIGHT};font-size:0;line-height:0;">&nbsp;</div></td></tr>
+</table>`
+}
+
+/**
+ * Extract domain from URL for display purposes
+ */
+function getDomain(url: string): string {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.hostname.replace('www.', '')
+  } catch {
+    return url
+  }
+}
+
+/**
+ * Generate links section (contact/social links)
+ */
+function generateLinks(linkUrl?: string | { url?: string; customText?: string }, instagram?: string, facebookHandle?: string, email?: string): string {
+  // Handle both old (string) and new (object) formats
+  const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
+  const customText = typeof linkUrl === 'string' ? undefined : linkUrl?.customText
+
+  if (!url && !instagram && !facebookHandle && !email) return ''
+
+  const links: string[] = []
+
+  if (email) {
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">email us: <a href="mailto:${esc(email)}" style="color:${SAGE};text-decoration:none;">${esc(email)}</a></p>`)
+  }
+
+  if (url) {
+    const linkText = customText || 'HERE'
+    if (url.startsWith('/') || url.includes('portergoldberg.com')) {
+      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">click <a href="${esc(url)}" style="color:${SAGE};text-decoration:none;">${esc(linkText)}</a> for more information</p>`)
+    } else {
+      // If no custom text and URL is long, show just the domain
+      let displayText = customText || url
+      if (!customText && url.length > 50) {
+        displayText = getDomain(url)
+      }
+      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(displayText)}</a></p>`)
+    }
+  }
+
+  if (instagram) {
+    const handle = instagram.replace('@', '')
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">ig: ${esc(handle)}</p>`)
+  }
+
+  if (facebookHandle) {
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">fb: ${esc(facebookHandle)}</p>`)
+  }
+
+  return `<div style="padding-top:14px;">
+  ${links.join('\n  ')}
+</div>`
+}
+
+/**
+ * Render a single newsletter section
+ * Uses table structure for better Outlook compatibility
+ */
+function renderSection(section: NewsletterSection, index: number): string {
+  const headingHtml = section.heading ? generateSectionHeading(section.heading, index, section.titleLarger) : ''
+
+  const optimizedImageUrl = section.imageUrl
+    ? optimizeSanityImageUrl(section.imageUrl, 600, 400, section.imageHotspot, section.imageCrop, section.imageDimensions)
+    : ''
+
+  const imageHtml = optimizedImageUrl
+    ? `<img src="${esc(optimizedImageUrl)}" alt="${esc(section.imageAlt || section.heading)}" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;">`
+    : ''
+
+  const bodyHtml = `<p style="margin:0;${BODY_TEXT}${FONT}">${typographic(section.body)}</p>`
+
+  const linksHtml = generateLinks(section.linkUrl, section.instagram, section.facebookHandle, section.email)
+
+  const topPadding = index === 0 ? '44px' : '40px'
+
+  // Use table for Outlook compatibility
+  return `<!--[if mso]>
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;">
+<tr><td style="padding:${topPadding} 0 0 0;">
+<![endif]-->
+<div style="padding:${topPadding} 0 0 0;">
+  ${headingHtml}
+  <div style="padding-top:24px;">
+    ${imageHtml}
+  </div>
+  <div style="padding-top:22px;">
+    ${bodyHtml}
+  </div>
+  ${linksHtml}
+</div>
+<!--[if mso]>
+</td></tr>
+</table>
+<![endif]-->`
+}
+
+/**
+ * Generates a "View on Website" link section
+ */
+function viewOnWebsiteHtml(slug: string): string {
+  const url = `https://www.portergoldberg.com/newsletters/${slug}`
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
+    <tr><td style="padding:0 0 16px 0;text-align:center;">
+      <a href="${url}" target="_blank" style="font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1a1a1a;text-decoration:none;">View this newsletter on our website</a>
+    </td></tr>
+  </table>`
 }
 
 /**
@@ -485,7 +378,7 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
   <tr>
     <td style="padding:10px 14px 16px 14px;background-color:#000000;">
       <p style="margin:0;font-size:10px;color:#ffffff;line-height:1.4;text-align:center;font-family:Arial,sans-serif;">
-        &copy; 2026 Sotheby&rsquo;s International Realty&reg; and the Sotheby&rsquo;s International Realty Logo are service marks licensed to Sotheby&rsquo;s International Realty Affiliates LLC and used with permission. Jameson Sotheby&rsquo;s International Realty fully supports the principles of the Fair Housing Act and the Equal Opportunity Act. Each franchise is independently owned and operated. Any services or products provided by independently owned and operated franchisees are not provided by, affiliated with or related to Sotheby&rsquo;s International Realty Affiliates LLC nor any of its affiliated companies.
+        &copy; ${new Date().getFullYear()} Sotheby&rsquo;s International Realty&reg; and the Sotheby&rsquo;s International Realty Logo are service marks licensed to Sotheby&rsquo;s International Realty Affiliates LLC and used with permission. Jameson Sotheby&rsquo;s International Realty fully supports the principles of the Fair Housing Act and the Equal Opportunity Act. Each franchise is independently owned and operated. Any services or products provided by independently owned and operated franchisees are not provided by, affiliated with or related to Sotheby&rsquo;s International Realty Affiliates LLC nor any of its affiliated companies.
       </p>
     </td>
   </tr>
@@ -493,91 +386,54 @@ const FOOTER_HTML = `<table role="presentation" width="100%" cellpadding="0" cel
 </table>`
 
 /**
- * Generates sections HTML for the newsletter.
- * Returns just the sections - header/footer handled separately in HubSpot.
- * @param layout - 'default' (title above image) or 'stacked' (image, then title below)
+ * Preheader (hidden preview text)
  */
-export function generateSectionsHtml(sections: NewsletterSection[], layout: NewsletterLayout = 'default'): string {
-  const sectionsHtml = sections
-    .map((section, index) => {
-      // Force alternating layout regardless of what's stored in Sanity
-      const alternatingSection: NewsletterSectionWithLayout = {
-        ...section,
-        layout: index % 2 === 0 ? 'image-left' : 'image-right',
-      }
-      // Use stacked renderer if layout is 'stacked'
-      return layout === 'stacked'
-        ? renderSectionEmailStacked(alternatingSection)
-        : renderSectionEmail(alternatingSection)
-    })
-    .join('\n\n')
-
-  // Wrap in content container
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-collapse:collapse;">
-<tr><td align="center" style="padding:0;">
-<div style="max-width:600px;margin:0 auto;padding:32px 0 8px 0;background-color:#ffffff;">
-<div style="max-width:600px;margin-bottom:32px;padding:0px 0 0px 0;text-align:center;background-color:#ffffff;">
-  <hr/>
-  <p style="margin:18px 19px 22px 20 px;${FONT}font-size:14px;font-style:italic;color:${INK};">Market updates, tips, and insights from Lauren and Samantha</p>
-  <hr/>
-</div>
-
-${sectionsHtml}
-
-</div>
-</td></tr>
-</table>`
-}
-
-/**
- * Generates a "View on Website" link section
- */
-function viewOnWebsiteHtml(slug: string): string {
-  const url = `https://www.portergoldberg.com/newsletters/${slug}`
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background-color:#ffffff;">
-    <tr><td style="padding:0 0 16px 0;text-align:center;">
-      <a href="${url}" target="_blank" style="${FONT}font-size:14px;color:${INK};text-decoration:none;">View this newsletter on our website</a>
-    </td></tr>
-  </table>`
-}
-
-/**
- * Generates preheader (hidden preview text)
- */
-function preheaderHtml(text: string): string {
-  return `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#e9e7e2;">
+function generatePreheader(text: string): string {
+  return `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;">
   ${typographic(text)}
 </div>`
 }
 
 /**
- * Generates full newsletter HTML including fixed header and footer.
- * @param sections - Newsletter content sections
- * @param slug - Optional slug for "View on Website" link
- * @param type - Newsletter type: 'weekly' (default) or 'halcyon'
- * @param previewText - Optional preheader/preview text
- * @param layout - 'default' (title above image) or 'stacked' (image, then title below)
+ * Main newsletter HTML generator
+ * Note: Email newsletters always use stacked layout
+ * Designed for HubSpot - no <html>, <head>, or <body> tags, no media queries
  */
 export function generateNewsletterEmailHtml(
   sections: NewsletterSection[],
   slug?: string,
   type: NewsletterType = 'weekly',
-  previewText?: string,
-  layout: NewsletterLayout = 'default'
+  previewText?: string
 ): string {
+  const preheader = previewText ? generatePreheader(previewText) : ''
   const header = HEADERS[type]
   const viewOnWebsite = slug ? viewOnWebsiteHtml(slug) : ''
-  const preheader = previewText ? preheaderHtml(previewText) : ''
 
-  // Outer wrapper table for email background
+  // Email content - pure inline styles, no CSS
   return `${preheader}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e7e2;border-collapse:collapse;">
-<tr><td align="center" style="padding:0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e7e2;border-collapse:collapse;margin:0;padding:0;">
+<tr><td align="center" style="padding:32px 0;">
 
 ${header}
-${generateSectionsHtml(sections, layout)}
+${generateSectionsHtml(sections)}
 ${viewOnWebsite}
 ${FOOTER_HTML}
+
+</td></tr>
+</table>`
+}
+
+/**
+ * Generate sections HTML wrapped in content container
+ */
+export function generateSectionsHtml(sections: NewsletterSection[]): string {
+  const sectionsHtml = sections.map((section, index) => renderSection(section, index)).join('\n\n')
+
+  // Wrap in content container - use width attribute for Outlook, max-width for responsive
+  return `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-collapse:collapse;margin:0 auto;">
+<tr><td style="padding:0;">
+
+${sectionsHtml}
 
 </td></tr>
 </table>`

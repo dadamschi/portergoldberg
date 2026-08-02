@@ -269,7 +269,10 @@ export type NewsletterImageSection = {
   alt?: string
   body?: string
   moreInfo?: string
-  linkUrl?: string
+  linkUrl?: string | {
+    url?: string
+    customText?: string
+  }
   instagram?: string
   email?: string
   facebookHandle?: string

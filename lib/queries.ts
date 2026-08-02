@@ -457,7 +457,10 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
       alt,
       body,
       moreInfo,
-      linkUrl,
+      linkUrl {
+        url,
+        customText
+      },
       instagram,
       email,
       facebookHandle
@@ -481,7 +484,10 @@ export const NEWSLETTER_BY_ID_QUERY = defineQuery(/* groq */ `
       alt,
       body,
       moreInfo,
-      linkUrl,
+      linkUrl {
+        url,
+        customText
+      },
       instagram,
       facebookHandle
     },

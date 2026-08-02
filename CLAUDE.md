@@ -161,6 +161,15 @@ Routes:
 - `/newsletters` - Archive page (grid of newsletter cards)
 - `/newsletters/[slug]` - Individual newsletter detail page
 
+### Newsletter Email Template
+
+Email newsletters use a **fully div-based stacked layout** (`lib/newsletter-email-template.ts`):
+- **No tables** (except MSO conditionals for Outlook compatibility)
+- **No width prediction** - headings can wrap naturally
+- **No rule/line** beside section headings
+- **Structure**: Title → Image (600x400) → Content (centered 550px column) → Links
+- **Aspect ratio**: 600x400 (3:2) for images - matches website stacked layout
+
 ## Email (Resend)
 
 Transactional emails are sent via [Resend](https://resend.com).

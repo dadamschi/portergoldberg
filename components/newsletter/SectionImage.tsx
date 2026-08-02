@@ -16,7 +16,10 @@ export type SectionImageVariant = 'default' | 'stacked'
 interface SectionImageProps {
   image: SanityImage | null
   alt?: string
-  linkUrl?: string
+  linkUrl?: string | {
+    url?: string
+    customText?: string
+  }
   variant?: SectionImageVariant
 }
 
@@ -85,12 +88,15 @@ export function SectionImage({ image, alt, linkUrl, variant = 'default' }: Secti
     />
   )
 
-  if (!linkUrl) {
+  // Handle both old (string) and new (object) formats
+  const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
+
+  if (!url) {
     return imageElement
   }
 
-  if (linkUrl.startsWith('#contact:')) {
-    const message = linkUrl.replace('#contact:', '')
+  if (url.startsWith('#contact:')) {
+    const message = url.replace('#contact:', '')
     return (
       <ContactLink message={message} className="pg-newsletter-section-link">
         {imageElement}
@@ -98,9 +104,9 @@ export function SectionImage({ image, alt, linkUrl, variant = 'default' }: Secti
     )
   }
 
-  if (linkUrl.startsWith('/')) {
+  if (url.startsWith('/')) {
     return (
-      <Link href={linkUrl} className="pg-newsletter-section-link">
+      <Link href={url} className="pg-newsletter-section-link">
         {imageElement}
       </Link>
     )
@@ -108,7 +114,7 @@ export function SectionImage({ image, alt, linkUrl, variant = 'default' }: Secti
 
   return (
     <a
-      href={addUtmParams(linkUrl, { campaign: 'newsletter' })}
+      href={addUtmParams(url, { campaign: 'newsletter' })}
       target="_blank"
       rel="noreferrer"
       className="pg-newsletter-section-link"

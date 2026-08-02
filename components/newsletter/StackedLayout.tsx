@@ -26,7 +26,9 @@ function StackedSection({ section, index }: {
   section: NewsletterImageSection
   index: number
 }) {
-  const hasLinks = section.linkUrl || section.instagram || section.email || section.facebookHandle
+  // Handle both old (string) and new (object) formats
+  const linkUrlValue = typeof section.linkUrl === 'string' ? section.linkUrl : section.linkUrl?.url
+  const hasLinks = linkUrlValue || section.instagram || section.email || section.facebookHandle
 
   return (
     <div className="pg-newsletter-stacked-section" style={{ marginBottom: 32, maxWidth: 600 }}>

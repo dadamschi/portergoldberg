@@ -12,7 +12,7 @@ const BLANK_SECTION: NewsletterSection = {
   imageAlt: '',
   body: '',
   caption: '',
-  linkUrl: '',
+  linkUrl: undefined,
   instagram: '',
 }
 
@@ -32,7 +32,10 @@ interface SanityNewsletterFull {
     alt: string | null
     body: string | null
     moreInfo: string | null
-    linkUrl: string | null
+    linkUrl: {
+      url?: string
+      customText?: string
+    } | null
     instagram: string | null
   }> | null
 }
@@ -71,7 +74,7 @@ export default function NewsletterBuilderPage() {
             imageAlt: s.alt ?? '',
             body: s.body ?? '',
             caption: s.moreInfo ?? '',
-            linkUrl: s.linkUrl ?? '',
+            linkUrl: s.linkUrl ?? undefined,
             instagram: s.instagram ?? '',
           })
         )
@@ -94,10 +97,10 @@ export default function NewsletterBuilderPage() {
     setSections(sections.filter((_, i) => i !== index))
   }
 
-  const updateSection = (
+  const updateSection = <K extends keyof NewsletterSection>(
     index: number,
-    field: keyof NewsletterSection,
-    value: string
+    field: K,
+    value: NewsletterSection[K]
   ) => {
     const updated = [...sections]
     updated[index] = { ...updated[index], [field]: value }
@@ -157,7 +160,13 @@ export default function NewsletterBuilderPage() {
 
         {/* Sections Form */}
         <div className="mb-8 space-y-6">
-          {sections.map((section, index) => (
+          {sections.map((section, index) => {
+            // Extract linkUrl values with type guards for backwards compatibility
+            const linkUrl = section.linkUrl
+            const currentLinkUrl = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url || ''
+            const currentCustomText = typeof linkUrl === 'string' ? '' : linkUrl?.customText || ''
+
+            return (
             <div
               key={index}
               className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
@@ -264,11 +273,33 @@ export default function NewsletterBuilderPage() {
                   </label>
                   <input
                     type="text"
-                    value={section.linkUrl}
+                    value={currentLinkUrl}
                     onChange={(e) =>
-                      updateSection(index, 'linkUrl', e.target.value)
+                      updateSection(index, 'linkUrl', {
+                        url: e.target.value,
+                        customText: currentCustomText
+                      })
                     }
                     placeholder="https://..."
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {/* Link Custom Text */}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Link Custom Text (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={currentCustomText}
+                    onChange={(e) =>
+                      updateSection(index, 'linkUrl', {
+                        url: currentLinkUrl,
+                        customText: e.target.value
+                      })
+                    }
+                    placeholder="e.g. Learn More, View Details"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>
@@ -290,7 +321,8 @@ export default function NewsletterBuilderPage() {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Add Section Button */}

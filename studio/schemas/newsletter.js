@@ -124,8 +124,22 @@ export const newsletter = defineType({
             defineField({
               name: "linkUrl",
               title: "Link URL",
-              type: "string",
-              description: "Use full URL (https://...) for external links, relative path (/contact) for internal links, or #contact:Your message to open the contact form with a pre-filled message",
+              type: "object",
+              description: "Add a link with optional custom text",
+              fields: [
+                defineField({
+                  name: "url",
+                  title: "URL",
+                  type: "string",
+                  description: "Use full URL (https://...) for external links, relative path (/contact) for internal links, or #contact:Your message to open the contact form with a pre-filled message",
+                }),
+                defineField({
+                  name: "customText",
+                  title: "Custom Link Text",
+                  type: "string",
+                  description: "Optional custom text for the link (e.g. 'Learn More', 'View Details')",
+                }),
+              ],
             }),
             defineField({
               name: "instagram",
@@ -162,12 +176,12 @@ export const newsletter = defineType({
 
               // Show which part will be larger
               const preview = titleLarger
-                ? `${firstWords} [${lastWord}]`  // last word larger
-                : `[${firstWords}] ${lastWord}`  // first words larger
+                ? `${firstWords} ${lastWord.toUpperCase()}`  // last word larger
+                : `[${firstWords.toUpperCase()}] ${lastWord}`  // first words larger
 
               return {
                 title: preview,
-                subtitle: link ? `Links to: ${link}` : "No link",
+                subtitle: link ? `Links to: ${link.url}` : "No link",
                 media,
               }
             },

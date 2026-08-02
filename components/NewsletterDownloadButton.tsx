@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { generateNewsletterEmailHtml, type NewsletterSection, type NewsletterType, type NewsletterLayout } from '@/lib/newsletter-email-template'
+import { generateNewsletterEmailHtml, type NewsletterSection, type NewsletterType } from '@/lib/newsletter-email-template'
 
 interface NewsletterDownloadButtonProps {
   sections: NewsletterSection[]
@@ -11,24 +11,22 @@ interface NewsletterDownloadButtonProps {
 }
 
 export function NewsletterDownloadButton({ sections, slug, filename = 'newsletter.html', type = 'weekly' }: NewsletterDownloadButtonProps) {
-  const [copiedLayout, setCopiedLayout] = useState<NewsletterLayout | null>(null)
+  const [copied, setCopied] = useState(false)
 
-  const handleDownload = async (layout: NewsletterLayout) => {
-    const html = generateNewsletterEmailHtml(sections, slug, type, undefined, layout)
+  const handleDownload = async () => {
+    const html = generateNewsletterEmailHtml(sections, slug, type)
 
     // Copy to clipboard
     await navigator.clipboard.writeText(html)
-    setCopiedLayout(layout)
-    setTimeout(() => setCopiedLayout(null), 3000)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 3000)
 
     // Also download the file
-    const layoutSuffix = layout === 'stacked' ? '-stacked' : ''
-    const downloadFilename = filename.replace('.html', `${layoutSuffix}.html`)
     const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = downloadFilename
+    a.download = filename
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -38,10 +36,10 @@ export function NewsletterDownloadButton({ sections, slug, filename = 'newslette
   return (
     <div style={{ display: 'flex', gap: '8px' }}>
       <button
-        onClick={() => handleDownload('stacked')}
+        onClick={handleDownload}
         className="pg-newsletter-download-btn"
       >
-        {copiedLayout === 'stacked' ? 'Copied!' : 'Stacked HTML'}
+        {copied ? 'Copied!' : 'Download HTML'}
       </button>
     </div>
   )

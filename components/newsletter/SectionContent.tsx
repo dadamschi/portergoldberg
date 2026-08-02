@@ -5,7 +5,10 @@ import { addUtmParams } from '@/lib/utils/utm'
 interface SectionContentProps {
   body?: string
   moreInfo?: string
-  linkUrl?: string
+  linkUrl?: string | {
+    url?: string
+    customText?: string
+  }
 }
 
 export function SectionContent({ body, moreInfo, linkUrl }: SectionContentProps) {
@@ -20,14 +23,17 @@ export function SectionContent({ body, moreInfo, linkUrl }: SectionContentProps)
     </div>
   )
 
-  if (!linkUrl) {
+  // Handle both old (string) and new (object) formats
+  const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
+
+  if (!url) {
     return textBlock
   }
 
   const linkStyle = { textDecoration: 'none', color: 'inherit' }
 
-  if (linkUrl.startsWith('#contact:')) {
-    const message = linkUrl.replace('#contact:', '')
+  if (url.startsWith('#contact:')) {
+    const message = url.replace('#contact:', '')
     return (
       <ContactLink message={message} style={linkStyle}>
         {textBlock}
@@ -35,9 +41,9 @@ export function SectionContent({ body, moreInfo, linkUrl }: SectionContentProps)
     )
   }
 
-  if (linkUrl.startsWith('/')) {
+  if (url.startsWith('/')) {
     return (
-      <Link href={linkUrl} style={linkStyle}>
+      <Link href={url} style={linkStyle}>
         {textBlock}
       </Link>
     )
@@ -45,7 +51,7 @@ export function SectionContent({ body, moreInfo, linkUrl }: SectionContentProps)
 
   return (
     <a
-      href={addUtmParams(linkUrl, { campaign: 'newsletter' })}
+      href={addUtmParams(url, { campaign: 'newsletter' })}
       target="_blank"
       rel="noreferrer"
       style={linkStyle}

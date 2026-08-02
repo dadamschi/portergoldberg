@@ -20,7 +20,7 @@ export function SectionHeader({ heading, index = 0, titleLarger }: SectionHeader
 
   return (
     <div className={`pg-newsletter-section-header ${alignmentClass}`}>
-      <div>
+      <div style={{display: 'flex', alignItems: 'center'}}>
         {label && <span className={labelClass} style={{marginInlineEnd: '12px'}}>{label}</span>}
         <span className={titleClass}>{title}</span>
       </div>
