@@ -31,6 +31,7 @@ const INK = '#1A1917'
 const GOLD = '#000000'
 const SAGE = '#79a52c'
 const DIVIDER_LIGHT = '#dedbd6'
+const DIVIDER_DARK = '#666666' // Medium gray - visible in both light and dark modes
 
 // Typography - responsive with clamp, no explicit color for dark mode
 const FONT = "font-family:'Quicksand',Helvetica,Arial,sans-serif;"
@@ -155,14 +156,14 @@ function generateSectionHeading(heading: string, index: number, titleLarger?: bo
     <td style="width:16px;"></td>` : ''}
     <td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${titleStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(title.toUpperCase())}</span></td>
     <td style="width:16px;"></td>
-    <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
+    <td style="vertical-align:middle;padding:0;"><div style="height:1px;border-top:1px solid ${INK};font-size:0;line-height:0;">&nbsp;</div></td>
   </tr>
 </table>`
   } else {
     // Right-aligned: line | label | title
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <td style="vertical-align:middle;padding:0;"><div style="height:1px;background:${INK};font-size:0;line-height:0;">&nbsp;</div></td>
+    <td style="vertical-align:middle;padding:0;"><div style="height:1px;border-top:1px solid ${INK};font-size:0;line-height:0;">&nbsp;</div></td>
     <td style="width:16px;"></td>
     ${label ? `<td style="width:1%;white-space:nowrap;vertical-align:middle;padding:0;"><span style="${labelStyle}text-transform:uppercase;${FONT}color:${GOLD};">${esc(label.toUpperCase())}</span></td>
     <td style="width:16px;"></td>` : ''}
