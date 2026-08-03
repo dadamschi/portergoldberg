@@ -44,7 +44,7 @@ export default async function InventoryPage() {
     >
         <div>
           <h2>Available</h2>
-          <ListingsGrid listings={available} maxItems={4} />
+          <ListingsGrid listings={available} maxItems={6} />
         </div>
 
           <ContactBanner

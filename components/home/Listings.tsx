@@ -7,6 +7,7 @@ type ListingsProps = {
 }
 
 export function Listings({ listings, isFeatured }: ListingsProps) {
+  console.log(listings)
   return (
     <section className="pg-listings">
       {isFeatured && (
@@ -19,7 +20,7 @@ export function Listings({ listings, isFeatured }: ListingsProps) {
           </a>
         </div>
       )}
-      <ListingsGrid listings={listings} maxItems={4} />
+      <ListingsGrid listings={listings} maxItems={6} />
     </section>
   )
 }

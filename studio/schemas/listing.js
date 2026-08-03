@@ -139,15 +139,17 @@ export const listing = defineType({
   preview: {
     select: {
       title: "address",
-      subtitle: "neighborhood",
       status: "statusType",
       media: "image",
+      featured: "featured",
+      featuredOrder: "featuredOrder",
     },
-    prepare({ title, subtitle, status, media }) {
+    prepare({ title, status, media, featured, featuredOrder }) {
       return {
         title,
         subtitle: `${subtitle} • ${status}`,
         media,
+        featured: featured ? `Is Featured: ${featuredOrder}` : "",
       };
     },
   },
