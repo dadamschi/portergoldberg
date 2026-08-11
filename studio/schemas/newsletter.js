@@ -147,6 +147,12 @@ export const newsletter = defineType({
               description: "Instagram handle (with or without @) - displays as clickable link",
             }),
             defineField({
+              name: "phone",
+              title: "Phone Number",
+              type: "string",
+              description: "Phone number to contact - displays as clickable link",
+            }),
+            defineField({
               name: "email",
               title: "Email Address",
               type: "string",
