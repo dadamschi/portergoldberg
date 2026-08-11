@@ -29,14 +29,12 @@ export type NewsletterLayout = 'default' | 'stacked'
 // Color palette matching Claude design
 const INK = '#1A1917'
 const GOLD = '#000000'
-const SAGE = '#79a52c'
 const DIVIDER_LIGHT = '#dedbd6'
-const DIVIDER_DARK = '#666666' // Medium gray - visible in both light and dark modes
 
 // Typography - responsive with clamp, no explicit color for dark mode
 const FONT = "font-family:'Quicksand',Helvetica,Arial,sans-serif;"
-const HEADING_LARGE = `font-size:clamp(18px, 6vw, 38px);font-weight:600;letter-spacing:0.02em;`
-const HEADING_SMALL = `font-size:clamp(11px, 3vw, 19px);font-weight:600;letter-spacing:0.16em;`
+const HEADING_LARGE = `font-size:clamp(24px, 6vw, 42px);font-weight:400;letter-spacing:0.02em;`
+const HEADING_SMALL = `font-size:clamp(18px, 3vw, 26px);font-weight:400;letter-spacing:0.16em;`
 const BODY_TEXT = `font-size:clamp(14px, 2.5vw, 16px);line-height:1.58;`
 
 // Utility functions
@@ -207,33 +205,33 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
   const links: string[] = []
 
   if (email) {
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">Connect via email: <a href="mailto:${esc(email)}" style="color:${SAGE};text-decoration:none;">${esc(email)}</a></p>`)
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Connect via email: <a href="mailto:${esc(email)}" style="color:${INK};text-decoration:none;">${esc(email)}</a></p>`)
   }
 
   if (url) {
     if (url.startsWith('/') || url.includes('portergoldberg.com')) {
       const linkText = customText || 'Check it out on portergoldberg.com'
-      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}">click <a href="${esc(url)}" style="color:${SAGE};text-decoration:none;">${esc(linkText)}</a> for more information</p>`)
+      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(linkText)}</a></p>`)
     } else {
       // If no custom text and URL is long, show just the domain
       let displayText = customText || url
       if (!customText && url.length > 50) {
         displayText = getDomain(url)
       }
-      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(displayText)}</a></p>`)
+      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(displayText)}</a></p>`)
     }
   }
 
   if (instagram) {
     const handle = instagram.replace('@', '')
     const instagramUrl = `https://www.instagram.com/${handle}`
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(instagramUrl)}" style="color:${SAGE};text-decoration:none;" target="_blank">IG: ${esc(handle)}</a></p>`)
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(instagramUrl)}" style="color:${INK};text-decoration:none;" target="_blank">IG: @${esc(handle)}</a></p>`)
   }
 
   if (facebookHandle) {
     const fbHandle = facebookHandle.replace('@', '')
     const facebookUrl = `https://www.facebook.com/${fbHandle}`
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}"><a href="${esc(facebookUrl)}" style="color:${SAGE};text-decoration:none;" target="_blank">FB: ${esc(fbHandle)}</a></p>`)
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(facebookUrl)}" style="color:${INK};text-decoration:none;" target="_blank">FB: ${facebookUrl}</a></p>`)
   }
 
   return `<div style="padding-top:14px;">
