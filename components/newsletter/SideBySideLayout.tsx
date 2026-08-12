@@ -55,12 +55,13 @@ function SectionRows({ section, index, isImageRight }: {
       instagram={section.instagram}
       email={section.email}
       facebookHandle={section.facebookHandle}
+      phone={section.phone}
     />
   )
 
   // Handle both old (string) and new (object) formats
   const linkUrlValue = typeof section.linkUrl === 'string' ? section.linkUrl : section.linkUrl?.url
-  const hasLinks = linkUrlValue || section.instagram || section.email || section.facebookHandle
+  const hasLinks = linkUrlValue || section.instagram || section.email || section.facebookHandle || section.phone
 
   return (
     <>

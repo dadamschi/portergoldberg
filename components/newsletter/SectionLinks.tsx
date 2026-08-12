@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { addUtmParams } from '@/lib/utils/utm'
+import { formatPhoneNumber } from '@/lib/utils/contact'
 import { ContactLink } from '@/components/ContactLink'
 
 interface SectionLinksProps {
@@ -10,20 +11,15 @@ interface SectionLinksProps {
   instagram?: string
   email?: string
   facebookHandle?: string
+  phone?: string
 }
 
-export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: SectionLinksProps) {
+export function SectionLinks({ linkUrl, instagram, email, facebookHandle, phone }: SectionLinksProps) {
   // Handle both old (string) and new (object) formats
   const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
   const customText = typeof linkUrl === 'string' ? undefined : linkUrl?.customText
 
-  console.log('urlLink', url)
-  console.log('customText', customText)
-  console.log('instagramLink', instagram)
-  console.log('email', email)
-  console.log('facebook', facebookHandle)
-
-  if (!url && !instagram && !email) {
+  if (!url && !instagram && !email && !phone && !facebookHandle) {
     return null
   }
 
@@ -56,6 +52,12 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
           e: {email}
         </a>
       ) : null
+
+  const phoneNumber = phone ? (
+    <a href={`tel:${phone.replace(/\D/g, '')}`} className="pg-newsletter-url-link">
+      {formatPhoneNumber(phone)}
+    </a>
+  ) : null
 
   type LinkType = 'none' | 'contact' | 'local' | 'brochure' | 'external'
 
@@ -119,7 +121,10 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
     } else {
       const linkText = customText || (url.length > 50 ? 'Learn More' : url)
       urlLink = (
-        <Link href={url} className="pg-newsletter-url-link">
+        <Link href={url} 
+              target="_blank" 
+              className="pg-newsletter-url-link"
+              rel="noreferrer">
           {linkText}
         </Link>
       )
@@ -130,6 +135,7 @@ export function SectionLinks({ linkUrl, instagram, email, facebookHandle }: Sect
     <div className="pg-newsletter-section-links">
       {urlLink}
       {formattedEmailLink}
+      {phoneNumber}
       {formattedInstagramLink}
       {formattedFacebookLink}
     </div>

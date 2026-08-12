@@ -462,6 +462,7 @@ export const NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
         customText
       },
       instagram,
+      phone,
       email,
       facebookHandle
     },
@@ -489,6 +490,7 @@ export const NEWSLETTER_BY_ID_QUERY = defineQuery(/* groq */ `
         customText
       },
       instagram,
+      phone,
       facebookHandle
     },
     hubspotUrl

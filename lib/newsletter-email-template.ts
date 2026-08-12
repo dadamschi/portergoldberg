@@ -4,6 +4,8 @@
  * Based on Claude design template - fully responsive, email-client tested.
  */
 
+import { formatPhoneNumber } from './utils/contact'
+
 export interface NewsletterSection {
   heading: string // e.g. "FEATURED PROFESSIONAL" - parsed into eyebrow + title
   imageUrl: string
@@ -18,6 +20,7 @@ export interface NewsletterSection {
     customText?: string
   }
   instagram?: string
+  phone?: string
   facebookHandle?: string
   email?: string
   titleLarger?: boolean
@@ -195,17 +198,25 @@ function getDomain(url: string): string {
 /**
  * Generate links section (contact/social links)
  */
-function generateLinks(linkUrl?: string | { url?: string; customText?: string }, instagram?: string, facebookHandle?: string, email?: string): string {
+function generateLinks(linkUrl?: string | { url?: string; customText?: string }, instagram?: string, facebookHandle?: string, email?: string, phone?: string): string {
   // Handle both old (string) and new (object) formats
   const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
   const customText = typeof linkUrl === 'string' ? undefined : linkUrl?.customText
 
-  if (!url && !instagram && !facebookHandle && !email) return ''
+  if (!url && !instagram && !facebookHandle && !email && !phone) return ''
 
   const links: string[] = []
 
   if (email) {
     links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Connect via email: <a href="mailto:${esc(email)}" style="color:${INK};text-decoration:none;">${esc(email)}</a></p>`)
+  }
+
+  if (phone) {
+    console.log('phone', phone)
+    const formattedPhone = formatPhoneNumber(phone)
+    // Use raw digits for tel: link, formatted version for display
+    const telLink = phone.replace(/\D/g, '')
+    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Call or text: <a href="tel:${telLink}" style="color:${INK};text-decoration:none;">${esc(formattedPhone)}</a></p>`)
   }
 
   if (url) {
@@ -278,7 +289,7 @@ function renderSection(section: NewsletterSection, index: number): string {
     ? `<a href="${esc(wrapUrl)}" target="_blank" style="text-decoration:none;color:inherit;">${bodyElement}</a>`
     : bodyElement
 
-  const linksHtml = generateLinks(section.linkUrl, section.instagram, section.facebookHandle, section.email)
+  const linksHtml = generateLinks(section.linkUrl, section.instagram, section.facebookHandle, section.email, section.phone)
 
   const topPadding = index === 0 ? '0px' : '10px'
 

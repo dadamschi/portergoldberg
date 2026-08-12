@@ -150,7 +150,26 @@ export const newsletter = defineType({
               name: "phone",
               title: "Phone Number",
               type: "string",
-              description: "Phone number to contact - displays as clickable link",
+              description: "Phone number to contact - displays as clickable link (e.g., (312) 555-1234)",
+              validation: (rule) =>
+                rule.custom((value) => {
+                  if (!value) return true; // Optional field
+
+                  // Remove all non-numeric characters for validation
+                  const digits = value.replace(/\D/g, '');
+
+                  // Must have at least 10 digits (area code + number)
+                  if (digits.length < 10) {
+                    return 'Phone number must include area code (at least 10 digits)';
+                  }
+
+                  // US/Canada can have 10 or 11 digits (with country code)
+                  if (digits.length > 11) {
+                    return 'Phone number is too long';
+                  }
+
+                  return true;
+                }),
             }),
             defineField({
               name: "email",

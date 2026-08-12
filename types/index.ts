@@ -274,6 +274,7 @@ export type NewsletterImageSection = {
     customText?: string
   }
   instagram?: string
+  phone?: string
   email?: string
   facebookHandle?: string
 }
