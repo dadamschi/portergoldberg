@@ -212,7 +212,6 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
   }
 
   if (phone) {
-    console.log('phone', phone)
     const formattedPhone = formatPhoneNumber(phone)
     // Use raw digits for tel: link, formatted version for display
     const telLink = phone.replace(/\D/g, '')
