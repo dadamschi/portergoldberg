@@ -196,14 +196,41 @@ function getDomain(url: string): string {
 }
 
 /**
+ * Normalize URL to ensure portergoldberg.com links use https://www.portergoldberg.com
+ */
+function normalizeUrl(url: string): string {
+  // Local links (starting with /) should be converted to full URLs
+  if (url.startsWith('/')) {
+    return `https://www.portergoldberg.com${url}`
+  }
+
+  // URLs containing portergoldberg.com should use https://www.portergoldberg.com
+  if (url.includes('portergoldberg.com')) {
+    try {
+      const urlObj = new URL(url)
+      // Replace any variation (http/https, www/non-www) with canonical version
+      return url.replace(urlObj.origin, 'https://www.portergoldberg.com')
+    } catch {
+      // If URL parsing fails but it contains portergoldberg.com, try to fix it
+      // Handle cases like "portergoldberg.com/path" without protocol
+      if (!url.startsWith('http')) {
+        return `https://www.portergoldberg.com${url.replace(/^portergoldberg\.com/, '')}`
+      }
+    }
+  }
+
+  return url
+}
+
+/**
  * Generate links section (contact/social links)
  */
 function generateLinks(linkUrl?: string | { url?: string; customText?: string }, instagram?: string, facebookHandle?: string, email?: string, phone?: string): string {
   // Handle both old (string) and new (object) formats
-  const url = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
+  const rawUrl = typeof linkUrl === 'string' ? linkUrl : linkUrl?.url
   const customText = typeof linkUrl === 'string' ? undefined : linkUrl?.customText
 
-  if (!url && !instagram && !facebookHandle && !email && !phone) return ''
+  if (!rawUrl && !instagram && !facebookHandle && !email && !phone) return ''
 
   const links: string[] = []
 
@@ -218,15 +245,19 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
     links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Call or text: <a href="tel:${telLink}" style="color:${INK};text-decoration:none;">${esc(formattedPhone)}</a></p>`)
   }
 
-  if (url) {
-    if (url.startsWith('/') || url.includes('portergoldberg.com')) {
+  if (rawUrl) {
+    // Normalize URL once at the beginning
+    const url = normalizeUrl(rawUrl)
+    const isPorterGoldbergUrl = rawUrl.startsWith('/') || rawUrl.includes('portergoldberg.com')
+
+    if (isPorterGoldbergUrl) {
       const linkText = customText || 'Check it out on portergoldberg.com'
       links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(linkText)}</a></p>`)
     } else {
       // If no custom text and URL is long, show just the domain
-      let displayText = customText || url
-      if (!customText && url.length > 50) {
-        displayText = getDomain(url)
+      let displayText = customText || rawUrl
+      if (!customText && rawUrl.length > 50) {
+        displayText = getDomain(rawUrl)
       }
       links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(displayText)}</a></p>`)
     }
@@ -261,7 +292,7 @@ function renderSection(section: NewsletterSection, index: number): string {
   const linkUrlValue = typeof section.linkUrl === 'string' ? section.linkUrl : section.linkUrl?.url
 
   if (linkUrlValue) {
-    wrapUrl = linkUrlValue
+    wrapUrl = normalizeUrl(linkUrlValue)
   } else if (section.instagram) {
     wrapUrl = `https://www.instagram.com/${section.instagram.replace('@', '')}`
   } else if (section.facebookHandle) {
