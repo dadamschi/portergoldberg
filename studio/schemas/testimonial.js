@@ -74,7 +74,14 @@ export const testimonial = defineType({
       name: "hubspotContactId",
       title: "HubSpot Contact ID",
       type: "string",
-      description: "Links this testimonial to a HubSpot contact",
+      description: "Primary HubSpot contact ID (for backwards compatibility)",
+    }),
+    defineField({
+      name: "hubspotContactIds",
+      title: "HubSpot Contact IDs",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "All HubSpot contact IDs linked to this testimonial (for couples/households)",
     }),
   ],
   orderings: [

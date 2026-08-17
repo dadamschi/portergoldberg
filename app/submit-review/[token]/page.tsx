@@ -27,7 +27,8 @@ type ExistingTestimonialData = {
 }
 
 // Extract plain text from Portable Text blocks
-function portableTextToPlain(blocks: PortableTextBlock[]): string {
+function portableTextToPlain(blocks: PortableTextBlock[] | null | undefined): string {
+  if (!blocks || !Array.isArray(blocks)) return ''
   return blocks
     .map((block) => {
       if (block._type !== 'block' || !block.children) return ''
@@ -41,17 +42,20 @@ function portableTextToPlain(blocks: PortableTextBlock[]): string {
 export default async function SubmitReviewPage({ params }: Props) {
   const { token } = await params
 
-  // Verify token and extract contact ID
-  const contactId = verifyReviewToken(token)
-  if (!contactId) {
+  // Verify token and extract contact IDs
+  const contactIds = verifyReviewToken(token)
+  if (!contactIds || contactIds.length === 0) {
     notFound()
   }
+
+  // Use first contact ID for lookup (primary contact)
+  const primaryContactId = contactIds[0]
 
   // Check if testimonial already exists for this contact (including drafts)
   // Using 'raw' perspective to get actual document IDs (with drafts. prefix if draft)
   const existingTestimonial = await client.fetch<ExistingTestimonialData | null>(
     TESTIMONIAL_BY_HUBSPOT_ID_QUERY,
-    { hubspotContactId: contactId },
+    { hubspotContactId: primaryContactId },
     { perspective: 'raw' }
   )
 
@@ -76,14 +80,31 @@ export default async function SubmitReviewPage({ params }: Props) {
     )
   }
 
-  // Fetch contact details and deals from HubSpot
-  const [contact, deals] = await Promise.all([
-    getContactById(contactId),
-    getContactDeals(contactId),
+  // Fetch all contacts and deals from HubSpot
+  const [contacts, deals] = await Promise.all([
+    Promise.all(contactIds.map(id => getContactById(id))),
+    getContactDeals(primaryContactId),
   ])
 
-  const defaultName = existingTestimonial?.clientName
-    || (contact ? `${contact.firstname} ${contact.lastname}`.trim() : '')
+  // Merge names for multiple contacts (e.g., "John & Jane Smith" or "John Smith & Jane Doe")
+  const defaultName = existingTestimonial?.clientName || (() => {
+    const validContacts = contacts.filter(Boolean)
+    if (validContacts.length === 0) return ''
+    if (validContacts.length === 1) {
+      const c = validContacts[0]!
+      return `${c.firstname} ${c.lastname}`.trim()
+    }
+    // Multiple contacts - check if they share last name
+    const firstNames = validContacts.map(c => c!.firstname)
+    const lastNames = validContacts.map(c => c!.lastname)
+    const sharedLastName = lastNames.every(ln => ln === lastNames[0])
+
+    if (sharedLastName) {
+      return `${firstNames.join(' & ')} ${lastNames[0]}`.trim()
+    } else {
+      return validContacts.map(c => `${c!.firstname} ${c!.lastname}`).join(' & ')
+    }
+  })()
 
   // Get most recent deal
   const recentDeal = deals[0] || null

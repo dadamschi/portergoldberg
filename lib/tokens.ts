@@ -14,37 +14,38 @@ function getSecret(): string {
 }
 
 /**
- * Generate a signed token for a HubSpot contact ID
- * Format: base64(contactId:hmac)
+ * Generate a signed token for one or more HubSpot contact IDs
+ * Format: base64(contactId1,contactId2:hmac)
  */
-export function generateReviewToken(contactId: string): string {
+export function generateReviewToken(contactIds: string | string[]): string {
   const secret = getSecret()
-  const hmac = createHmac('sha256', secret).update(contactId).digest('hex').slice(0, 16)
-  const payload = `${contactId}:${hmac}`
+  const idsString = Array.isArray(contactIds) ? contactIds.join(',') : contactIds
+  const hmac = createHmac('sha256', secret).update(idsString).digest('hex').slice(0, 16)
+  const payload = `${idsString}:${hmac}`
   return Buffer.from(payload).toString('base64url')
 }
 
 /**
  * Decode and verify a review token
- * Returns the contact ID if valid, null if invalid
+ * Returns array of contact IDs if valid, null if invalid
  */
-export function verifyReviewToken(token: string): string | null {
+export function verifyReviewToken(token: string): string[] | null {
   try {
     const secret = getSecret()
     const payload = Buffer.from(token, 'base64url').toString('utf-8')
-    const [contactId, providedHmac] = payload.split(':')
+    const [contactIds, providedHmac] = payload.split(':')
 
-    if (!contactId || !providedHmac) {
+    if (!contactIds || !providedHmac) {
       return null
     }
 
-    const expectedHmac = createHmac('sha256', secret).update(contactId).digest('hex').slice(0, 16)
+    const expectedHmac = createHmac('sha256', secret).update(contactIds).digest('hex').slice(0, 16)
 
     if (providedHmac !== expectedHmac) {
       return null
     }
 
-    return contactId
+    return contactIds.split(',')
   } catch {
     return null
   }

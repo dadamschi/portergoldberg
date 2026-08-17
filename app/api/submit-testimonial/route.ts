@@ -47,13 +47,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify token
-    const contactId = verifyReviewToken(token)
-    if (!contactId) {
+    const contactIds = verifyReviewToken(token)
+    if (!contactIds || contactIds.length === 0) {
       return NextResponse.json(
         { error: 'Invalid or expired token' },
         { status: 401 }
       )
     }
+
+    const primaryContactId = contactIds[0]
 
     // Check if write client is configured
     if (!process.env.SANITY_API_WRITE_TOKEN) {
@@ -71,7 +73,8 @@ export async function POST(request: NextRequest) {
       date: date || new Date().toISOString().split('T')[0],
       quote: textToPortableText(quote.trim()),
       pinOnHomePage: false,
-      hubspotContactId: contactId,
+      hubspotContactId: primaryContactId,
+      hubspotContactIds: contactIds, // Store all contact IDs
     }
 
     await writeClient.createOrReplace(document)

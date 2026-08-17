@@ -28,6 +28,7 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, zillowRev
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
+  console.log(existingData)
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('loading')
@@ -71,7 +72,7 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, zillowRev
 
   const handleCopyAndZillowReview = () => {
     navigator.clipboard.writeText(formData.quote)
-    window.open(zillowReviewUrl || 'https://www.zillow.com/profile/portergoldberg', '_blank')
+    window.open(zillowReviewUrl || 'https://www.zillow.com/profile/portergoldberg#reviews', '_blank')
   }
 
   if (status === 'success') {
