@@ -138,18 +138,55 @@ export const listing = defineType({
   ],
   preview: {
     select: {
-      title: "address",
+      address: "address",
+      neighborhood: "neighborhood",
+      city: "city",
+      price: "price",
+      beds: "beds",
+      baths: "baths",
+      sqft: "sqft",
       status: "statusType",
-      media: "image",
+      statusLabel: "status",
       featured: "featured",
       featuredOrder: "featuredOrder",
+      halcyon: "isHalcyonProject",
+      halcyonOrder: "halcyonOrder",
+      soldOrder: "soldOrder",
+      units: "units",
+      media: "image",
     },
-    prepare({ title, status, media, featured, featuredOrder }) {
+    prepare({ address, neighborhood, city, price, beds, baths, sqft, status, statusLabel, featured, featuredOrder, halcyon, halcyonOrder, soldOrder, units, media }) {
+      // Build subtitle with relevant details
+      const details = [];
+      console.log('featuredOrder', featuredOrder)
+      console.log('featured', featured)
+
+      if (price) details.push(`${price}`);
+      if (beds || baths) {
+        const bedBath = [beds && `${beds}bd`, baths && `${baths}ba`].filter(Boolean).join(", ");
+        details.push(bedBath);
+      }
+      if (sqft) details.push(sqft);
+      if (units) details.push(`${units} units`);
+      if (neighborhood) details.push(neighborhood);
+      else if (city && city !== "Chicago") details.push(city);
+
+      const subtitle = details.join(" • ");
+
+      // Build description line with ordering info
+      const meta = [];
+
+      if (featured && featuredOrder) meta.push(`Featured #${featuredOrder}`);
+      if (halcyon && halcyonOrder) meta.push(`Halcyon #${halcyonOrder}`);
+      if (status === "sold" && soldOrder) meta.push(`Sold #${soldOrder}`);
+
+      const description = meta.join(" | ");
+
       return {
-        title,
-        subtitle: `${subtitle} • ${status}`,
-        media,
-        featured: featured ? `Is Featured: ${featuredOrder}` : "",
+        title: address || "Untitled Listing",
+        subtitle: subtitle,
+        description: description || status,
+        media: media,
       };
     },
   },

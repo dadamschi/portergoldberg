@@ -35,7 +35,6 @@ export default async function InventoryPage() {
   const heroData = {
     heroHeadline: 'Explore our current listings and recently sold properties in Chicago',
   }
-  console.log('available', available)
 
   return (
     <ContentTemplate
@@ -43,7 +42,7 @@ export default async function InventoryPage() {
       heroData={heroData}
     >
         <div>
-          <h2>Available</h2>
+          <h2>Inventory</h2>
           <ListingsGrid listings={available} maxItems={6} />
         </div>
 

@@ -108,9 +108,11 @@ On-demand revalidation via `/api/revalidate` webhook from Sanity (requires `SANI
 
 ## Sanity
 
-**Project ID**: `mw8duas2` | **Dataset**: `production` | **API Version**: `2026-02-01`
+**Project ID**: `mw8duas2` | **Dataset**: `production` | **API Version**: `2024-01-01`
 
 Studio is standalone in `/studio` with separate `package.json`.
+
+**Live Studio**: https://portergoldberg.sanity.studio/
 
 ### Sanity Clients
 
@@ -170,6 +172,14 @@ Email newsletters use a **fully div-based stacked layout** (`lib/newsletter-emai
 - **Structure**: Title → Image (600x400) → Content (centered 550px column) → Links
 - **Aspect ratio**: 600x400 (3:2) for images - matches website stacked layout
 
+### Testimonial Ordering
+
+Testimonials use an `order` field for custom sorting:
+- Lower numbers appear first
+- New testimonials without an `order` appear at the TOP (sorted by creation date)
+- Set `order` in Sanity Studio to position testimonials permanently
+- Update via `scripts/update-testimonial-order.ts` for bulk changes
+
 ## Email (Resend)
 
 Transactional emails are sent via [Resend](https://resend.com).
@@ -202,6 +212,16 @@ Contact Form (ContactPageForm.tsx)
 ```env
 RESEND_API_KEY=              # Resend API key (required)
 ```
+
+## API Routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| `/api/error-notify` | POST | Creates GitHub Issue for errors |
+| `/api/revalidate` | POST | Sanity webhook for ISR cache revalidation (requires `x-revalidate-secret` header) |
+| `/api/subscribe` | POST | Newsletter subscription (HubSpot) |
+| `/api/unsubscribe` | POST | Newsletter unsubscribe (HubSpot) |
+| `/api/vendor-list` | POST | Vendor list signup request |
 
 ## Analytics & Tracking
 
@@ -237,14 +257,78 @@ Scripts in `scripts/` for HubSpot and data operations (run with `npx ts-node scr
 - **Newsletters**: `sync-newsletter-to-hubspot.ts`, `update-newsletter-content.ts`
 - **Other**: `check-sitemap.ts`, `fetch-google-reviews.ts`
 
+## Error Tracking (GitHub Issues)
+
+Errors are automatically tracked as GitHub Issues instead of email notifications.
+
+**Setup:** Create a fine-grained PAT with `issues:write` permission, add as `GITHUB_TOKEN` env var.
+
+**How it works:**
+- 404 errors create issues titled `404: /path` with `bug/404` label
+- Runtime errors create issues with `bug/runtime` label
+- Global errors create issues with `bug/global-error` label
+- Duplicate errors add comments to existing open issues instead of creating new ones
+- Closing an issue resets tracking (new occurrence = new issue)
+
+**Key files:**
+- `app/not-found.tsx` - 404 tracking (uses `x-pathname` from middleware)
+- `app/error.tsx` - Page-level error tracking
+- `app/global-error.tsx` - Root error tracking
+- `lib/github.ts` - GitHub Issues API client
+- `middleware.ts` - Sets `x-url` and `x-pathname` headers for error context
+
+## Styling
+
+**Single CSS file**: `styles/globals.css` - all styles in one file using CSS variables
+
+**Key colors** (see BRAND.md for full palette):
+- Navy: `--pg-navy` (#000035)
+- Sage: `--pg-sage` (#79A52C)
+- Teal: `--pg-teal` (#50B08A)
+- Cream: `--pg-cream` (#F5F3EE)
+
+**Typography**: Quicksand (primary), Nunito Sans, Proxima Nova
+
+**Breakpoint**: 768px (mobile/desktop)
+
+**Class naming**: Prefix with `pg-` (e.g., `pg-newsletter-section`)
+
+## Redirects
+
+Configured in `next.config.ts`:
+
+| From | To |
+|------|-----|
+| `/buy` | `/buying` |
+| `/sell` | `/selling` |
+| `/lets-connect` | `/contact` |
+| `/our-trusted-vendors` | `/client-resources` |
+| `/local-school-guidance` | `/client-resources` |
+| `/eblasts` | `/newsletters` |
+| `/active-listings` | `/inventory` |
+| `/listings` | `/inventory` |
+
 ## Environment Variables
 
 ```env
+# Sanity CMS
 NEXT_PUBLIC_SANITY_PROJECT_ID=mw8duas2
 NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_READ_TOKEN=       # Server-side fetches (read-only)
 SANITY_API_WRITE_TOKEN=      # Server-side writes (creating/updating documents)
-SANITY_REVALIDATE_SECRET=    # Webhook auth
+SANITY_REVALIDATE_SECRET=    # Webhook auth for ISR
+
+# External Services
 HUBSPOT_API_KEY=             # HubSpot API access
-RESEND_API_KEY=              # Resend email API
+RESEND_API_KEY=              # Resend email API (optional)
+GITHUB_TOKEN=                # GitHub Issues for error tracking (fine-grained PAT)
+
+# Email (SMTP - alternative to Resend)
+SMTP_HOST=                   # SMTP server host
+SMTP_PORT=                   # SMTP port (usually 587)
+SMTP_USER=                   # SMTP username
+SMTP_PASS=                   # SMTP password
+SMTP_FROM_EMAIL=             # Sender email address
+CONTACT_EMAIL=               # Primary contact form recipient
+CONTACT_CC_EMAIL=            # CC recipient for contact forms
 ```

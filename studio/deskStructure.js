@@ -5,7 +5,78 @@ export const structure = (S) =>
       // === FREQUENTLY UPDATED ===
       S.documentTypeListItem("testimonial").title("Testimonials"),
       S.documentTypeListItem("newsletter").title("Newsletters"),
-      S.documentTypeListItem("listing").title("Listings"),
+
+      // Custom Listings view with ordering
+      S.listItem()
+        .title("Listings")
+        .child(
+          S.list()
+            .title("Listings")
+            .items([
+              S.listItem()
+                .title("All Listings")
+                .icon(() => "📋")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("All Listings")
+                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
+                ),
+
+              S.divider(),
+
+              S.listItem()
+                .title("Featured Listings")
+                .icon(() => "⭐")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("Featured Listings")
+                    .filter('featured == true')
+                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
+                ),
+
+              S.listItem()
+                .title("Halcyon Projects")
+                .icon(() => "🏗️")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("Halcyon Projects")
+                    .filter('isHalcyonProject == true')
+                    .defaultOrdering([{ field: "halcyonOrder", direction: "asc" }])
+                ),
+
+              S.listItem()
+                .title("Sold Listings")
+                .icon(() => "✅")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("Sold Listings")
+                    .filter('statusType == "sold" && defined(soldOrder)')
+                    .defaultOrdering([{ field: "soldOrder", direction: "asc" }])
+                ),
+
+              S.divider(),
+
+              S.listItem()
+                .title("Active Listings")
+                .icon(() => "🟢")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("Active Listings")
+                    .filter('statusType == "active"')
+                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
+                ),
+
+              S.listItem()
+                .title("Coming Soon")
+                .icon(() => "🔜")
+                .child(
+                  S.documentTypeList("listing")
+                    .title("Coming Soon")
+                    .filter('statusType == "coming"')
+                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
+                ),
+            ])
+        ),
       S.listItem()
         .title("Client Page")
         .child(
