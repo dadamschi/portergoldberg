@@ -17,9 +17,9 @@ export const structure = (S) =>
                 .title("All Listings")
                 .icon(() => "📋")
                 .child(
-                  S.documentTypeList("listing")
+                  S.documentList()
                     .title("All Listings")
-                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
+                    .filter('_type == "listing"')
                 ),
 
               S.divider(),
@@ -28,9 +28,10 @@ export const structure = (S) =>
                 .title("Featured Listings")
                 .icon(() => "⭐")
                 .child(
-                  S.documentTypeList("listing")
-                    .title("Featured Listings")
-                    .filter('featured == true')
+                  S.documentList()
+                    .title("Featured Listings (by order)")
+                    .id("featuredListingsByOrder")
+                    .filter('_type == "listing" && featured == true')
                     .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
                 ),
 
@@ -38,9 +39,9 @@ export const structure = (S) =>
                 .title("Halcyon Projects")
                 .icon(() => "🏗️")
                 .child(
-                  S.documentTypeList("listing")
+                  S.documentList()
                     .title("Halcyon Projects")
-                    .filter('isHalcyonProject == true')
+                    .filter('_type == "listing" && isHalcyonProject == true')
                     .defaultOrdering([{ field: "halcyonOrder", direction: "asc" }])
                 ),
 
@@ -48,31 +49,19 @@ export const structure = (S) =>
                 .title("Sold Listings")
                 .icon(() => "✅")
                 .child(
-                  S.documentTypeList("listing")
+                  S.documentList()
                     .title("Sold Listings")
-                    .filter('statusType == "sold" && defined(soldOrder)')
+                    .filter('_type == "listing" && statusType == "sold" && defined(soldOrder)')
                     .defaultOrdering([{ field: "soldOrder", direction: "asc" }])
-                ),
-
-              S.divider(),
-
-              S.listItem()
-                .title("Active Listings")
-                .icon(() => "🟢")
-                .child(
-                  S.documentTypeList("listing")
-                    .title("Active Listings")
-                    .filter('statusType == "active"')
-                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
                 ),
 
               S.listItem()
                 .title("Coming Soon")
                 .icon(() => "🔜")
                 .child(
-                  S.documentTypeList("listing")
+                  S.documentList()
                     .title("Coming Soon")
-                    .filter('statusType == "coming"')
+                    .filter('_type == "listing" && statusType == "coming"')
                     .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
                 ),
             ])

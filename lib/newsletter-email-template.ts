@@ -233,16 +233,18 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
   if (!rawUrl && !instagram && !facebookHandle && !email && !phone) return ''
 
   const links: string[] = []
+  const paragraphStyle = `style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:700;${FONT}color:${INK};"`;
+  const anchorStyle = `style="color:${INK};text-decoration:underline;"`;
 
   if (email) {
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Connect via email: <a href="mailto:${esc(email)}" style="color:${INK};text-decoration:none;">${esc(email)}</a></p>`)
+    links.push(`<p ${paragraphStyle}>Connect via email: <a href="mailto:${esc(email)}" ${anchorStyle}>${esc(email)} &gt;</a></p>`)
   }
 
   if (phone) {
     const formattedPhone = formatPhoneNumber(phone)
     // Use raw digits for tel: link, formatted version for display
     const telLink = phone.replace(/\D/g, '')
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};">Call or text: <a href="tel:${telLink}" style="color:${INK};text-decoration:none;">${esc(formattedPhone)}</a></p>`)
+    links.push(`<p ${paragraphStyle}>Call or text: <a href="tel:${telLink}" ${anchorStyle}>${esc(formattedPhone)}</a></p>`)
   }
 
   if (rawUrl) {
@@ -252,27 +254,27 @@ function generateLinks(linkUrl?: string | { url?: string; customText?: string },
 
     if (isPorterGoldbergUrl) {
       const linkText = customText || 'Check it out on portergoldberg.com'
-      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(linkText)}</a></p>`)
+      links.push(`<p ${paragraphStyle}><a href="${esc(url)}" ${anchorStyle}>${esc(linkText)} &gt;</a></p>`)
     } else {
       // If no custom text and URL is long, show just the domain
       let displayText = customText || rawUrl
       if (!customText && rawUrl.length > 50) {
         displayText = getDomain(rawUrl)
       }
-      links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(url)}" style="color:${INK};text-decoration:none;">${esc(displayText)}</a></p>`)
+      links.push(`<p ${paragraphStyle}><a href="${esc(url)}" target="_blank" ${anchorStyle}>${esc(displayText)} &gt;</a></p>`)
     }
   }
 
   if (instagram) {
     const handle = instagram.replace('@', '')
     const instagramUrl = `https://www.instagram.com/${handle}`
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(instagramUrl)}" style="color:${INK};text-decoration:none;" target="_blank">IG: @${esc(handle)}</a></p>`)
+    links.push(`<p ${paragraphStyle}><a href="${esc(instagramUrl)}" target="_blank" ${anchorStyle}>IG: @${esc(handle)} &gt;</a></p>`)
   }
 
   if (facebookHandle) {
     const fbHandle = facebookHandle.replace('@', '')
     const facebookUrl = `https://www.facebook.com/${fbHandle}`
-    links.push(`<p style="margin:0 0 4px 0;font-size:15px;letter-spacing:0.03em;font-weight:500;${FONT}color:${INK};"><a href="${esc(facebookUrl)}" style="color:${INK};text-decoration:none;" target="_blank">FB: ${facebookUrl}</a></p>`)
+    links.push(`<p ${paragraphStyle}><a href="${esc(facebookUrl)}" target="_blank" ${anchorStyle}>FB: ${fbHandle} &gt;</a></p>`)
   }
 
   return `<div style="padding-top:14px;">

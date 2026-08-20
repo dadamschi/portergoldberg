@@ -158,8 +158,6 @@ export const listing = defineType({
     prepare({ address, neighborhood, city, price, beds, baths, sqft, status, statusLabel, featured, featuredOrder, halcyon, halcyonOrder, soldOrder, units, media }) {
       // Build subtitle with relevant details
       const details = [];
-      console.log('featuredOrder', featuredOrder)
-      console.log('featured', featured)
 
       if (price) details.push(`${price}`);
       if (beds || baths) {
@@ -178,16 +176,42 @@ export const listing = defineType({
 
       if (featured && featuredOrder) meta.push(`Featured #${featuredOrder}`);
       if (halcyon && halcyonOrder) meta.push(`Halcyon #${halcyonOrder}`);
-      if (status === "sold" && soldOrder) meta.push(`Sold #${soldOrder}`);
 
       const description = meta.join(" | ");
 
       return {
-        title: address || "Untitled Listing",
+        title: `${address} : ${status}` || "Untitled Listing",
         subtitle: subtitle,
         description: description || status,
         media: media,
       };
     },
   },
+  orderings: [
+    {
+      title: "Featured Order (Low to High)",
+      name: "featuredOrderAsc",
+      by: [{ field: "featuredOrder", direction: "asc" }],
+    },
+    {
+      title: "Halcyon Order (Low to High)",
+      name: "halcyonOrderAsc",
+      by: [{ field: "halcyonOrder", direction: "asc" }],
+    },
+    {
+      title: "Sold Order (Low to High)",
+      name: "soldOrderAsc",
+      by: [{ field: "soldOrder", direction: "asc" }],
+    },
+    {
+      title: "Address (A-Z)",
+      name: "addressAsc",
+      by: [{ field: "address", direction: "asc" }],
+    },
+    {
+      title: "Price (High to Low)",
+      name: "priceDesc",
+      by: [{ field: "price", direction: "desc" }],
+    },
+  ],
 });
