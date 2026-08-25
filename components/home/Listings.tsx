@@ -7,11 +7,10 @@ type ListingsProps = {
 }
 
 export function Listings({ listings, isFeatured }: ListingsProps) {
-  console.log(listings)
   return (
     <section className="pg-listings">
       {isFeatured && (
-        <div className="pg-section-head" style={{ flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <div className="pg-section-head" style={{ flexDirection: 'column', alignItems: 'center', gap: '2px', marginBottom: '2px', marginTop: '8px' }}>
           <span className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000' }}>
             Featured Listings
           </span>

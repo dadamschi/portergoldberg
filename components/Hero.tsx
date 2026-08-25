@@ -59,15 +59,15 @@ function HeroStat({
   const displayValue = value !== undefined ? (animate ? formatNumber(count) : formatNumber(value)) : null
 
   return (
-    <div className="pg-hero-stat">
+    <div className="pg-hero-stat" itemScope itemType="https://schema.org/QuantitativeValue">
       <div className="pg-hero-stat-value">
         {prefix && <span className="pg-hero-stat-symbol">{prefix}</span>}
-        {displayValue}
+        <span itemProp="value">{displayValue}</span>
         {suffix && <span className="pg-hero-stat-symbol">{suffix}</span>}
         {label && <span className="pg-hero-stat-label"> {label}</span>}
       </div>
 
-      <p className="pg-hero-stat-desc">{description}</p>
+      <p className="pg-hero-stat-desc" itemProp="description">{description}</p>
     </div>
   )
 }
@@ -109,7 +109,14 @@ export function Hero({ heroBio }: HeroProps) {
       </div>
       <div className="pg-hero-content">
 
-        <div className="pg-hero-stats" ref={statsRef}>
+        <div
+          className="pg-hero-stats"
+          ref={statsRef}
+          itemScope
+          itemType="https://schema.org/ProfessionalService"
+          itemProp="about"
+        >
+          <meta itemProp="name" content="PorterGoldberg Residential" />
           <HeroStat
             value={85}
             suffix="%"

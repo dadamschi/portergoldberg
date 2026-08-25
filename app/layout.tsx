@@ -106,7 +106,7 @@ export default async function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        <LocalBusinessJsonLd />
+        <LocalBusinessJsonLd agents={agents} />
         <WebsiteJsonLd />
       </head>
       <body>

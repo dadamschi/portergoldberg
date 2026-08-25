@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import { Hero, Listings, Testimonials } from '@/components'
+import { HomeFAQ } from '@/components/HomeFAQ'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
 import type { Listing, Testimonial, Agent } from '@/types'
 import type { PortableTextBlock } from '@portabletext/types'
 
 export const metadata: Metadata = {
-  title: 'Chicago Real Estate | PorterGoldberg Residential',
-  description: 'Chicago real estate, personally delivered. Samantha Porter & Lauren Goldberg offer boutique expertise for buying, selling, and building homes in Chicago\'s North Side neighborhoods.',
+  title: 'Chicago Luxury Real Estate | PorterGoldberg Residential',
+  description: 'Chicago luxury real estate experts Samantha Porter & Lauren Goldberg deliver boutique service for Lincoln Park, Lakeview & North Side. 44 years experience, $550M+ in sales.',
   alternates: {
     canonical: 'https://www.portergoldberg.com',
   },
@@ -36,7 +37,11 @@ async function getHomePageData(): Promise<HomePageData> {
   }
 }
 
-export default async function HomePage() {
+type HomePageProps = {
+  searchParams: { showfaq?: string }
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
   const data = await getHomePageData()
 
   // Use Sanity data if available, otherwise fall back to static data
@@ -44,11 +49,15 @@ export default async function HomePage() {
   const testimonials = data.testimonials
   const heroBio = data.settings?.heroBio
 
+  // Show FAQ only when ?showfaq=true
+  const showFAQ = searchParams.showfaq === 'true'
+
   return (
     <>
       <Hero heroBio={heroBio} />
       <Listings listings={featuredListings} isFeatured />
       <Testimonials testimonials={testimonials} />
+      {showFAQ && <HomeFAQ />}
     </>
   )
 }

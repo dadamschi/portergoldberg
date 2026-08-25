@@ -26,6 +26,7 @@ function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: bo
       width={400}
       height={500}
       className="pg-agent-image"
+      itemProp="image"
     />
   ) : (
     <div
@@ -38,15 +39,24 @@ function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: bo
 
   const bioContent = (
     <div className="pg-agent-bio">
-      <span className="pg-agent-name" style={{ fontWeight: '800' }}>{agent.name}</span>
+      <span className="pg-agent-name" style={{ fontWeight: '800' }} itemProp="name">{agent.name}</span>
+      <meta itemProp="jobTitle" content="Broker" />
+      <meta itemProp="email" content={agent.email} />
+      <meta itemProp="telephone" content={agent.phone} />
       {agent.biography?.biography && (
-        <PortableTextClient value={agent.biography.biography} />
+        <div itemProp="description">
+          <PortableTextClient value={agent.biography.biography} />
+        </div>
       )}
     </div>
   )
 
   return (
-    <section className={`pg-agent-section${reversed ? ' pg-agent-section--reversed' : ''}`}>
+    <section
+      className={`pg-agent-section${reversed ? ' pg-agent-section--reversed' : ''}`}
+      itemScope
+      itemType="https://schema.org/RealEstateAgent"
+    >
       {reversed ? (
         <>
           {bioContent}

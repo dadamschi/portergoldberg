@@ -1740,6 +1740,16 @@ body {
   margin-top: 48px;
 }
 
+/* ============================================================
+   Home Page FAQ
+   ============================================================ */
+
+.pg-home-faq {
+  background: #f7f7f7;
+  padding: 20px 40px 100px;
+  width: 100%;
+}
+
 .pg-dot {
   width: 8px;
   height: 8px;
@@ -6694,4 +6704,124 @@ ul {
   color: #999;
   padding-top: 24px;
   border-top: 1px solid #e0e0e0;
+}
+
+/* ============================================================================
+   Homepage FAQ Section - Optimized for SEO/GEO/AEO
+   ============================================================================ */
+
+.pg-faq {
+  padding: 80px 0;
+  background: var(--pg-cream);
+}
+
+.pg-faq-grid {
+  display: grid;
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pg-faq-item {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pg-faq-item h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--pg-navy);
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.pg-faq-item p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--pg-charcoal);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .pg-faq {
+    padding: 60px 0;
+  }
+
+  .pg-faq-item {
+    padding: 24px;
+  }
+
+  .pg-faq-item h3 {
+    font-size: 18px;
+  }
+
+  .pg-faq-item p {
+    font-size: 15px;
+  }
+}
+
+/* FAQ Accordion Styling */
+.pg-faq-short-answer {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--pg-charcoal);
+  margin: 0 0 12px 0;
+}
+
+.pg-faq-details {
+  margin-top: 8px;
+  display: none;
+}
+
+/* Hide extended FAQ answers from users, keep for SEO/AI */
+.pg-faq-seo-content {
+  display: none;
+}
+
+.pg-faq-read-more {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pg-sage);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.pg-faq-read-more:hover {
+  color: var(--pg-sage-l);
+}
+
+.pg-faq-read-more::-webkit-details-marker,
+.pg-faq-read-more::marker {
+  display: none;
+}
+
+.pg-faq-details[open] .pg-faq-read-more {
+  margin-bottom: 12px;
+}
+
+.pg-faq-details[open] .pg-faq-read-more::after {
+  content: " ▲";
+  font-size: 10px;
+}
+
+.pg-faq-details:not([open]) .pg-faq-read-more::after {
+  content: " ▼";
+  font-size: 10px;
+}
+
+.pg-faq-details p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--pg-gray);
+  margin: 0;
+  padding-top: 8px;
+}
+
+.pg-home-faq {
+  padding: 80px 0;
+  background: var(--pg-cream);
 }

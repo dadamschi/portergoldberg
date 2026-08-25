@@ -1,8 +1,8 @@
-import type { EventItem } from '@/types'
+import type { EventItem, Agent } from '@/types'
 import { toPlainText } from '@/lib/utils/text'
 import { SITE_URL, EMAIL_INFO, BUSINESS_INFO } from '@/lib/constants'
 
-export function LocalBusinessJsonLd() {
+export function LocalBusinessJsonLd({ agents }: { agents?: Agent[] } = {}) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
@@ -47,26 +47,70 @@ export function LocalBusinessJsonLd() {
       name: 'Jameson Sotheby\'s International Realty',
       url: 'https://www.jamesonsir.com/',
     },
-    employee: [
-      {
-        '@type': 'RealEstateAgent',
-        name: 'Samantha Porter',
-        jobTitle: 'Broker',
-        worksFor: {
-          '@type': 'Organization',
-          name: 'PorterGoldberg Residential',
-        },
-      },
-      {
-        '@type': 'RealEstateAgent',
-        name: 'Lauren Goldberg',
-        jobTitle: 'Broker',
-        worksFor: {
-          '@type': 'Organization',
-          name: 'PorterGoldberg Residential',
-        },
-      },
-    ],
+    employee: agents?.length
+      ? agents.map((agent) => ({
+          '@type': 'RealEstateAgent',
+          name: agent.name,
+          jobTitle: 'Broker',
+          email: agent.email,
+          telephone: agent.phone,
+          image: agent.photo?.asset?.url,
+          description: agent.biography?.summary || `${agent.name} is a Chicago real estate broker at PorterGoldberg Residential`,
+          url: `${SITE_URL}/about-us`,
+          knowsAbout: [
+            'Real Estate',
+            'Chicago Real Estate',
+            'Luxury Homes',
+            'Residential Real Estate',
+            'Property Sales',
+            'Buyer Representation',
+            'Seller Representation',
+          ],
+          worksFor: {
+            '@type': 'Organization',
+            name: 'PorterGoldberg Residential',
+          },
+        }))
+      : [
+          {
+            '@type': 'RealEstateAgent',
+            name: 'Samantha Porter',
+            jobTitle: 'Broker',
+            email: 'samantha@portergoldberg.com',
+            telephone: '+1-312-944-8900',
+            url: `${SITE_URL}/about-us`,
+            knowsAbout: [
+              'Real Estate',
+              'Chicago Real Estate',
+              'Luxury Homes',
+              'Residential Real Estate',
+              'Property Sales',
+            ],
+            worksFor: {
+              '@type': 'Organization',
+              name: 'PorterGoldberg Residential',
+            },
+          },
+          {
+            '@type': 'RealEstateAgent',
+            name: 'Lauren Goldberg',
+            jobTitle: 'Broker',
+            email: 'lauren@portergoldberg.com',
+            telephone: '+1-773-576-0053',
+            url: `${SITE_URL}/about-us`,
+            knowsAbout: [
+              'Real Estate',
+              'Chicago Real Estate',
+              'Luxury Homes',
+              'Residential Real Estate',
+              'Property Sales',
+            ],
+            worksFor: {
+              '@type': 'Organization',
+              name: 'PorterGoldberg Residential',
+            },
+          },
+        ],
   }
 
   return (
