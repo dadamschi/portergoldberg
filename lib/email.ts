@@ -15,7 +15,7 @@ export const NOTIFY_EMAILS = EMAIL_NOTIFICATION_RECIPIENTS
 
 type SendEmailOptions = {
   from?: string
-  to: string | string[]
+  to?: string | string[]
   cc?: string | string[]
   replyTo?: string
   subject: string
@@ -27,7 +27,7 @@ type SendEmailResult = {
 }
 
 export async function sendEmail(options: SendEmailOptions): Promise<SendEmailResult> {
-  const { from = FROM_EMAIL, to, replyTo, subject, html } = options
+  const { from = FROM_EMAIL, to = NOTIFY_EMAILS, replyTo, subject, html } = options
 
   try {
     const resend = getResend()

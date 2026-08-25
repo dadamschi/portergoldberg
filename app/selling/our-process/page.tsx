@@ -10,8 +10,8 @@ import { ContentTemplate } from '@/components/contentTemplate'
 import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
-  title: 'Our Process | Selling Your Chicago Home',
-  description: 'PorterGoldberg\'s property preparation services help Chicago homeowners maximize their sale price through strategic improvements, repairs, and pre-listing preparation.',
+  title: 'Sell Your Chicago Home | Expert Listing Services',
+  description: 'Sell your Chicago home with PorterGoldberg. $550M+ in sales, Sotheby\'s global marketing, expert pricing & staging guidance. Serving Lincoln Park, Lakeview & North Side.',
   path: '/selling/our-process',
 })
 
@@ -34,7 +34,7 @@ export default async function SellingMarketingPage() {
   }
 
   return (
-    <ContentTemplate title="Our Process" heroData={data}>
+    <ContentTemplate title="Selling Your Chicago Home: Our Proven Process" heroData={data}>
       <SellingSectionNav currentSection="our process" />  
       <div className="pg-selling-content">
       {data.marketingIntro && data.marketingIntro.length > 0 && (

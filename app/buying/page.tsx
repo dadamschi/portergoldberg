@@ -6,7 +6,7 @@ import { createMetadata } from '@/lib/metadata'
 import { ContentTemplate } from '@/components'
 
 export const metadata = createMetadata({
-  title: 'Buying a Home in Chicago',
+  title: 'Chicago Home Buying Guide | Expert Buyer Agents',
   description: 'Expert guide to buying a home in Chicago. PorterGoldberg Residential provides full-service buyer representation in Lincoln Park, Lakeview, Bucktown, and Chicago\'s North Side.',
   path: '/buying',
 })

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeClient } from '@/lib/client'
 import { verifyReviewToken } from '@/lib/tokens'
 import { nanoid } from 'nanoid'
+import { textToPortableText } from '@/lib/utils/text'
+import { sendEmail } from '@/lib/email'
 
 type SubmitTestimonialRequest = {
   token: string
@@ -10,33 +12,13 @@ type SubmitTestimonialRequest = {
   quote: string
   testimonialId?: string // For updating existing drafts
   date?: string // Client-provided date (YYYY-MM-DD)
-}
-
-// Convert plain text to Portable Text blocks
-function textToPortableText(text: string) {
-  // Split by double newlines to create separate paragraphs
-  const paragraphs = text.split(/\n\n+/).filter(Boolean)
-
-  return paragraphs.map(() => ({
-    _type: 'block',
-    _key: nanoid(),
-    style: 'normal',
-    markDefs: [],
-    children: [
-      {
-        _type: 'span',
-        _key: nanoid(),
-        text: text,
-        marks: [],
-      },
-    ],
-  }))
+  dealName?: string
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: SubmitTestimonialRequest = await request.json()
-    const { token, clientName, clientTitle, quote, testimonialId: existingId, date } = body
+    const { token, clientName, clientTitle, quote, testimonialId: existingId, date, dealName } = body
 
     // Validate required fields
     if (!token || !clientName || !quote) {
@@ -77,7 +59,37 @@ export async function POST(request: NextRequest) {
       hubspotContactIds: contactIds, // Store all contact IDs
     }
 
-    await writeClient.createOrReplace(document)
+    const draftedTestimonial = await writeClient.createOrReplace(document)
+
+    // Build Sanity Studio URL for the draft
+    const sanityStudioUrl = `https://portergoldberg.sanity.studio/desk/testimonial;${testimonialId}`
+
+    // Send notification email
+    if(draftedTestimonial){
+      const emailResult = await sendEmail({
+        subject: `New Testimonial submitted by: ${clientName}${dealName ? ` (${dealName})` : ''}`,
+        html: `
+          <h2>New Testimonial Submission</h2>
+          <hr>
+          <p><strong>Name:</strong> ${clientName}</p>
+          ${clientTitle ? `<p><strong>Title:</strong> ${clientTitle}</p>` : ''}
+          ${dealName ? `<p><strong>Deal:</strong> ${dealName}</p>` : ''}
+          <p><strong>Date:</strong> ${date || new Date().toISOString().split('T')[0]}</p>
+          <p><strong>Testimonial:</strong></p>
+          <p>${quote.replace(/\n/g, '<br>')}</p>
+          <hr>
+          <p><strong>HubSpot Contact ID:</strong> ${primaryContactId}</p>
+          <p><strong>Sanity Document ID:</strong> ${testimonialId}</p>
+          <p><a href="${sanityStudioUrl}" style="display: inline-block; padding: 10px 20px; background-color: #2276FC; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px;">Open in Sanity Studio to Publish</a></p>
+          <p><em>This testimonial has been created as a draft in Sanity. Click the button above to review and publish.</em></p>
+        `,
+      })
+
+      if (emailResult.error) {
+        console.error('Failed to send testimonial notification email:', emailResult.error)
+        // Don't fail the request if email fails - testimonial was already saved
+      }
+    }
 
     return NextResponse.json({
       success: true,

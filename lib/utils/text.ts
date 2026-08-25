@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from '@portabletext/types'
+import { nanoid } from 'nanoid'
 
 export function toPlainText(blocks: PortableTextBlock[]): string {
   return blocks
@@ -9,4 +10,25 @@ export function toPlainText(blocks: PortableTextBlock[]): string {
         .join('')
     })
     .join(' ')
+}
+
+// Convert plain text to Portable Text blocks
+export function textToPortableText(text: string) {
+  // Split by double newlines to create separate paragraphs
+  const paragraphs = text.split(/\n\n+/).filter(Boolean)
+
+  return paragraphs.map(() => ({
+    _type: 'block',
+    _key: nanoid(),
+    style: 'normal',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: nanoid(),
+        text: text,
+        marks: [],
+      },
+    ],
+  }))
 }

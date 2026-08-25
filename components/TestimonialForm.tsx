@@ -45,6 +45,7 @@ export function TestimonialForm({ token, defaultName, googleReviewUrl, zillowRev
           quote: formData.quote,
           testimonialId: existingData?.testimonialId,
           date: new Date().toISOString().split('T')[0],
+          dealName
         }),
       })
 
