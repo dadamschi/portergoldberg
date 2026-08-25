@@ -38,11 +38,12 @@ async function getHomePageData(): Promise<HomePageData> {
 }
 
 type HomePageProps = {
-  searchParams: { showfaq?: string }
+  searchParams: Promise<{ showfaq?: string }>
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const data = await getHomePageData()
+  const params = await searchParams
 
   // Use Sanity data if available, otherwise fall back to static data
   const featuredListings = [...data.listings].sort((a, b) => a.featuredOrder! - b.featuredOrder!);
@@ -50,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const heroBio = data.settings?.heroBio
 
   // Show FAQ only when ?showfaq=true
-  const showFAQ = searchParams.showfaq === 'true'
+  const showFAQ = params.showfaq === 'true'
 
   return (
     <>

@@ -32,7 +32,7 @@ export type NewsletterLayout = 'default' | 'stacked'
 // Color palette matching Claude design
 const INK = '#1A1917'
 const GOLD = '#000000'
-const DIVIDER_LIGHT = '#dedbd6'
+// const DIVIDER_LIGHT = '#dedbd6' // Unused - kept for future use
 
 // Typography - responsive with clamp, no explicit color for dark mode
 const FONT = "font-family:'Quicksand',Helvetica,Arial,sans-serif;"
