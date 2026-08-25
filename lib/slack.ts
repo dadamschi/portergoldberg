@@ -45,7 +45,7 @@ type NotFound404 = {
   cacheStatus: string
 }
 
-export async function notify404({ pathname, fullUrl, referer, userAgent, isRSC, isPrefetch, vercelId, cacheStatus }: NotFound404): Promise<void> {
+export async function notify404({ pathname, fullUrl, referer, isRSC, isPrefetch, vercelId, cacheStatus }: NotFound404): Promise<void> {
   if (!SLACK_WEBHOOK_URL) return
 
   // Build request type label

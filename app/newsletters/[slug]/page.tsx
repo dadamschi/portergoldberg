@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
-import type { Newsletter, NewsletterImageSection, NewsletterPreview } from '@/types'
+import type { Newsletter, NewsletterPreview } from '@/types'
 import { client } from '@/lib/client'
 import { NEWSLETTER_BY_SLUG_QUERY, ALL_NEWSLETTERS_QUERY } from '@/lib/queries'
 import { formatDateOnly } from '@/lib/utils/dateTime'

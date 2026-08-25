@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /**
  * Homepage FAQ Section
  * Optimized for SEO, GEO (AI citation), and AEO (Answer Engine Optimization)

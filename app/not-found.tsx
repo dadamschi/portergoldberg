@@ -14,7 +14,6 @@ export default async function NotFound() {
   // Edge cache debugging
   const vercelId = headersList.get('x-vercel-id') || 'none'
   const cacheStatus = headersList.get('x-vercel-cache') || 'none'
-  const forwardedFor = headersList.get('x-forwarded-for') || 'none'
 
   // Skip protocol links (tel:, mailto:, etc.) and common bot probes
   const skipPatterns = [

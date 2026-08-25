@@ -57,14 +57,14 @@ function typographic(input: string): string {
     .replace(/--/g, '&mdash;')
 }
 
-function parseHeading(heading: string): { eyebrow: string; title: string } {
-  const words = heading.trim().split(/\s+/)
-  if (words.length === 1) {
-    return { eyebrow: '', title: words[0] }
-  }
-  // Reversed: first word(s) = title, last word = eyebrow
-  return { eyebrow: words[words.length - 1], title: words.slice(0, -1).join(' ') }
-}
+// function parseHeading(heading: string): { eyebrow: string; title: string } {
+//   const words = heading.trim().split(/\s+/)
+//   if (words.length === 1) {
+//     return { eyebrow: '', title: words[0] }
+//   }
+//   // Reversed: first word(s) = title, last word = eyebrow
+//   return { eyebrow: words[words.length - 1], title: words.slice(0, -1).join(' ') }
+// }
 
 // Image optimization for Sanity CDN
 function optimizeSanityImageUrl(
@@ -174,14 +174,14 @@ function generateSectionHeading(heading: string, index: number, titleLarger?: bo
   }
 }
 
-/**
- * Section divider line - uses table for Outlook compatibility
- */
-function generateDivider(): string {
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:40px;">
-  <tr><td style="padding:0;"><div style="height:1px;background:${DIVIDER_LIGHT};font-size:0;line-height:0;">&nbsp;</div></td></tr>
-</table>`
-}
+// /**
+//  * Section divider line - uses table for Outlook compatibility
+//  */
+// function generateDivider(): string {
+//   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:40px;">
+//   <tr><td style="padding:0;"><div style="height:1px;background:${DIVIDER_LIGHT};font-size:0;line-height:0;">&nbsp;</div></td></tr>
+// </table>`
+// }
 
 /**
  * Extract domain from URL for display purposes
