@@ -101,6 +101,22 @@ export const TESTIMONIAL_BY_HUBSPOT_ID_QUERY = defineQuery(/* groq */ `
   }
 `)
 
+export const TESTIMONIAL_BY_ANY_CONTACT_QUERY = defineQuery(/* groq */ `
+  *[
+    _type == "testimonial"
+    && (
+      hubspotContactId in $contactIds
+      || count((hubspotContactIds[])[@ in $contactIds]) > 0
+    )
+  ] | order(_id asc)[0] {
+    _id,
+    clientName,
+    clientTitle,
+    date,
+    quote
+  }
+`)
+
  export const UNPUBLISHED_DRAFTS_QUERY = defineQuery(/* groq */ `
     *[
       _type == "testimonial" 

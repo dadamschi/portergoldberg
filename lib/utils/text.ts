@@ -17,7 +17,7 @@ export function textToPortableText(text: string) {
   // Split by double newlines to create separate paragraphs
   const paragraphs = text.split(/\n\n+/).filter(Boolean)
 
-  return paragraphs.map(() => ({
+  return paragraphs.map((paragraph) => ({
     _type: 'block',
     _key: nanoid(),
     style: 'normal',
@@ -26,7 +26,7 @@ export function textToPortableText(text: string) {
       {
         _type: 'span',
         _key: nanoid(),
-        text: text,
+        text: paragraph,
         marks: [],
       },
     ],

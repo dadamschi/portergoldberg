@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { verifyReviewToken } from '@/lib/tokens'
 import { getContactById, getContactDeals } from '@/lib/hubspot'
 import { client } from '@/lib/client'
-import { TESTIMONIAL_BY_HUBSPOT_ID_QUERY } from '@/lib/queries'
+import { TESTIMONIAL_BY_ANY_CONTACT_QUERY } from '@/lib/queries'
 import { TestimonialForm } from '@/components/TestimonialForm'
 import { ExistingTestimonial } from '@/components/ExistingTestimonial'
 
@@ -51,11 +51,12 @@ export default async function SubmitReviewPage({ params }: Props) {
   // Use first contact ID for lookup (primary contact)
   const primaryContactId = contactIds[0]
 
-  // Check if testimonial already exists for this contact (including drafts)
+  // Check if testimonial already exists for ANY of the contacts in this token (including drafts)
   // Using 'raw' perspective to get actual document IDs (with drafts. prefix if draft)
+  // This prevents duplicate testimonials when couples share a review link
   const existingTestimonial = await client.fetch<ExistingTestimonialData | null>(
-    TESTIMONIAL_BY_HUBSPOT_ID_QUERY,
-    { hubspotContactId: primaryContactId },
+    TESTIMONIAL_BY_ANY_CONTACT_QUERY,
+    { contactIds },
     { perspective: 'raw' }
   )
 
