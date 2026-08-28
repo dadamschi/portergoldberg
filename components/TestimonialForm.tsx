@@ -21,7 +21,7 @@ type Props = {
 export function TestimonialForm({ token, defaultName, googleReviewUrl, zillowReviewUrl, existingData, dealName }: Props) {
   const [formData, setFormData] = useState({
     clientName: existingData?.clientName || defaultName,
-    clientTitle: existingData?.clientTitle || dealName || '',
+    clientTitle: existingData?.clientTitle || '', // Never auto-fill with deal name (could be property address)
     quote: existingData?.quote || '',
   })
   const isEditing = !!existingData
