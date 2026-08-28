@@ -13,7 +13,7 @@ type InventoryData = {
 }
 
 export const metadata = createMetadata({
-    title: 'Inventory',
+    title: 'Chicago Real Estate Listings & Inventory',
     description: 'Explore PorterGoldberg current listings and recently sold properties in Chicago',
     path: '/inventory',
   })

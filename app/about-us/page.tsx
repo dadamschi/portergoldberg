@@ -7,7 +7,7 @@ import { ContentTemplate } from '@/components'
 import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
-  title: 'About Us',
+  title: 'Meet Our Chicago Real Estate Team',
   description: 'Meet Samantha Porter and Lauren Goldberg — Chicago real estate experts at Jameson Sotheby\'s International Realty with 44 years combined experience and $550M+ in career sales.',
   path: '/about-us',
 })
