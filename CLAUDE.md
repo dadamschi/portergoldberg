@@ -129,7 +129,7 @@ Two clients are available in `lib/client.ts`:
 
 **Collections** (multiple documents):
 
-- `listing`, `testimonial`, `zillowReview`, `agent`, `event`, `newsletter`, `vendor`
+- `listing`, `testimonial`, `zillowReview`, `agent`, `event`, `newsletter`, `vendor`, `emailTemplate`
 
 ### Key Schema Fields
 
@@ -180,13 +180,15 @@ Testimonials use an `order` field for custom sorting:
 - Set `order` in Sanity Studio to position testimonials permanently
 - Update via `scripts/update-testimonial-order.ts` for bulk changes
 
-## Email (Resend)
+## Email
+
+### Contact Form Emails (Resend)
 
 Transactional emails are sent via [Resend](https://resend.com).
 
 **Domain**: `portergoldberg.com` (verified in Resend dashboard)
 
-### How It Works
+**How It Works:**
 
 ```text
 Contact Form (ContactPageForm.tsx)
@@ -195,22 +197,49 @@ Contact Form (ContactPageForm.tsx)
             → Resend API
 ```
 
-### Key Files
-
+**Key Files:**
 - `lib/email.ts` - Resend client and `sendEmail()` function
 - `lib/constants.ts` - `EMAIL_NOTIFICATION_RECIPIENTS` (where notifications go)
 - `app/actions.ts` - Server action that sends contact form emails
 
-### Configuration
-
+**Configuration:**
 - **From address**: `noreply@portergoldberg.com` (no real mailbox needed, just verified domain)
 - **Reply-To**: Set to the submitter's email so replies go to them
 - **Recipients**: `info@portergoldberg.com` in dev
 
-### Environment Variable
+### Bulk Email System
+
+Internal tool for sending personalized emails to HubSpot contact lists.
+
+**URL**: `/client/bulk-email` (noindex, internal use only)
+
+**How It Works:**
+
+1. Select a HubSpot contact list
+2. Create/edit email templates with mustache variables (stored in Sanity)
+3. Preview contacts from selected list
+4. Send test email with sample data
+5. Send personalized bulk emails to selected contacts
+
+**Template Variables:**
+- `{{firstname}}`, `{{lastname}}`, `{{email}}`, `{{tier}}`, `{{interested_property}}`
+- **Defaults**: `{{firstname|There}}` - uses "There" if firstname is empty
+- Line breaks are automatically preserved
+
+**Key Files:**
+- `components/BulkEmailSender.tsx` - Main UI component
+- `app/client/bulk-email/page.tsx` - Internal client page
+- `app/api/email-templates/route.ts` - Template CRUD operations
+- `app/api/send-test-email/route.ts` - Test email with sample data
+- `app/api/send-bulk-email/route.ts` - Bulk send to HubSpot contacts
+- `app/api/hubspot/lists/route.ts` - Fetch HubSpot lists
+- `studio/schemas/emailTemplate.js` - Email template schema
+- `lib/utils/newsletter.ts` - Email template rendering logic
+
+**Environment Variables:**
 
 ```env
-RESEND_API_KEY=              # Resend API key (required)
+RESEND_API_KEY=              # Resend API key (required for both systems)
 ```
 
 ## API Routes
@@ -222,6 +251,13 @@ RESEND_API_KEY=              # Resend API key (required)
 | `/api/subscribe` | POST | Newsletter subscription (HubSpot) |
 | `/api/unsubscribe` | POST | Newsletter unsubscribe (HubSpot) |
 | `/api/vendor-list` | POST | Vendor list signup request |
+| `/api/email-templates` | GET | Fetch all email templates from Sanity |
+| `/api/email-templates` | POST | Create new email template in Sanity |
+| `/api/email-templates/[id]` | PATCH | Update existing email template |
+| `/api/send-test-email` | POST | Send test email with sample data (requires `templateId`, `recipientEmail`) |
+| `/api/send-bulk-email` | POST | Send personalized emails to HubSpot contacts (requires `templateId`, `contacts[]`) |
+| `/api/hubspot/lists` | GET | Fetch all HubSpot contact lists |
+| `/api/hubspot/lists/[id]/contacts` | GET | Fetch contacts from specific HubSpot list |
 
 ## Analytics & Tracking
 

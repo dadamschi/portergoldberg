@@ -569,3 +569,29 @@ export const ZILLOW_REVIEWS_QUERY = defineQuery(/* groq */ `
     transactionType
   }
 `)
+
+// =============================================================================
+// EMAIL TEMPLATES
+// =============================================================================
+
+export const EMAIL_TEMPLATES_QUERY = defineQuery(/* groq */ `
+  *[_type == "emailTemplate"] | order(title asc) {
+    _id,
+    title,
+    subject,
+    htmlContent,
+    _createdAt,
+    _updatedAt
+  }
+`)
+
+export const EMAIL_TEMPLATE_BY_ID_QUERY = defineQuery(/* groq */ `
+  *[_type == "emailTemplate" && _id == $id][0] {
+    _id,
+    title,
+    subject,
+    htmlContent,
+    _createdAt,
+    _updatedAt
+  }
+`)

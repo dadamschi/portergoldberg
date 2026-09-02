@@ -347,3 +347,12 @@ export type ClientPage = {
   markdownContent?: string
   noIndex?: boolean
 }
+
+export type EmailTemplate = {
+  _id: string
+  title: string
+  subject: string
+  htmlContent: string
+  _createdAt?: string
+  _updatedAt?: string
+}

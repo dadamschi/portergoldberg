@@ -18,6 +18,17 @@ export type HubSpotContact = {
   interested_property: string
 }
 
+export type HubSpotList = {
+  listId: string
+  name: string
+  processingType: string
+  processingStatus?: string
+  objectTypeId?: string
+  createdAt?: string
+  updatedAt?: string
+  listSize?: string
+}
+
 export async function buildHubspotContactLink(contactId: string) {
   return `https://app.hubspot.com/contacts/${HUBSPOT_CLIENT_ID}/record/0-1/${contactId}`
 }
@@ -152,6 +163,218 @@ export async function getContactDeals(contactId: string): Promise<HubSpotDeal[]>
     })
 
   return deals
+}
+
+/**
+ * Get all lists/segments from HubSpot
+ */
+export async function getHubSpotLists(): Promise<HubSpotList[]> {
+  const allLists: HubSpotList[] = []
+  let offset: number | undefined
+  let pageCount = 0
+
+  do {
+    pageCount++
+    const body: {
+      count: number
+      processingTypes: string[]
+      offset?: number
+    } = {
+      count: 100,
+      processingTypes: ['DYNAMIC', 'MANUAL'],
+    }
+
+    if (offset !== undefined) {
+      body.offset = offset
+    }
+
+    const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/lists/search`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(body),
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error('[HubSpot] Failed to fetch lists:', error)
+      throw new Error(`Failed to fetch lists: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log(`[HubSpot] Page ${pageCount}: Got ${data.lists?.length || 0} lists, hasMore: ${data.hasMore}, total: ${data.total}`)
+
+    const lists = (data.lists || []).map((list: {
+      listId: string
+      name: string
+      processingType: string
+      processingStatus?: string
+      objectTypeId?: string
+      createdAt?: string
+      updatedAt?: string
+      additionalProperties?: {
+        hs_list_size?: string
+      }
+    }) => ({
+      listId: list.listId,
+      name: list.name,
+      processingType: list.processingType,
+      processingStatus: list.processingStatus,
+      objectTypeId: list.objectTypeId,
+      createdAt: list.createdAt,
+      updatedAt: list.updatedAt,
+      listSize: list.additionalProperties?.hs_list_size,
+    }))
+
+    allLists.push(...lists)
+
+    // Update offset for next iteration if there are more results
+    if (data.hasMore) {
+      offset = data.offset
+    } else {
+      offset = undefined
+    }
+  } while (offset !== undefined)
+
+  return allLists
+}
+
+/**
+ * Get contacts from a specific HubSpot list
+ */
+export async function getContactsFromList(
+  listId: string,
+  properties: string[] = ['firstname', 'lastname', 'email', 'tier']
+): Promise<HubSpotContact[]> {
+  const contactIds: string[] = []
+  let after: string | undefined
+
+  // Step 1: Get list memberships (contact IDs)
+  do {
+    const params = new URLSearchParams({
+      limit: '100',
+    })
+    if (after) {
+      params.set('after', after)
+    }
+
+    const membershipUrl = `${HUBSPOT_API_BASE}/crm/lists/2026-03/${listId}/memberships?${params.toString()}`
+
+    const response = await fetch(membershipUrl, {
+      headers: getHeaders(),
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error(`[HubSpot] Failed to fetch memberships for list ${listId}:`, error)
+      throw new Error(`Failed to fetch list memberships: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    for (const member of data.results || []) {
+      contactIds.push(member.recordId)
+    }
+
+    after = data.paging?.next?.after
+  } while (after)
+
+  if (contactIds.length === 0) {
+    return []
+  }
+
+  // Step 2: Batch fetch contact details
+  const contacts: HubSpotContact[] = []
+  const batchSize = 100
+
+  for (let i = 0; i < contactIds.length; i += batchSize) {
+    const batch = contactIds.slice(i, i + batchSize)
+
+    const batchResponse = await fetch(
+      `${HUBSPOT_API_BASE}/crm/v3/objects/contacts/batch/read`,
+      {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          inputs: batch.map(id => ({ id })),
+          properties,
+        }),
+      }
+    )
+
+    if (!batchResponse.ok) {
+      const error = await batchResponse.text()
+      console.error('[HubSpot] Batch read failed:', error)
+      throw new Error(`Failed to fetch contacts: ${batchResponse.status}`)
+    }
+
+    const batchData = await batchResponse.json()
+
+    for (const contact of batchData.results || []) {
+      contacts.push({
+        id: contact.id,
+        email: contact.properties.email || '',
+        firstname: contact.properties.firstname || '',
+        lastname: contact.properties.lastname || '',
+        tier: contact.properties.tier || '',
+        interested_property: contact.properties.interested_property || '',
+      })
+    }
+  }
+
+  return contacts
+}
+
+/**
+ * Get contacts from a specific HubSpot view
+ */
+export async function getContactsFromView(
+  viewId: string,
+  properties: string[] = ['firstname', 'lastname', 'email']
+): Promise<HubSpotContact[]> {
+  const contacts: HubSpotContact[] = []
+  let after: string | undefined
+
+  do {
+    const params = new URLSearchParams({
+      limit: '100',
+    })
+    if (after) {
+      params.set('after', after)
+    }
+
+    const url = `${HUBSPOT_API_BASE}/crm/v4/objects/contacts/views/${viewId}/contacts?${params.toString()}`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        properties,
+      }),
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error(`[HubSpot] Failed to fetch contacts from view ${viewId}:`, error)
+      throw new Error(`Failed to fetch contacts from view: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    for (const contact of data.results || []) {
+      contacts.push({
+        id: contact.id,
+        email: contact.properties.email || '',
+        firstname: contact.properties.firstname || '',
+        lastname: contact.properties.lastname || '',
+        tier: contact.properties.tier || '',
+        interested_property: contact.properties.interested_property || '',
+      })
+    }
+
+    after = data.paging?.next?.after
+  } while (after)
+
+  return contacts
 }
 
 export async function updateContactProperty(
@@ -662,4 +885,64 @@ export async function addMultiSelectValue(
   }
 
   return updateContactProperty(contactId, propertyName, values.join(';'))
+}
+
+/**
+ * Create an email engagement in HubSpot contact timeline
+ * This logs that an email was sent to a contact
+ */
+export async function createEmailEngagement(
+  contactId: string,
+  subject: string,
+  htmlBody: string,
+  fromEmail: string = 'samantha@portergoldberg.com'
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/emails`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        properties: {
+          hs_timestamp: new Date().toISOString(),
+          hubspot_owner_id: null, // Not assigned to specific owner
+          hs_email_direction: 'EMAIL',
+          hs_email_status: 'SENT',
+          hs_email_subject: subject,
+          hs_email_text: htmlBody.replace(/<[^>]*>/g, ''), // Strip HTML for text version
+          hs_email_html: htmlBody,
+          hs_email_from_email: fromEmail,
+          hs_email_from_firstname: 'Samantha',
+          hs_email_from_lastname: 'Porter',
+        },
+        associations: [
+          {
+            to: { id: contactId },
+            types: [
+              {
+                associationCategory: 'HUBSPOT_DEFINED',
+                associationTypeId: 198, // Email to contact (directional: email -> contact)
+              },
+            ],
+          },
+        ],
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      console.error('HubSpot engagement creation failed:', errorData)
+      return {
+        success: false,
+        error: errorData.message || 'Failed to create engagement',
+      }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error creating HubSpot engagement:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    }
+  }
 }
