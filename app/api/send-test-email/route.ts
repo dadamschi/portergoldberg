@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 // Allowed test email recipients
 const ALLOWED_TEST_EMAILS = [
-  // 'info@portergoldberg.com',
+  'info@portergoldberg.com',
   'dadams.chi@gmail.com',
 ]
 
