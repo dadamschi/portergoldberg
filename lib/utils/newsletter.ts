@@ -20,6 +20,11 @@ export const EMAIL_SIGNATURE_HTML = `<div style="font-family: Arial, sans-serif;
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="24" height="24" style="display: block; border: 0;">
         </a>
       </td>
+      <td style="padding-right: 12px;">
+        <a href="https://www.youtube.com/@PorterGoldbergResidential" target="_blank" style="text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/174/174883.png" alt="YouTube" width="24" height="24" style="display: block; border: 0;">
+        </a>
+      </td>
     </tr>
   </table>
 </div>`
