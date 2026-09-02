@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { client } from '@/lib/client'
 import { EMAIL_TEMPLATE_BY_ID_QUERY } from '@/lib/queries'
-import { sendEmail, FROM_EMAIL } from '@/lib/email'
+import { sendEmail } from '@/lib/email'
 import { EMAIL_SIGNATURE_HTML } from '@/lib/utils/newsletter'
 import type { EmailTemplate } from '@/types'
 
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
 
     // Send email
     const { error } = await sendEmail({
-      from: FROM_EMAIL,
+      from: 'PorterGoldberg Website <info@portergoldberg.com>',
       to: recipientEmail,
       subject: `[TEST] ${subject}`,
       html: htmlContent,

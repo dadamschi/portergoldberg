@@ -1,15 +1,27 @@
 /**
  * Simple email signature for bulk emails
  */
-export const EMAIL_SIGNATURE_HTML = `<div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #333; margin-top: 20px; padding-top: 20px;">
-  <p style="margin: 0 0 2px 0;"><strong>Samantha Porter | PorterGoldberg Residential</strong></p>
-  <p style="margin: 0 0 2px 0;">Jameson Sotheby's International Realty</p>
-  <p style="margin: 0 0 2px 0;"><a href="https://www.google.com/maps/search/425+W.+North+Avenue+%7C+Chicago,+IL+60610?entry=gmail&source=g" style="color: #15c;">425 W. North Avenue | Chicago, IL 60610</a></p>
-  <p style="margin: 0 0 2px 0;">C. <a href="tel:7739887898" style="color: #15c; text-decoration: none;">773-988-7898</a></p>
-  <p style="margin: 0;">
-    <a href="mailto:samantha@portergoldberg.com" style="color: #791a3e; text-decoration: none;">samantha@portergoldberg.com</a> |
-    <a href="https://www.portergoldberg.com" style="color: #15c; text-decoration: none;">www.portergoldberg.com</a>
+export const EMAIL_SIGNATURE_HTML = `<div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #333; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+  <p style="margin: 0 0 4px 0;"><strong>PorterGoldberg Residential</strong></p>
+  <p style="margin: 0 0 4px 0;">Jameson Sotheby's International Realty</p>
+  <p style="margin: 0 0 4px 0;">425 W. North Avenue | Chicago, IL 60610</p>
+  <p style="margin: 0 0 12px 0;">
+    <a href="https://www.portergoldberg.com" style="color: #15c; text-decoration: none;">portergoldberg.com</a>
   </p>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0;">
+    <tr>
+      <td style="padding-right: 12px;">
+        <a href="https://www.instagram.com/portergoldbergchicago" target="_blank" style="text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" width="24" height="24" style="display: block; border: 0;">
+        </a>
+      </td>
+      <td style="padding-right: 12px;">
+        <a href="https://www.facebook.com/PorterGoldbergResidential" target="_blank" style="text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="24" height="24" style="display: block; border: 0;">
+        </a>
+      </td>
+    </tr>
+  </table>
 </div>`
 
 /**
