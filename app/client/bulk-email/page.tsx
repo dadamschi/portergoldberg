@@ -12,7 +12,7 @@ export default function BulkEmailPage() {
     <main className="pg-page">
       <section className="pg-page-hero">
         <h1>Bulk Email Sender</h1>
-        <p>Send personalized emails to contacts from HubSpot lists</p>
+        <p>Send personalized emails to contacts from HubSpot lists. This is NOT meant for bulk marketing.</p>
       </section>
 
       <section className="pg-section">
