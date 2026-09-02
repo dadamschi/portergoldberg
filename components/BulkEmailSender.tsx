@@ -584,7 +584,7 @@ export function BulkEmailSender() {
                   <strong>Available Fields:</strong> {'{{firstname}}, {{lastname}}, {{email}}, {{tier}}, {{interested_property}}'}
                   <br />
                   <span className="help-text">
-                    Use defaults: {'{{firstname|There}}'} - if firstname is empty, it will use "There"
+                    Use defaults: {'{{firstname|There}}'} - if firstname is empty, it will use &quot;There&quot;
                   </span>
                 </div>
 
@@ -625,8 +625,8 @@ export function BulkEmailSender() {
               <label htmlFor="template-html">Email Content:</label>
               <div className="help-text">
                 Use mustache syntax: {'{{firstname}}, {{lastname}}, {{email}}, {{tier}}, {{interested_property}}'}<br />
-                Add defaults with: {'{{firstname|There}}'} - uses "There" if firstname is empty<br />
-                <strong>Line breaks:</strong> Press Enter for new lines - they'll be preserved in the email. Or use full HTML if you prefer.
+                Add defaults with: {'{{firstname|There}}'} - uses &quot;There&quot; if firstname is empty<br />
+                <strong>Line breaks:</strong> Press Enter for new lines - they&apos;ll be preserved in the email. Or use full HTML if you prefer.
               </div>
               <textarea
                 id="template-html"
@@ -672,7 +672,7 @@ export function BulkEmailSender() {
           <p className="test-email-description">
             Send a test email with sample data to verify your template. Test data: John Doe, test@example.com, Gold tier, 123 Main St, Chicago, IL
             <br />
-            <em>Note: To test defaults, temporarily remove a field from your template (e.g., use {'{{firstname|There}}'} and the test will show "John")</em>
+            <em>Note: To test defaults, temporarily remove a field from your template (e.g., use {'{{firstname|There}}'} and the test will show &quot;John&quot;)</em>
           </p>
 
           <div className="test-email-controls">
