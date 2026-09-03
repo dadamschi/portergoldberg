@@ -137,7 +137,7 @@ export async function POST(request: Request) {
         return {
           contact,
           email: {
-            from: 'PorterGoldberg Website <info@portergoldberg.com>',
+            from: 'PorterGoldberg <info@portergoldberg.com>',
             to: contact.email,
             subject,
             html: htmlContent,
