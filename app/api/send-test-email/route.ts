@@ -121,7 +121,7 @@ export async function POST(request: Request) {
 
     // Send email
     const { error } = await sendEmail({
-      from: 'PorterGoldberg Website <info@portergoldberg.com>',
+      from: 'PorterGoldberg <info@portergoldberg.com>',
       to: recipientEmail,
       subject: `[TEST] ${subject}`,
       html: htmlContent,

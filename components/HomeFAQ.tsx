@@ -3,11 +3,17 @@
  * Homepage FAQ Section
  * Optimized for SEO, GEO (AI citation), and AEO (Answer Engine Optimization)
  * Short answers visible to users, full 134-167 word answers hidden but available to search engines
+ *
+ * @param visibleToUsers - Controls whether FAQ is visible to users (always in DOM for SEO)
  */
 
-export function HomeFAQ() {
+type HomeFAQProps = {
+  visibleToUsers?: boolean
+}
+
+export function HomeFAQ({ visibleToUsers = false }: HomeFAQProps) {
   return (
-    <section className="pg-home-faq">
+    <section className={`pg-home-faq${visibleToUsers ? '' : ' pg-hidden-for-users'}`}>
       <div className="pg-testimonials-inner">
         <h2 id="faq-heading" className="pg-section-header">
           Frequently Asked Questions

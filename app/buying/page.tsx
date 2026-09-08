@@ -1,6 +1,7 @@
 import { client } from '@/lib/client'
 import { BUY_PAGE_QUERY } from '@/lib/queries'
 import { Flipbook } from '@/components/Flipbook'
+import { BuyingFAQ } from '@/components/BuyingFAQ'
 import type { BuyPageData } from '@/types'
 import { createMetadata } from '@/lib/metadata'
 import { ContentTemplate } from '@/components'
@@ -16,8 +17,15 @@ async function getBuyPageData(): Promise<BuyPageData | null> {
   return data
 }
 
-export default async function BuyPage() {
+type BuyPageProps = {
+  searchParams: Promise<{ showfaq?: string }>
+}
+
+export default async function BuyPage({ searchParams }: BuyPageProps) {
   const data = await getBuyPageData()
+  const params = await searchParams
+  const showFAQToUsers = params.showfaq === 'true'
+
   const templateData = {
     title: data?.title,
     heroHeadline: data?.headline,
@@ -39,6 +47,7 @@ export default async function BuyPage() {
       <section className="pg-buy-flipbook">
         <Flipbook images={data.flipbookImages} />
       </section>
+      <BuyingFAQ visibleToUsers={showFAQToUsers} />
     </ContentTemplate>
   )
 }

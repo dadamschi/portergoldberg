@@ -1,6 +1,7 @@
 import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
+import { SellingFAQ } from '@/components/SellingFAQ'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { ContactBanner } from '@/components'
@@ -19,8 +20,14 @@ async function getSellingPageData(): Promise<SellingPageData | null> {
   return client.fetch<SellingPageData>(SELLING_PAGE_QUERY)
 }
 
-export default async function SellingMarketingPage() {
+type SellingPageProps = {
+  searchParams: Promise<{ showfaq?: string }>
+}
+
+export default async function SellingMarketingPage({ searchParams }: SellingPageProps) {
   const data = await getSellingPageData()
+  const params = await searchParams
+  const showFAQToUsers = params.showfaq === 'true'
 
   if (!data) {
     return (
@@ -63,6 +70,8 @@ export default async function SellingMarketingPage() {
       )}
 
       <MarketingGallery />
+
+    <SellingFAQ visibleToUsers={showFAQToUsers} />
 
     <ContactBanner
       title="Connect with us today to build your customized marketing plan."

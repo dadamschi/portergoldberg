@@ -8,7 +8,7 @@ function getResend(): Resend {
   return new Resend(process.env.RESEND_API_KEY)
 }
 
-export const FROM_EMAIL = 'PorterGoldberg Website <noreply@portergoldberg.com>'
+export const FROM_EMAIL = 'PorterGoldberg <noreply@portergoldberg.com>'
 
 // All notification emails go to these addresses
 export const NOTIFY_EMAILS = EMAIL_NOTIFICATION_RECIPIENTS

@@ -50,15 +50,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const testimonials = data.testimonials
   const heroBio = data.settings?.heroBio
 
-  // Show FAQ only when ?showfaq=true
-  const showFAQ = params.showfaq === 'true'
+  // FAQ visibility: hidden by default, shown with ?showfaq=true
+  const showFAQToUsers = params.showfaq === 'true'
 
   return (
     <>
       <Hero heroBio={heroBio} />
       <Listings listings={featuredListings} isFeatured />
       <Testimonials testimonials={testimonials} />
-      {showFAQ && <HomeFAQ />}
+      <HomeFAQ visibleToUsers={showFAQToUsers} />
     </>
   )
 }
