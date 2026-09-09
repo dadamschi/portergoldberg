@@ -2,6 +2,7 @@ import { client } from '@/lib/client'
 import { BUY_PAGE_QUERY } from '@/lib/queries'
 import { Flipbook } from '@/components/Flipbook'
 import { BuyingFAQ } from '@/components/BuyingFAQ'
+import { BreadcrumbJsonLd } from '@/components'
 import type { BuyPageData } from '@/types'
 import { createMetadata } from '@/lib/metadata'
 import { ContentTemplate } from '@/components'
@@ -43,11 +44,19 @@ export default async function BuyPage({ searchParams }: BuyPageProps) {
   }
 
   return (
-    <ContentTemplate title={data.title} heroData={templateData}>
-      <section className="pg-buy-flipbook">
-        <Flipbook images={data.flipbookImages} />
-      </section>
-      <BuyingFAQ visibleToUsers={showFAQToUsers} />
-    </ContentTemplate>
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', item: 'https://www.portergoldberg.com' },
+          { name: 'Buying a Home in Chicago', item: 'https://www.portergoldberg.com/buying' },
+        ]}
+      />
+      <ContentTemplate title={data.title} heroData={templateData}>
+        <section className="pg-buy-flipbook">
+          <Flipbook images={data.flipbookImages} />
+        </section>
+        <BuyingFAQ visibleToUsers={showFAQToUsers} />
+      </ContentTemplate>
+    </>
   )
 }

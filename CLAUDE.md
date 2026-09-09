@@ -41,6 +41,7 @@ cd studio && npm run deploy
 
 - **Check `public/sitemap.xml`** - update if routes were added/removed/renamed
 - **Check `public/llms.txt`** - update if site structure or content changed significantly
+- **Check breadcrumb schemas** - update if navigation structure changed (see SEO section below)
 
 ## Code Standards
 
@@ -258,6 +259,43 @@ RESEND_API_KEY=              # Resend API key (required for both systems)
 | `/api/send-bulk-email` | POST | Send personalized emails to HubSpot contacts (requires `templateId`, `contacts[]`) |
 | `/api/hubspot/lists` | GET | Fetch all HubSpot contact lists |
 | `/api/hubspot/lists/[id]/contacts` | GET | Fetch contacts from specific HubSpot list |
+
+## SEO & Schema Markup
+
+### Breadcrumb Schema
+
+Pages use `BreadcrumbJsonLd` component from `components/JsonLd.tsx` for search engine breadcrumb navigation.
+
+**Important**: When navigation structure changes, update breadcrumb schemas in corresponding pages.
+
+**Current implementations:**
+- `/buying` - Home → Buying a Home in Chicago
+- `/selling/our-process` - Home → Sell Your Home → Our Process
+
+**Example:**
+```tsx
+<BreadcrumbJsonLd
+  items={[
+    { name: 'Home', item: 'https://www.portergoldberg.com' },
+    { name: 'Page Name', item: 'https://www.portergoldberg.com/path' },
+  ]}
+/>
+```
+
+### FAQ Schema
+
+FAQ sections on homepage, buying, and selling pages use proper Question schema markup for SEO/GEO optimization.
+
+**Visibility**: FAQs are controlled by `?showfaq=true` query parameter:
+- Default: Hidden from users, visible to search engines (`.pg-hidden-for-users` class)
+- With `?showfaq=true`: Fully visible to users
+
+All FAQ answers are 134-167 words (optimal for AI citation).
+
+**Preview URLs:**
+- `/?showfaq=true`
+- `/buying?showfaq=true`
+- `/selling/our-process?showfaq=true`
 
 ## Analytics & Tracking
 

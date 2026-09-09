@@ -2,6 +2,7 @@ import { client } from '@/lib/client'
 import { SELLING_PAGE_QUERY } from '@/lib/queries'
 import { PortableTextClient } from '@/components/PortableTextClient'
 import { SellingFAQ } from '@/components/SellingFAQ'
+import { BreadcrumbJsonLd } from '@/components'
 import type { SellingPageData } from '@/types'
 import Image from 'next/image'
 import { ContactBanner } from '@/components'
@@ -41,8 +42,16 @@ export default async function SellingMarketingPage({ searchParams }: SellingPage
   }
 
   return (
-    <ContentTemplate title="Selling Your Chicago Home: Our Proven Process" heroData={data}>
-      <SellingSectionNav currentSection="our process" />  
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', item: 'https://www.portergoldberg.com' },
+          { name: 'Sell Your Home', item: 'https://www.portergoldberg.com/selling' },
+          { name: 'Our Process', item: 'https://www.portergoldberg.com/selling/our-process' },
+        ]}
+      />
+      <ContentTemplate title="Selling Your Chicago Home: Our Proven Process" heroData={data}>
+        <SellingSectionNav currentSection="our process" />  
       <div className="pg-selling-content">
       {data.marketingIntro && data.marketingIntro.length > 0 && (
         <PortableTextClient value={data.marketingIntro} />
@@ -71,14 +80,15 @@ export default async function SellingMarketingPage({ searchParams }: SellingPage
 
       <MarketingGallery />
 
-    <SellingFAQ visibleToUsers={showFAQToUsers} />
+      <SellingFAQ visibleToUsers={showFAQToUsers} />
 
-    <ContactBanner
-      title="Connect with us today to build your customized marketing plan."
-      cta="Connect"
-      openContactForm
-      contactMessage="Yes! I would like to get more information about your listing services and discuss a marketing plan."
-    />
-    </ContentTemplate>
+      <ContactBanner
+        title="Connect with us today to build your customized marketing plan."
+        cta="Connect"
+        openContactForm
+        contactMessage="Yes! I would like to get more information about your listing services and discuss a marketing plan."
+      />
+      </ContentTemplate>
+    </>
   )
 }
