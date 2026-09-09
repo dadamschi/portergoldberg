@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { client } from '@/lib/client'
 import { EMAIL_TEMPLATE_BY_ID_QUERY } from '@/lib/queries'
-import { FROM_EMAIL } from '@/lib/email'
 import { EMAIL_SIGNATURE_HTML } from '@/lib/utils/newsletter'
 import { createEmailEngagement } from '@/lib/hubspot'
 import type { EmailTemplate } from '@/types'
@@ -17,6 +16,15 @@ type Contact = {
   lastname: string
   tier: string
   interested_property: string
+}
+
+const infoPorterGoldbergContact = {
+  id: 'info@portergoldberg.com',
+  email: 'info@portergoldberg.com',
+  firstname: 'Info',
+  lastname: 'Porter Goldberg',
+  tier: 'Gold',
+  interested_property: '123 Main St, Chicago, IL',
 }
 
 function getResend(): Resend {
@@ -84,6 +92,13 @@ export async function POST(request: Request) {
       contacts: Contact[]
     }
 
+    const interestedProperty = contacts[0]?.interested_property
+
+    contacts.push({
+      ...infoPorterGoldbergContact,
+      interested_property: interestedProperty,
+    })
+
     // Validate inputs
     if (!templateId) {
       return NextResponse.json(
@@ -149,7 +164,7 @@ export async function POST(request: Request) {
 
       try {
         // Send batch
-        const { data, error } = await resend.batch.send(emails)
+        const { error } = await resend.batch.send(emails)
 
         if (error) {
           // If batch fails, mark all emails in batch as failed
@@ -168,6 +183,9 @@ export async function POST(request: Request) {
               email: item.contact.email,
             })
 
+            if (item.contact.email === 'info@portergoldberg.com') {
+              continue
+            }
             // Create HubSpot engagement asynchronously (don't await, fire and forget)
             createEmailEngagement(
               item.contact.id,

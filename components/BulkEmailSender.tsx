@@ -479,6 +479,7 @@ export function BulkEmailSender() {
 
           {/* Bulk Send Button */}
           {selectedContactIds.size > 0 && selectedTemplateId && (
+            <div>
             <div className="bulk-send-section">
               <button
                 type="button"
@@ -489,11 +490,15 @@ export function BulkEmailSender() {
                 {isSendingBulk ? 'Sending...' : `Send Email to ${selectedContactIds.size} Selected Contact(s)`}
               </button>
 
+              
+
               {bulkSendMessage && (
                 <div className={`bulk-send-message ${bulkSendMessage.type}`}>
                   {bulkSendMessage.text}
                 </div>
               )}
+            </div>
+            <p className="info-notice">An email will always get sent to info@portergoldberg.com</p>
             </div>
           )}
         </div>
@@ -847,6 +852,12 @@ export function BulkEmailSender() {
         .selected-count {
           color: #2C3E35;
           font-weight: 600;
+        }
+
+        .info-notice {
+        color: #2C3E35;
+          font-weight: 600;
+          text-align: center;
         }
 
         .contacts-table-wrapper {
