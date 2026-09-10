@@ -895,7 +895,7 @@ export async function createEmailEngagement(
   contactId: string,
   subject: string,
   htmlBody: string,
-  fromEmail: string = 'samantha@portergoldberg.com'
+  fromEmail: string = 'info@portergoldberg.com'
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/emails`, {
@@ -911,8 +911,8 @@ export async function createEmailEngagement(
           hs_email_text: htmlBody.replace(/<[^>]*>/g, ''), // Strip HTML for text version
           hs_email_html: htmlBody,
           hs_email_from_email: fromEmail,
-          hs_email_from_firstname: 'Samantha',
-          hs_email_from_lastname: 'Porter',
+          hs_email_from_firstname: 'Porter Goldberg',
+          hs_email_from_lastname: '',
         },
         associations: [
           {
