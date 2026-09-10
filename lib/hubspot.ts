@@ -688,6 +688,23 @@ export async function fetchVendors(): Promise<HubSpotVendor[]> {
                   operator: 'EQ',
                   value: 'Vendor',
                 },
+                {
+                  propertyName: 'vendor_category',
+                  operator: 'HAS_PROPERTY',
+                },
+              ],
+            },
+            {
+              filters: [
+                {
+                  propertyName: 'tier',
+                  operator: 'EQ',
+                  value: 'House Tradesman',
+                },
+                {
+                  propertyName: 'vendor_category',
+                  operator: 'HAS_PROPERTY',
+                },
               ],
             },
           ],
