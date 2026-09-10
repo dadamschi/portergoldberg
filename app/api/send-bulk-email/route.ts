@@ -183,17 +183,16 @@ export async function POST(request: Request) {
               email: item.contact.email,
             })
 
-            if (item.contact.email === 'info@portergoldberg.com') {
-              continue
+            if (item.contact.email !== 'info@portergoldberg.com') {
+              // Create HubSpot engagement asynchronously (don't await, fire and forget)
+              createEmailEngagement(
+                item.contact.id,
+                item.email.subject,
+                item.email.html
+              ).catch(err => {
+                console.error(`Failed to create HubSpot engagement for ${item.contact.email}:`, err)
+              })
             }
-            // Create HubSpot engagement asynchronously (don't await, fire and forget)
-            createEmailEngagement(
-              item.contact.id,
-              item.email.subject,
-              item.email.html
-            ).catch(err => {
-              console.error(`Failed to create HubSpot engagement for ${item.contact.email}:`, err)
-            })
           }
         }
       } catch (err) {
