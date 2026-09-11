@@ -64,7 +64,7 @@ export function ListingCard({ listing }: ListingCardProps) {
               <span>Coming Soon</span>
             </div>
           )}
-          {statusType !== 'coming' && (
+          {statusType && (
             <span className={`pg-listing-status ${STATUS_CLASS[statusType]}`}>
               {statusText}
             </span>
