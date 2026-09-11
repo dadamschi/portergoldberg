@@ -343,7 +343,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     about { sectionLabel, headline, introParagraphs, tagline },
     social[] { platform, url }
   },
-  "listings": *[_type == "listing" && featuredOrder != null] | order(order asc) [0...4] {
+  "listings": *[_type == "listing" && featuredOrder != null] | order(order asc) {
     _id,
     address,
     neighborhood,

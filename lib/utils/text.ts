@@ -32,3 +32,26 @@ export function textToPortableText(text: string) {
     ],
   }))
 }
+
+export function textToMoney(text = '00000', locale = 'en-US', currency = 'USD') {
+  // Check if there's a plus sign at the end
+  if(!text) return null
+  const hasPlus = text.trim().endsWith('+');
+
+  // Remove everything except numbers
+  const cleanedText = text.replace(/[^\d]/g, '');
+  const amount = parseInt(cleanedText);
+
+  if (isNaN(amount)) {
+    return null; // Handle invalid inputs
+  }
+
+  const formatted = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount).toString();
+
+  return hasPlus ? `${formatted}+` : formatted;
+}

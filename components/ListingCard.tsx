@@ -5,6 +5,7 @@ import Image from 'next/image'
 import type { Listing } from '@/types'
 import { addUtmParams } from '@/lib/utils/utm'
 import { openContactForm } from '@/lib/utils/contact'
+import { textToMoney } from '@/lib/utils/text'
 
 const STATUS_CLASS: Record<string, string> = {
   active: 'pg-listing-status--active',
@@ -23,7 +24,10 @@ export function ListingCard({ listing }: ListingCardProps) {
 
   const statusText = status ?? statusType
   const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
-  const finalPrice = price ?? 'Inquire for pricing'
+  // If price contains – (en-dash) or - (hyphen), it's already formatted text
+  const finalPrice = price && (price.includes('–') || price.includes(' - '))
+    ? price
+    : textToMoney(price) ?? 'Inquire for pricing'
 
   // Build amenities string (e.g., "6 Beds | 5/1 Baths | 25,000 ft²")
   const amenities = [
