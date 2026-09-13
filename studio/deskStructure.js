@@ -1,4 +1,6 @@
-export const structure = (S) =>
+import { orderableFilteredListItem } from './plugins/orderable-filtered-list'
+
+export const structure = (S, context) =>
   S.list()
     .title("Content")
     .items([
@@ -19,41 +21,50 @@ export const structure = (S) =>
                 .child(
                   S.documentList()
                     .title("All Listings")
+                    .apiVersion('2024-01-01')
                     .filter('_type == "listing"')
                 ),
 
               S.divider(),
 
-              S.listItem()
-                .title("Featured Listings")
-                .icon(() => "⭐")
-                .child(
-                  S.documentList()
-                    .title("Featured Listings (by order)")
-                    .id("featuredListingsByOrder")
-                    .filter('_type == "listing" && featured == true')
-                    .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
-                ),
+              // Drag-and-drop orderable list for Featured Listings
+              orderableFilteredListItem({
+                type: 'listing',
+                title: 'Featured Listings',
+                filter: '_type == "listing" && featured == true',
+                orderField: 'featuredOrder',
+                displayFields: ['address', 'price', 'beds', 'baths'],
+                imageField: 'image',
+                icon: () => "⭐",
+                S,
+                context,
+              }),
 
-              S.listItem()
-                .title("Halcyon Projects")
-                .icon(() => "🏗️")
-                .child(
-                  S.documentList()
-                    .title("Halcyon Projects")
-                    .filter('_type == "listing" && isHalcyonProject == true')
-                    .defaultOrdering([{ field: "halcyonOrder", direction: "asc" }])
-                ),
+              // Drag-and-drop orderable list for Halcyon Projects
+              orderableFilteredListItem({
+                type: 'listing',
+                title: 'Halcyon Projects',
+                filter: '_type == "listing" && isHalcyonProject == true',
+                orderField: 'halcyonOrder',
+                displayFields: ['address', 'price', 'beds', 'baths'],
+                imageField: 'image',
+                icon: () => "🏗️",
+                S,
+                context,
+              }),
 
-              S.listItem()
-                .title("Sold Listings")
-                .icon(() => "✅")
-                .child(
-                  S.documentList()
-                    .title("Sold Listings")
-                    .filter('_type == "listing" && statusType == "sold" && defined(soldOrder)')
-                    .defaultOrdering([{ field: "soldOrder", direction: "asc" }])
-                ),
+              // Drag-and-drop orderable list for Sold Listings
+              orderableFilteredListItem({
+                type: 'listing',
+                title: 'Sold Listings',
+                filter: '_type == "listing" && statusType == "sold" && defined(soldOrder)',
+                orderField: 'soldOrder',
+                displayFields: ['address', 'price', 'beds', 'baths'],
+                imageField: 'image',
+                icon: () => "✅",
+                S,
+                context,
+              }),
 
               S.listItem()
                 .title("Coming Soon")
@@ -61,6 +72,7 @@ export const structure = (S) =>
                 .child(
                   S.documentList()
                     .title("Coming Soon")
+                    .apiVersion('2024-01-01')
                     .filter('_type == "listing" && statusType == "coming"')
                     .defaultOrdering([{ field: "featuredOrder", direction: "asc" }])
                 ),
