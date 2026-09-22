@@ -27,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${seasonTitle} Home Care Guide | Halcyon Development`,
     description: newsletter.previewText || newsletter.introduction,
-    robots: 'noindex',
   }
 }
 

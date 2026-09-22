@@ -7,7 +7,6 @@ import type { HalcyonNewsletterPreview } from '@/types'
 export const metadata: Metadata = {
   title: 'Seasonal Home Care Newsletters | Halcyon Development',
   description: 'Seasonal maintenance guides and care tips for your Halcyon home.',
-  robots: 'noindex',
 }
 
 export const revalidate = 86400 // 24 hours
