@@ -7,13 +7,14 @@ import type { HalcyonNewsletter } from '@/types'
 export const revalidate = 86400 // 24 hours
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
   const newsletter = await client.fetch<HalcyonNewsletter>(
     HALCYON_NEWSLETTER_BY_SLUG_QUERY,
-    { slug: params.slug }
+    { slug }
   )
 
   if (!newsletter) {
@@ -38,9 +39,10 @@ const SEASON_EMOJI: Record<string, string> = {
 }
 
 export default async function HalcyonNewsletterPage({ params }: Props) {
+  const { slug } = await params
   const newsletter = await client.fetch<HalcyonNewsletter>(
     HALCYON_NEWSLETTER_BY_SLUG_QUERY,
-    { slug: params.slug }
+    { slug }
   )
 
   if (!newsletter) {
