@@ -32,7 +32,11 @@ export const halcyonNewsletter = defineType({
       title: "Slug",
       type: "slug",
       options: {
-        source: "season",
+        source: (doc) => {
+          const season = doc.season || 'season'
+          const year = doc.publishedAt ? new Date(doc.publishedAt).getFullYear() : new Date().getFullYear()
+          return `${season}-${year}`
+        },
         slugify: (input) => `halcyon-home-care-${input}`,
       },
       validation: (rule) => rule.required(),

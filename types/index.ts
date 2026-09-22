@@ -301,6 +301,48 @@ export type Newsletter = {
 }
 
 // =============================================================================
+// HALCYON SEASONAL NEWSLETTER TYPES
+// =============================================================================
+
+export type ChecklistItem = {
+  _type: 'checklistItem'
+  emoji: string
+  title: string
+  description: string
+}
+
+export type ContentSection = {
+  title: string
+  content: string
+}
+
+// Preview for list page
+export type HalcyonNewsletterPreview = {
+  _id: string
+  season: 'spring' | 'summer' | 'fall' | 'winter'
+  publishedAt: string
+  slug: { current: string }
+  emailSubject: string
+}
+
+// Full halcyon newsletter for detail page
+export type HalcyonNewsletter = {
+  _id: string
+  season: 'spring' | 'summer' | 'fall' | 'winter'
+  publishedAt: string
+  slug: { current: string }
+  emailSubject: string
+  previewText?: string
+  introduction: string
+  maintenanceChecklist: ChecklistItem[]
+  homeTip?: ContentSection
+  didYouKnow?: ContentSection
+  luxurySpotlight?: ContentSection
+  additionalSection?: ContentSection
+  lookingAhead?: string
+}
+
+// =============================================================================
 // PRESS TYPES
 // =============================================================================
 

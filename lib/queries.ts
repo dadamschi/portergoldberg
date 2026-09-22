@@ -524,6 +524,57 @@ export const ALL_NEWSLETTERS_ADMIN_QUERY = defineQuery(/* groq */ `
 `)
 
 // =============================================================================
+// HALCYON SEASONAL NEWSLETTERS
+// =============================================================================
+
+// List all halcyon newsletters for archive page
+export const ALL_HALCYON_NEWSLETTERS_QUERY = defineQuery(/* groq */ `
+  *[_type == "halcyonNewsletter" && publishedAt < now()] | order(publishedAt desc) {
+    _id,
+    season,
+    publishedAt,
+    slug,
+    emailSubject
+  }
+`)
+
+// Single halcyon newsletter by slug
+export const HALCYON_NEWSLETTER_BY_SLUG_QUERY = defineQuery(/* groq */ `
+  *[_type == "halcyonNewsletter" && slug.current == $slug][0] {
+    _id,
+    season,
+    publishedAt,
+    slug,
+    emailSubject,
+    previewText,
+    introduction,
+    maintenanceChecklist[] {
+      _type,
+      emoji,
+      title,
+      description
+    },
+    homeTip {
+      title,
+      content
+    },
+    didYouKnow {
+      title,
+      content
+    },
+    luxurySpotlight {
+      title,
+      content
+    },
+    additionalSection {
+      title,
+      content
+    },
+    lookingAhead
+  }
+`)
+
+// =============================================================================
 // PRESS
 // =============================================================================
 

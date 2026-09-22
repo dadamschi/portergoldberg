@@ -57,7 +57,7 @@ export const structure = (S, context) =>
               orderableFilteredListItem({
                 type: 'listing',
                 title: 'Sold Listings',
-                filter: '_type == "listing" && statusType == "sold" && defined(soldOrder)',
+                filter: '_type == "listing" && statusType == "sold"',
                 orderField: 'soldOrder',
                 displayFields: ['address', 'price', 'beds', 'baths'],
                 imageField: 'image',
@@ -126,6 +126,7 @@ export const structure = (S, context) =>
             .schemaType("halcyonPage")
             .documentId("halcyonPage")
         ),
+      S.documentTypeListItem("halcyonNewsletter").title("Halcyon Seasonal Newsletters"),
 
       S.divider(),
 

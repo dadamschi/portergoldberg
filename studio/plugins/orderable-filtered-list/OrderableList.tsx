@@ -50,7 +50,8 @@ export function OrderableList(props: any) {
 
       // Query ONLY published documents (exclude drafts)
       // This ensures we're only reordering live, published content
-      const query = `*[${filter} && !(_id in path("drafts.**"))] | order(${orderField} asc)`
+      // Use coalesce to treat null order values as -1 so they appear at top
+      const query = `*[${filter} && !(_id in path("drafts.**"))] | order(coalesce(${orderField}, -1) asc)`
 
       const docs = await client.fetch<OrderableDocument[]>(query)
       setDocuments(docs)

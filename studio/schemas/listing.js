@@ -107,6 +107,7 @@ export const listing = defineType({
       title: "Order in Featured Listings section",
       type: "number",
       description: "Ordered by this value, lower numbers appear first",
+      hidden: true,
     }),
     defineField({
       name: "isHalcyonProject",
@@ -120,14 +121,14 @@ export const listing = defineType({
       title: "Halcyon Page Order",
       type: "number",
       description: "Display order on the Halcyon Development page (lower numbers appear first)",
-      hidden: ({ document }) => !document?.isHalcyonProject,
+      hidden: true,
     }),
     defineField({
       name: "soldOrder",
       title: "Sold List Order",
       type: "number",
-      description: "Display order on the inventory sold list (lower numbers appear first). Only listings with this set will appear.",
-      hidden: ({ document }) => document?.statusType !== "sold",
+      description: "Display order on the inventory sold list (lower numbers appear first). Listings without an order appear at the top.",
+      hidden: true,
     }),
     defineField({
       name: "units",
