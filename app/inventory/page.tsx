@@ -54,7 +54,7 @@ export default async function InventoryPage() {
           />
 
         <div>
-          <h2>Sold</h2>
+          <h2 id="sold">Sold</h2>
           <a
             href={addUtmParams("https://www.sothebysrealty.com/jamesonsir/eng/sold/int/775-a-df19010717111012533-agentid", { campaign: 'sold-listings' })}
             target="_blank"
@@ -63,7 +63,7 @@ export default async function InventoryPage() {
           >
             See more sold properties →
           </a>
-          <ListingsGrid listings={sold} maxItems={9} />
+          <ListingsGrid listings={sold} maxItems={12} />
         </div>
       </ContentTemplate>
   )

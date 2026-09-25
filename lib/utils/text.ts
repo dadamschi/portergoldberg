@@ -38,13 +38,16 @@ export function textToMoney(text = '00000', locale = 'en-US', currency = 'USD') 
   if(!text) return null
   const hasPlus = text.trim().endsWith('+');
 
-  // Remove everything except numbers
-  const cleanedText = text.replace(/[^\d]/g, '');
-  const amount = parseInt(cleanedText);
+  // Remove everything except numbers and decimal point
+  const cleanedText = text.replace(/[^\d.]/g, '');
+  const numericValue = parseFloat(cleanedText);
 
-  if (isNaN(amount)) {
+  if (isNaN(numericValue)) {
     return null; // Handle invalid inputs
   }
+
+  // If value is less than 10000, assume it's in millions (e.g., 1.635 = $1,635,000)
+  const amount = numericValue < 10000 ? numericValue * 1000000 : numericValue;
 
   const formatted = new Intl.NumberFormat(locale, {
     style: 'currency',
