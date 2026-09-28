@@ -23,7 +23,7 @@ export function ListingCard({ listing }: ListingCardProps) {
   const { address, neighborhood, city, price, beds, baths, sqft, status, statusType, image, brochureUrl, units } = listing
 
   const statusText = status ?? statusType
-  const contactMessage = `I'm interested in the property at ${address}, ${neighborhood}.`
+  const contactMessage = `I'm interested in the property at ${address} ${neighborhood}.`
   // If price contains – (en-dash) or - (hyphen), it's already formatted text
   const finalPrice = price && (price.includes('–') || price.includes(' - '))
     ? price
@@ -104,7 +104,10 @@ export function ListingCard({ listing }: ListingCardProps) {
         {amenities && (
           <div className="pg-listing-amenities">{amenities || '\u00A0'}</div>
         )}
-        <div className="pg-listing-address">{address}, {city || 'Chicago'}</div>
+        <div className="pg-listing-address">
+          {address}
+          {statusType !== 'coming' ? `, ${city || 'Chicago'}` : ` ${neighborhood}`}
+        </div>
       </div>
     </div>
   )

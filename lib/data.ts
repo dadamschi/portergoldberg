@@ -14,7 +14,7 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: 'Testimonials', href: '/testimonials' },
-  { label: 'Inventory', href: '/inventory',
+  { label: 'Properties', href: '/inventory',
     children: [
       { label: 'Inventory', href: '/inventory' },
       // { label: 'Available', href: 'https://www.sothebysrealty.com/jamesonsir/eng/sales/int/775-a-df19010717111012533-agentid' },

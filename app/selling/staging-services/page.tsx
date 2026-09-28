@@ -38,7 +38,7 @@ export default async function SellingStagingPage() {
       {data.stagingIntro && data.stagingIntro.length > 0 && (
         <div className="pg-selling-content">
           <PortableTextClient value={data.stagingIntro} />
-          <div style={{ marginTop: '2rem' }}>
+          {/* <div style={{ marginTop: '2rem' }}>
             <a
               href={addUtmParams('https://www.havenhomestager.com/', { campaign: 'staging-partner' })}
               target="_blank"
@@ -47,7 +47,7 @@ export default async function SellingStagingPage() {
             >
               Haven Home Stagers
             </a>
-          </div>
+          </div> */}
         </div>
       )}
 

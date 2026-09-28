@@ -11,6 +11,23 @@ type TestimonialsProps = {
   testimonials: Testimonial[]
 }
 
+function getInitials(name: string): string {
+  const firstinitial = name
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(0, 1)
+    .toUpperCase()
+  const lastinitial = name
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(-1)
+    .toUpperCase()
+  const initials = `${firstinitial}${lastinitial}`
+  return initials
+}
+
 export function Testimonials({ testimonials }: TestimonialsProps) {
   const [active, setActive] = useState(0)
   const [fading, setFading] = useState(false)
@@ -60,8 +77,8 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           <div className="pg-testimonial-body">
             <PortableText value={current.quote} components={portableTextComponents} />
             <div className="pg-testimonial-author--home">
-              — {current.clientName} <br></br>
-            {current.clientTitle && `${current.clientTitle}`}
+              <div className="pg-testimonial-avatar">{getInitials(current.clientName)}</div>
+              <span>Verified Client</span>
             </div>
           </div>
           

@@ -7,7 +7,7 @@ import { ContentTemplate } from '@/components/contentTemplate'
 import { toPlainText } from '@/lib/utils/text'
 
 export const metadata = createMetadata({
-  title: 'Client Reviews & Testimonials',
+  title: 'Testimonials',
   description: 'Read reviews and testimonials from our clients about their experience buying and selling homes with PorterGoldberg Residential in Chicago.',
   path: '/testimonials',
 })
@@ -54,7 +54,7 @@ function generateTestimonialsSchema(testimonials: Testimonial[]) {
 
 export default async function TestimonialsPage() {
   const testimonials = await getTestimonials()
-  const title = 'Client Reviews & Testimonials'
+  const title = 'Testimonials'
   const heroData = {
     heroHeadline: 'Hear from our clients about their experience buying and selling homes with PorterGoldberg',
   }

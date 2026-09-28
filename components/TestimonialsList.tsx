@@ -39,7 +39,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       <div className="pg-testimonial-header">
         <div className="pg-testimonial-avatar">{initials}</div>
         <div className="pg-testimonial-user-info">
-          <span className="pg-testimonial-name">{testimonial.clientName}</span>
+          {/* <span className="pg-testimonial-name">{testimonial.clientName}</span> */}
           {/* {testimonial.clientTitle && (
             <span className="pg-testimonial-handle">{testimonial.clientTitle}</span>
           )} */}

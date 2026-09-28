@@ -2783,6 +2783,7 @@ body {
 .pg-testimonial-user-info {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   min-width: 0;
   flex: 1;
 }
@@ -2834,7 +2835,10 @@ body {
 .pg-testimonial-author--home {
   margin-bottom: 1px;
   margin-top: 6px;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 /* Tweet footer */
