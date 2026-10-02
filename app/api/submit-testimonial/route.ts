@@ -55,8 +55,7 @@ export async function POST(request: NextRequest) {
       date: date || new Date().toISOString().split('T')[0],
       quote: textToPortableText(quote.trim()),
       pinOnHomePage: false,
-      hubspotContactId: primaryContactId,
-      hubspotContactIds: contactIds, // Store all contact IDs
+      hubspotContactIds: contactIds,
     }
 
     const draftedTestimonial = await writeClient.createOrReplace(document)

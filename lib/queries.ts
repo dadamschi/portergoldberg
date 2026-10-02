@@ -92,7 +92,7 @@ export const ALL_TESTIMONIALS_QUERY = defineQuery(/* groq */ `
 `)
 
 export const TESTIMONIAL_BY_HUBSPOT_ID_QUERY = defineQuery(/* groq */ `
-  *[_type == "testimonial" && hubspotContactId == $hubspotContactId] | order(_id asc)[0] {
+  *[_type == "testimonial" && $hubspotContactId in hubspotContactIds] | order(_id asc)[0] {
     _id,
     clientName,
     clientTitle,
@@ -104,10 +104,7 @@ export const TESTIMONIAL_BY_HUBSPOT_ID_QUERY = defineQuery(/* groq */ `
 export const TESTIMONIAL_BY_ANY_CONTACT_QUERY = defineQuery(/* groq */ `
   *[
     _type == "testimonial"
-    && (
-      hubspotContactId in $contactIds
-      || count((hubspotContactIds[])[@ in $contactIds]) > 0
-    )
+    && count((hubspotContactIds[])[@ in $contactIds]) > 0
   ] | order(_id asc)[0] {
     _id,
     clientName,
