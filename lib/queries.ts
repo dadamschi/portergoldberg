@@ -87,7 +87,8 @@ export const ALL_TESTIMONIALS_QUERY = defineQuery(/* groq */ `
     date,
     quote,
     pinOnHomePage,
-    order
+    order,
+    showFullName
   }
 `)
 
@@ -362,7 +363,8 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     clientName,
     clientTitle,
     date,
-    quote
+    quote,
+    showFullName
   },
   "agents": *[_type == "agent"] | order(order asc) {
     _id,

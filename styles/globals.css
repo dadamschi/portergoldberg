@@ -2841,6 +2841,31 @@ body {
   gap: 8px;
 }
 
+.pg-testimonial-full-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.pg-testimonial-name-text {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000035;
+}
+
+.pg-testimonial-title-text {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.pg-testimonial-first-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000035;
+}
+
 /* Tweet footer */
 .pg-testimonial-footer {
   display: flex;

@@ -59,6 +59,7 @@ export type Testimonial = {
   quote: PortableTextBlock[]
   pinOnHomePage?: boolean
   order?: number
+  showFullName?: boolean
 }
 
 export type ZillowReview = {

@@ -71,6 +71,13 @@ export const testimonial = defineType({
       description: "Lower numbers appear first in carousel",
     }),
     defineField({
+      name: "showFullName",
+      title: "Show Full Name",
+      type: "boolean",
+      description: "Show full name instead of initials (default: show initials only)",
+      initialValue: false,
+    }),
+    defineField({
       name: "hubspotContactIds",
       title: "HubSpot Contact IDs",
       type: "array",

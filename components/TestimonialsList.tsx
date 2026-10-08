@@ -37,14 +37,16 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <div className="pg-testimonial-card">
       <div className="pg-testimonial-header">
-        <div className="pg-testimonial-avatar">{initials}</div>
-        <div className="pg-testimonial-user-info">
-          {/* <span className="pg-testimonial-name">{testimonial.clientName}</span> */}
-          {/* {testimonial.clientTitle && (
-            <span className="pg-testimonial-handle">{testimonial.clientTitle}</span>
-          )} */}
-          <div className="pg-testimonial-footer">Verified Client</div>
-        </div>
+        {testimonial.showFullName ? (
+          <div className="pg-testimonial-user-info">
+            <span className="pg-testimonial-name">{testimonial.clientName}</span>
+            {testimonial.clientTitle && (
+              <span className="pg-testimonial-handle">{testimonial.clientTitle}</span>
+            )}
+          </div>
+        ) : (
+          <div className="pg-testimonial-avatar">{initials}</div>
+        )}
       </div>
       <div className="pg-testimonial-content">
         <PortableText value={testimonial.quote} components={portableTextComponents} />
