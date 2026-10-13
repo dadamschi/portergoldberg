@@ -55,13 +55,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `https://www.portergoldberg.com/newsletters/${slug}`
 
   return {
-    title: `${newsletter.title} | ${formatDateOnly(newsletter.publishedAt)}`,
+    title: newsletter.title,
     description: newsletter.summary,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: `${newsletter.title} | ${formatDateOnly(newsletter.publishedAt)}`,
+      title: newsletter.title,
       description: newsletter.summary,
       url,
       type: 'article',

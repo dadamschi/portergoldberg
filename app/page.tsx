@@ -8,7 +8,7 @@ import type { PortableTextBlock } from '@portabletext/types'
 
 export const metadata: Metadata = {
   title: 'Chicago Luxury Real Estate | PorterGoldberg Residential',
-  description: 'Chicago luxury real estate experts Samantha Porter & Lauren Goldberg deliver boutique service for Lincoln Park, Lakeview & North Side. 44 years experience, $550M+ in sales.',
+  description: 'Chicago luxury real estate experts. Boutique service for Lincoln Park, Lakeview & North Side. 44 years experience, $550M+ in sales.',
   alternates: {
     canonical: 'https://www.portergoldberg.com',
   },

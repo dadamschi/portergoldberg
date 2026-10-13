@@ -87,6 +87,7 @@ export default async function NewslettersPage() {
     <ContentTemplate heroData={heroData} >
       <section className="pg-newsletters-section">
         <div className="pg-newsletters-inner">
+          <h1 className="pg-visually-hidden">Newsletter Archive</h1>
           {newsletters.length > 0 ? (
             <div className="pg-newsletter-blog-grid">
               {firstBatch.map((newsletter) => (

@@ -9,7 +9,7 @@ import type { Metadata } from 'next'
 
   export function createMetadata({ title, description, path, openGraph }: PageMeta): Metadata {
     return {
-      title: `${title} | PorterGoldberg`,
+      title,
       description,
       openGraph,
       alternates: {

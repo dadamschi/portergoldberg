@@ -36,11 +36,12 @@ export default async function HalcyonDevelopmentPage() {
     }
   }
 
-  return (    
-    <ContentTemplate 
+  return (
+    <ContentTemplate
       title={title}
       heroData={heroData}
     >
+      <h1 className="pg-visually-hidden">Halcyon Development</h1>
 
       {/* About Section */}
       <section className="pg-halcyon-about">

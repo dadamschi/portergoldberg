@@ -8,9 +8,9 @@ export function ContactForm() {
         <div className="pg-contact-col-empty" />
 
         <div className="pg-contact-col-content">
-          <h2 className="pg-contact-title">
-            <strong>Let&apos;s Connect</strong>
-          </h2>
+          <h1 className="pg-contact-title">
+            <strong>Contact Us</strong>
+          </h1>
 
           {/* <div className="pg-contact-agents">
             {agents.map((agent) => (

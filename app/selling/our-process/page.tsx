@@ -13,7 +13,7 @@ import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
   title: 'Sell Your Chicago Home | Expert Listing Services',
-  description: 'Sell your Chicago home with PorterGoldberg. $550M+ in sales, Sotheby\'s global marketing, expert pricing & staging guidance. Serving Lincoln Park, Lakeview & North Side.',
+  description: 'Sell your Chicago home with expert guidance. $550M+ in sales, Sotheby\'s marketing, pricing & staging. Lincoln Park, Lakeview & North Side.',
   path: '/selling/our-process',
 })
 

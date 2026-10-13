@@ -8,7 +8,7 @@ import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
   title: 'Property Preparation | Selling Your Chicago Home',
-  description: 'PorterGoldberg\'s property preparation services help Chicago homeowners maximize their sale price through strategic improvements, repairs, and pre-listing preparation.',
+  description: 'Property preparation services to maximize your Chicago home\'s sale price through strategic improvements, repairs, and pre-listing prep.',
   path: '/selling/our-process',
 })
 

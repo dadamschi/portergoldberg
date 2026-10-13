@@ -8,7 +8,7 @@ import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
   title: 'Meet Our Chicago Real Estate Team',
-  description: 'Meet Samantha Porter and Lauren Goldberg — Chicago real estate experts at Jameson Sotheby\'s International Realty with 44 years combined experience and $550M+ in career sales.',
+  description: 'Meet Samantha Porter and Lauren Goldberg. Chicago real estate experts at Jameson Sotheby\'s with 44 years experience and $550M+ in sales.',
   path: '/about-us',
 })
 
