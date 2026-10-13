@@ -10,7 +10,7 @@ const GALLERY_ITEMS = [
 export function MarketingGallery() {
   return (
     <div className="pg-marketing-gallery">
-      <h3 className="pg-marketing-gallery-tagline">Preview a selection of our marketing materials below:</h3>
+      <h2 className="pg-marketing-gallery-tagline">Preview a selection of our marketing materials below:</h2>
       {GALLERY_ITEMS.map((item) => (
         <a key={item.src} {...getLinkProps(item.href, 'marketing')} className="pg-marketing-gallery-item">
           <span className="pg-marketing-gallery-title">{item.title}</span>

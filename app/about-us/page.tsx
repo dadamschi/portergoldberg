@@ -75,12 +75,12 @@ function AgentSection({ agent, reversed = false }: { agent: Agent; reversed?: bo
 function PartnershipSection() {
   return (
     <section className="pg-partnership">
-      <h3>
+      <h2>
         <strong>Samantha</strong> and <strong>Lauren</strong> are Chicago natives, moms with
         two young children, and have husbands in construction. With kids in public and private
         schools, involvement in community, and a great knowledge of the real estate
         culture&hellip; they are a distinguishable resource.
-      </h3>
+      </h2>
     </section>
   )
 }

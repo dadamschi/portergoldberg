@@ -4,7 +4,7 @@ import { createMetadata } from '@/lib/metadata'
 
 export const metadata = createMetadata({
 title: 'Our Trusted Vendors',
-  description: 'A curated list of trusted vendors and service providers recommended by PorterGoldberg Residential',
+  description: 'Curated network of trusted Chicago vendors and service providers. Contractors, designers, inspectors, and specialists recommended by PorterGoldberg.',
   path: '/vendors',
 })
 
