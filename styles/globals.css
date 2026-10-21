@@ -6997,16 +6997,18 @@ ul {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
+  padding: 0 4px;
+  margin: 0 -4px;
 }
 
 .pg-ch-track {
   --pg-ch-gap: 24px;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 2px;
   display: flex;
   gap: var(--pg-ch-gap);
-  transform: translateX(calc((25% + 18px) * var(--pg-ch-index) * -1));
+  transform: translateX(calc((25% + 6px) * var(--pg-ch-index) * -1));
   transition: transform 0.6s ease;
 }
 
@@ -7025,8 +7027,8 @@ ul {
 }
 
 .pg-ch-slide {
-  flex: 0 0 calc(25% - 18px);
-  max-width: calc(25% - 18px);
+  flex: 0 0 calc(25% - 20px);
+  max-width: calc(25% - 20px);
   min-width: 0;
   display: flex;
 }

@@ -105,9 +105,6 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
         <h2 id="pg-ch-title" className="pg-section-title" style={{ marginBottom: 0, fontSize: '46px', fontWeight: 600, color: '#000' }}>
           Closing Highlights &amp; Success Stories
         </h2>
-        <a href="/inventory#sold" className="pg-section-head-link">
-          View All →
-        </a>
       </div>
 
       <div className="pg-ch-inner">
@@ -168,8 +165,8 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                       </div>
                       <div className="pg-ch-body">
                         <p className="pg-ch-place">{place}</p>
-                        <h3 className="pg-ch-address">{item.address}</h3>
-                        <p className="pg-ch-details">{[price && `Sold ${price}`, details].filter(Boolean).join(' · ')}</p>
+                        {/* <h3 className="pg-ch-address">{item.address}</h3> */}
+                        {/* <p className="pg-ch-details">{[price && `Sold ${price}`, details].filter(Boolean).join(' · ')}</p> */}
                       </div>
                       {item.successStory && (
                         <div className="pg-ch-actions">
@@ -261,13 +258,12 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                   </svg>
                 </button>
               </div>
-              <h3 id="pg-ch-dialog-title" className="pg-ch-dialog-title">{story.address}</h3>
+              {/* <h3 id="pg-ch-dialog-title" className="pg-ch-dialog-title">{story.address}</h3> */}
               <p className="pg-ch-details">
                 {[story.neighborhood || story.city, storyPrice && `Sold ${storyPrice}`, storyDetails].filter(Boolean).join(' · ')}
               </p>
               <hr className="pg-ch-rule" />
               <p className="pg-ch-story">{story.successStory}</p>
-              <a href="/inventory#sold" className="pg-ch-cta">See All Sold Properties</a>
             </div>
           </div>
         )}
