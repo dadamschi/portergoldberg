@@ -358,6 +358,19 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     featured,
     featuredOrder
   },
+  "closingHighlights": *[_type == "listing" && statusType == "sold" && closingHighlight == true && representation in ["buyer", "seller"]] | order(closingHighlightOrder asc, _updatedAt desc) {
+    _id,
+    address,
+    neighborhood,
+    city,
+    price,
+    beds,
+    baths,
+    units,
+    representation,
+    successStory,
+    "image": image { ${imageFragment} }
+  },
   "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(order asc, _createdAt desc) {
     _id,
     clientName,

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { Hero, Listings, Testimonials } from '@/components'
 import { HomeFAQ } from '@/components/HomeFAQ'
+import { ClosingHighlights } from '@/components/home/ClosingHighlights'
 import { client } from '@/lib/client'
 import { HOME_PAGE_QUERY } from '@/lib/queries'
-import type { Listing, Testimonial, Agent } from '@/types'
+import type { Listing, Testimonial, Agent, ClosingHighlight } from '@/types'
 import type { PortableTextBlock } from '@portabletext/types'
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ type HomePageData = {
     heroBio?: PortableTextBlock[]
   } | null
   listings: Listing[]
+  closingHighlights: ClosingHighlight[]
   testimonials: Testimonial[]
   agents: Agent[]
 }
@@ -33,12 +35,12 @@ async function getHomePageData(): Promise<HomePageData> {
     return data
   } catch (error) {
     console.error('Failed to fetch from Sanity:', error)
-    return { settings: null, listings: [], testimonials: [], agents: [] }
+    return { settings: null, listings: [], closingHighlights: [], testimonials: [], agents: [] }
   }
 }
 
 type HomePageProps = {
-  searchParams: Promise<{ showfaq?: string; testimonialFirstName?: string }>
+  searchParams: Promise<{ showfaq?: string; testimonialFirstName?: string; showClosingHighlights?: string }>
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
@@ -53,6 +55,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   // FAQ visibility: hidden by default, shown with ?showfaq=true
   const showFAQToUsers = params.showfaq === 'true'
 
+  // Closing Highlights: hidden until approved, preview with ?showClosingHighlights=true
+  const showClosingHighlights = params.showClosingHighlights === 'true'
+
   // Testimonial display: initials by default, first name with ?testimonialFirstName=true
   const showTestimonialFirstName = params.testimonialFirstName === 'true'
 
@@ -60,6 +65,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <>
       <Hero heroBio={heroBio} />
       <Listings listings={featuredListings} isFeatured />
+      {showClosingHighlights && <ClosingHighlights items={data.closingHighlights} />}
       <Testimonials testimonials={testimonials} showFirstName={showTestimonialFirstName} />
       <HomeFAQ visibleToUsers={showFAQToUsers} />
     </>

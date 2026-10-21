@@ -131,6 +131,58 @@ export const listing = defineType({
       hidden: true,
     }),
     defineField({
+      name: "representation",
+      title: "Represented",
+      type: "string",
+      description: "Which side PorterGoldberg represented. Shown as a banner in Closing Highlights.",
+      options: {
+        list: [
+          { title: "Buyer", value: "buyer" },
+          { title: "Seller", value: "seller" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      hidden: ({ document }) => document?.statusType !== "sold",
+    }),
+    defineField({
+      name: "closingHighlight",
+      title: "Show in Closing Highlights",
+      type: "boolean",
+      description: "Feature this sold property in the homepage Closing Highlights & Success Stories carousel",
+      initialValue: false,
+      hidden: ({ document }) => document?.statusType !== "sold",
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          if (value && !context.document?.representation) {
+            return "Set \"Represented\" before featuring this property in Closing Highlights";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "closingHighlightOrder",
+      title: "Closing Highlights Order",
+      type: "number",
+      description: "Lower numbers appear first in the carousel. Update this field to reorder highlights - all highlights should have unique sequential numbers (1, 2, 3, etc.)",
+      hidden: ({ document }) => !document?.closingHighlight,
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          if (context.document?.closingHighlight && !value) {
+            return "Order is required for Closing Highlights";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "successStory",
+      title: "Success Story",
+      type: "text",
+      rows: 6,
+      description: "Shown in the Success Story pop-out (~80–120 words). Do not include client names or initials.",
+      hidden: ({ document }) => !document?.closingHighlight,
+    }),
+    defineField({
       name: "units",
       title: "Units",
       type: "number",
@@ -154,9 +206,11 @@ export const listing = defineType({
       halcyonOrder: "halcyonOrder",
       soldOrder: "soldOrder",
       units: "units",
+      closingHighlight: "closingHighlight",
+      closingHighlightOrder: "closingHighlightOrder",
       media: "image",
     },
-    prepare({ address, neighborhood, city, price, beds, baths, sqft, status, statusLabel, featured, featuredOrder, halcyon, halcyonOrder, soldOrder, units, media }) {
+    prepare({ address, neighborhood, city, price, beds, baths, sqft, status, statusLabel, featured, featuredOrder, halcyon, halcyonOrder, soldOrder, units, closingHighlight, closingHighlightOrder, media }) {
       // Build subtitle with relevant details
       const details = [];
 
@@ -177,6 +231,7 @@ export const listing = defineType({
 
       if (featured && featuredOrder) meta.push(`Featured #${featuredOrder}`);
       if (halcyon && halcyonOrder) meta.push(`Halcyon #${halcyonOrder}`);
+      if (closingHighlight) meta.push(`Highlight #${closingHighlightOrder ?? "–"}`);
 
       const description = meta.join(" | ");
 

@@ -34,6 +34,20 @@ export type Listing = {
   featuredOrder?: number
 }
 
+export type ClosingHighlight = {
+  _id: string
+  address: string
+  neighborhood?: string
+  city?: string
+  price?: string
+  beds?: string
+  baths?: string
+  units?: number
+  representation: 'buyer' | 'seller'
+  successStory?: string
+  image?: SanityImage
+}
+
 export type FlipbookImage = {
   asset: {
     _id: string

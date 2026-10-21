@@ -2,6 +2,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Documentation (Obsidian Vault)
+
+**CRITICAL: All project documentation lives in the Obsidian vault, NOT in the repository.**
+
+- **Vault path**: Check using `mcp__obsidian-vault__vault_list` with path `portergoldberg`
+- **Always check Obsidian first** for any documentation before creating new files
+- **Never create `.md` files in the repo** for documentation (README.md is the exception)
+- **All documentation updates** must be made in the Obsidian vault using `mcp__obsidian-vault__vault_write`
+
+**Documentation locations:**
+- SEO analyses → `portergoldberg/SEO-ANALYSIS-*.md`
+- TODO lists → `portergoldberg/TODO-*.md`
+- Halcyon seasonal content → `portergoldberg/halcyon-seasonal/`
+- Project notes → `portergoldberg/`
+
+**Workflow:**
+1. Check Obsidian vault for existing documentation
+2. Read relevant docs using `mcp__obsidian-vault__vault_read`
+3. Update docs in vault using `mcp__obsidian-vault__vault_write`
+4. Never duplicate documentation in the repository
+
 ## Brand Guidelines
 
 See **[BRAND.md](./BRAND.md)** for brand rules including:
