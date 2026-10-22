@@ -134,8 +134,8 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
             >
               {items.map((item, i) => {
                 const visible = i >= current && i < current + perView
-                const price = formatPrice(item.price)
-                const details = formatDetails(item)
+                // const price = formatPrice(item.price)
+                // const details = formatDetails(item)
                 const place = item.neighborhood || item.city || 'Chicago'
                 return (
                   <li

@@ -40,7 +40,7 @@ async function getHomePageData(): Promise<HomePageData> {
 }
 
 type HomePageProps = {
-  searchParams: Promise<{ showfaq?: string; testimonialFirstName?: string; showClosingHighlights?: string }>
+  searchParams: Promise<{ showfaq?: string; }>
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
@@ -55,18 +55,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   // FAQ visibility: hidden by default, shown with ?showfaq=true
   const showFAQToUsers = params.showfaq === 'true'
 
-  // Closing Highlights: hidden until approved, preview with ?showClosingHighlights=true
-  const showClosingHighlights = params.showClosingHighlights === 'true'
-
-  // Testimonial display: initials by default, first name with ?testimonialFirstName=true
-  const showTestimonialFirstName = params.testimonialFirstName === 'true'
-
   return (
     <>
       <Hero heroBio={heroBio} />
       <Listings listings={featuredListings} isFeatured />
-      {showClosingHighlights && <ClosingHighlights items={data.closingHighlights} />}
-      <Testimonials testimonials={testimonials} showFirstName={showTestimonialFirstName} />
+      <ClosingHighlights items={data.closingHighlights} />
+      <Testimonials testimonials={testimonials} />
       <HomeFAQ visibleToUsers={showFAQToUsers} />
     </>
   )

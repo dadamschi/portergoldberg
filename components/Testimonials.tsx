@@ -29,13 +29,7 @@ function getInitials(name: string): string {
   return initials
 }
 
-function getFirstName(name: string): string {
-  const words = name.trim().split(' ')
-  words.pop() // Remove last word (surname)
-  return words.join(' ') // Return everything before the surname
-}
-
-export function Testimonials({ testimonials, showFirstName = false }: TestimonialsProps) {
+export function Testimonials({ testimonials }: TestimonialsProps) {
   const [active, setActive] = useState(0)
   const [fading, setFading] = useState(false)
 
@@ -84,18 +78,7 @@ export function Testimonials({ testimonials, showFirstName = false }: Testimonia
           <div className="pg-testimonial-body">
             <PortableText value={current.quote} components={portableTextComponents} />
             <div className="pg-testimonial-author--home">
-              {current.showFullName ? (
-                <div className="pg-testimonial-full-name">
-                  <span className="pg-testimonial-name-text">{current.clientName}</span>
-                  {current.clientTitle && (
-                      <span className="pg-testimonial-title-text">{current.clientTitle}</span>
-                  )}
-                </div>
-              ) : !current.showFullName && showFirstName ? (
-                <span className="pg-testimonial-first-name">{getFirstName(current.clientName)}</span>
-              ) : (
-                <div className="pg-testimonial-avatar">{getInitials(current.clientName)}</div>
-              )}
+              <div className="pg-testimonial-avatar">{getInitials(current.clientName)}</div>
             </div>
           </div>
           
