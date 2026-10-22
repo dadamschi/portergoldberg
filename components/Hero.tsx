@@ -225,12 +225,13 @@ export function Hero({ heroBio }: HeroProps) {
         </div>
         <div className="pg-hero-bio-photo">
           <Image
-            src="/Lauren-and-Samantha-Oval.webp"
+            src="/pg_image_sharpened.webp"
             alt="Samantha Porter and Lauren Goldberg"
             className="pg-hero-bio-img"
             fill
             sizes="(max-width: 768px) 280px, 420px"
-            style={{ objectFit: 'cover' }}
+            quality={95}
+            style={{ objectFit: 'cover', transform: 'scale(1.7)', transformOrigin: '55% 67%' }}
           />
         </div>
       </div>

@@ -694,8 +694,8 @@ body {
   position: relative;
   width: 440px;
   height: 660px;
-  border-radius: 220px;
-  border: 8px solid var(--pg-black);
+  border-radius: 24px;
+  /* border: 8px solid var(--pg-black); */
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -716,7 +716,7 @@ body {
     order: -1;
     width: 240px;
     height: 360px;
-    border-radius: 120px;
+    border-radius: 16px;
     margin: 0 auto;
     display: none;
   }
