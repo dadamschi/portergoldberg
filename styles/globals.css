@@ -7138,6 +7138,14 @@ ul {
   color: #7A6733;
 }
 
+.pg-ch-highlight-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pg-navy);
+}
+
 .pg-ch-address {
   margin: 0;
   font-size: 22px;

@@ -98,6 +98,7 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
 
   const storyPrice = story ? formatPrice(story.price) : null
   const storyDetails = story ? formatDetails(story) : ''
+  const storyHighlightText = story ? (story.closingHighlightDetails?.highlightText || story.highlightText) : null
 
   return (
     <section className="pg-listings" aria-labelledby="pg-ch-title">
@@ -137,6 +138,7 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                 // const price = formatPrice(item.price)
                 // const details = formatDetails(item)
                 const place = item.neighborhood || item.city || 'Chicago'
+                const highlightText = item.closingHighlightDetails?.highlightText || item.highlightText
                 return (
                   <li
                     key={item._id}
@@ -165,6 +167,9 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                       </div>
                       <div className="pg-ch-body">
                         <p className="pg-ch-place">{place}</p>
+                        {highlightText && (
+                          <h3 className="pg-ch-highlight-text">{highlightText}</h3>
+                        )}
                         {/* <h3 className="pg-ch-address">{item.address}</h3> */}
                         {/* <p className="pg-ch-details">{[price && `Sold ${price}`, details].filter(Boolean).join(' · ')}</p> */}
                       </div>
@@ -250,7 +255,12 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
             </div>
             <div className="pg-ch-dialog-body">
               <div className="pg-ch-dialog-top">
-                <p className="pg-ch-eyebrow">Success Story</p>
+                <div>
+                  <p className="pg-ch-eyebrow">Success Story</p>
+                  {storyHighlightText && (
+                    <h3 className="pg-ch-highlight-text">{storyHighlightText}</h3>
+                  )}
+                </div>
                 <button type="button" className="pg-ch-close" aria-label="Close" onClick={() => setStory(null)}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                     <path d="M6 6l12 12" />
