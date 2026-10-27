@@ -359,7 +359,6 @@ export function BulkEmailSender() {
 
   const selectedList = lists.find(l => l.listId === selectedListId)
   const allSelected = contacts.length > 0 && selectedContactIds.size === contacts.length
-  const selectedContacts = contacts.filter(c => selectedContactIds.has(c.id))
 
   return (
     <div className="bulk-email-sender">

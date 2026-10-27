@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
       throw new Error(`HubSpot API error: ${response.status}`)
     }
 
-    const data = await response.json()
+    const data = await response.json() as { results: Array<{ id: string; properties: Record<string, string> }> }
 
     return NextResponse.json({
-      contacts: data.results.map((contact: any) => ({
+      contacts: data.results.map((contact) => ({
         id: contact.id,
         firstname: contact.properties.firstname || '',
         lastname: contact.properties.lastname || '',

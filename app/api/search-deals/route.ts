@@ -63,8 +63,8 @@ async function getDealContacts(dealId: string) {
     return []
   }
 
-  const data = await response.json()
-  const contactIds = data.results?.map((r: any) => r.id) || []
+  const data = await response.json() as { results?: Array<{ id: string }> }
+  const contactIds = data.results?.map((r) => r.id) || []
 
   if (contactIds.length === 0) {
     return []
@@ -109,14 +109,14 @@ export async function POST(request: NextRequest) {
 
     // Fetch contacts for each deal
     const dealsWithContacts = await Promise.all(
-      deals.map(async (deal: any) => {
-        const contacts = await getDealContacts(deal.id)
+      deals.map(async (deal: { id: string; properties: Record<string, string> }) => {
+        const contacts = await getDealContacts(deal.id) as Array<{ id: string; properties: Record<string, string> }>
         return {
           id: deal.id,
           dealname: deal.properties.dealname || '',
           dealstage: deal.properties.dealstage || '',
           amount: deal.properties.amount || '0',
-          contacts: contacts.map((c: any) => ({
+          contacts: contacts.map((c) => ({
             id: c.id,
             firstname: c.properties.firstname || '',
             lastname: c.properties.lastname || '',
