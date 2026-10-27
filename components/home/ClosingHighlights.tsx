@@ -50,10 +50,16 @@ function useCardsPerView(): number {
   return perView
 }
 
-function RepresentationBanner({ representation }: { representation: ClosingHighlight['representation'] }) {
+function RepresentationBanner({
+  representation,
+  customLabel
+}: {
+  representation: ClosingHighlight['representation']
+  customLabel?: string
+}) {
   return (
     <span className={`pg-ch-banner pg-ch-banner--${representation}`}>
-      {REPRESENTATION_LABEL[representation]}
+      {customLabel || REPRESENTATION_LABEL[representation]}
     </span>
   )
 }
@@ -163,7 +169,10 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                         ) : (
                           <div className="pg-ch-media-empty" />
                         )}
-                        <RepresentationBanner representation={item.representation} />
+                        <RepresentationBanner
+                          representation={item.representation}
+                          customLabel={item.customRepresentationLabel}
+                        />
                       </div>
                       <div className="pg-ch-body">
                         <p className="pg-ch-place">{place}</p>
@@ -251,7 +260,10 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                   style={{ objectFit: 'cover' }}
                 />
               )}
-              <RepresentationBanner representation={story.representation} />
+              <RepresentationBanner
+                representation={story.representation}
+                customLabel={story.customRepresentationLabel}
+              />
             </div>
             <div className="pg-ch-dialog-body">
               <div className="pg-ch-dialog-top">

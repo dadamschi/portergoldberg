@@ -368,6 +368,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     baths,
     units,
     representation,
+    customRepresentationLabel,
     successStory,
     closingHighlightDetails,
     closingHighlightOrder,

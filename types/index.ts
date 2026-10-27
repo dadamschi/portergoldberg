@@ -44,6 +44,7 @@ export type ClosingHighlight = {
   baths?: string
   units?: number
   representation: 'buyer' | 'seller'
+  customRepresentationLabel?: string
   // Old flat structure (for backward compatibility)
   successStory?: string
   closingHighlightOrder?: number

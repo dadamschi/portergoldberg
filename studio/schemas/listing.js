@@ -146,6 +146,13 @@ export const listing = defineType({
       hidden: ({ document }) => document?.statusType !== "sold",
     }),
     defineField({
+      name: "customRepresentationLabel",
+      title: "Custom Representation Label",
+      type: "string",
+      description: "Optional custom label to override the default 'Represented Buyer' or 'Represented Seller' banner (e.g., 'Land Acquisition')",
+      hidden: ({ document }) => document?.statusType !== "sold" || !document?.representation,
+    }),
+    defineField({
       name: "closingHighlight",
       title: "Show in Closing Highlights",
       type: "boolean",
