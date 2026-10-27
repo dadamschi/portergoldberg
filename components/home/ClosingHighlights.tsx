@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import type { ClosingHighlight } from '@/types'
 import { textToMoney } from '@/lib/utils/text'
+import { urlFor } from '@/lib/image'
 
 const AUTOPLAY_MS = 5000
 
@@ -156,15 +157,15 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                   >
                     <article className="pg-ch-card">
                       <div className="pg-ch-media">
-                        {item.image?.asset?.url ? (
+                        {item.image ? (
                           <Image
-                            src={item.image.asset.url}
+                            src={urlFor(item.image).width(840).height(560).url()}
                             alt={item.image.alt || `${item.address}, ${place} – sold`}
                             fill
                             sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 420px"
                             style={{ objectFit: 'cover' }}
-                            placeholder={item.image.asset.metadata?.lqip ? 'blur' : 'empty'}
-                            blurDataURL={item.image.asset.metadata?.lqip}
+                            placeholder={item.image.asset?.metadata?.lqip ? 'blur' : 'empty'}
+                            blurDataURL={item.image.asset?.metadata?.lqip}
                           />
                         ) : (
                           <div className="pg-ch-media-empty" />
@@ -251,9 +252,9 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
         {story && (
           <div className="pg-ch-dialog-panel">
             <div className="pg-ch-dialog-media">
-              {story.image?.asset?.url && (
+              {story.image && (
                 <Image
-                  src={story.image.asset.url}
+                  src={urlFor(story.image).width(920).height(614).url()}
                   alt={story.image.alt || `${story.address} – sold`}
                   fill
                   sizes="(max-width: 760px) 100vw, 460px"
