@@ -358,7 +358,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     featured,
     featuredOrder
   },
-  "closingHighlights": *[_type == "listing" && statusType == "sold" && closingHighlight == true && representation in ["buyer", "seller"]] | order(closingHighlightOrder asc, _updatedAt desc) {
+  "closingHighlights": *[_type == "listing" && statusType == "sold" && closingHighlight == true && representation in ["buyer", "seller"]] | order(coalesce(closingHighlightDetails.order, closingHighlightOrder) asc, _updatedAt desc) {
     _id,
     address,
     neighborhood,
@@ -369,6 +369,9 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `{
     units,
     representation,
     successStory,
+    closingHighlightDetails,
+    closingHighlightOrder,
+    highlightText,
     "image": image { ${imageFragment} }
   },
   "testimonials": *[_type == "testimonial" && pinOnHomePage == true] | order(order asc, _createdAt desc) {

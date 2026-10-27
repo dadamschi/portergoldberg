@@ -161,26 +161,33 @@ export const listing = defineType({
         }),
     }),
     defineField({
-      name: "closingHighlightOrder",
-      title: "Closing Highlights Order",
-      type: "number",
-      description: "Lower numbers appear first in the carousel. Update this field to reorder highlights - all highlights should have unique sequential numbers (1, 2, 3, etc.)",
+      name: "closingHighlightDetails",
+      title: "Closing Highlight Details",
+      type: "object",
       hidden: ({ document }) => !document?.closingHighlight,
-      validation: (rule) =>
-        rule.custom((value, context) => {
-          if (context.document?.closingHighlight && !value) {
-            return "Order is required for Closing Highlights";
-          }
-          return true;
+      fields: [
+        defineField({
+          name: "order",
+          title: "Order",
+          type: "number",
+          description: "Lower numbers appear first in the carousel. All highlights should have unique sequential numbers (1, 2, 3, etc.)",
+          validation: (rule) => rule.required().error("Order is required for Closing Highlights"),
         }),
-    }),
-    defineField({
-      name: "successStory",
-      title: "Success Story",
-      type: "text",
-      rows: 6,
-      description: "Shown in the Success Story pop-out (~80–120 words). Do not include client names or initials.",
-      hidden: ({ document }) => !document?.closingHighlight,
+        defineField({
+          name: "highlightText",
+          title: "Highlight Text",
+          type: "string",
+          description: "Short text shown on the card (max 50 characters). Example: \"Navigating Seasons\"",
+          validation: (rule) => rule.max(50).warning("Keep it under 50 characters for best display"),
+        }),
+        defineField({
+          name: "successStory",
+          title: "Success Story",
+          type: "text",
+          rows: 6,
+          description: "Shown in the Success Story pop-out (~80–120 words). Do not include client names or initials.",
+        }),
+      ],
     }),
     defineField({
       name: "units",
