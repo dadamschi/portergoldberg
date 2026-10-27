@@ -168,7 +168,7 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                         {/* <h3 className="pg-ch-address">{item.address}</h3> */}
                         {/* <p className="pg-ch-details">{[price && `Sold ${price}`, details].filter(Boolean).join(' · ')}</p> */}
                       </div>
-                      {item.successStory && (
+                      {(item.closingHighlightDetails?.successStory || item.successStory) && (
                         <div className="pg-ch-actions">
                           <button type="button" className="pg-ch-story-btn" onClick={() => setStory(item)}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -263,7 +263,7 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
                 {[story.neighborhood || story.city, storyPrice && `Sold ${storyPrice}`, storyDetails].filter(Boolean).join(' · ')}
               </p>
               <hr className="pg-ch-rule" />
-              <p className="pg-ch-story">{story.successStory}</p>
+              <p className="pg-ch-story">{story.closingHighlightDetails?.successStory || story.successStory}</p>
             </div>
           </div>
         )}

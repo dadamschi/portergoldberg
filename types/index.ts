@@ -44,7 +44,16 @@ export type ClosingHighlight = {
   baths?: string
   units?: number
   representation: 'buyer' | 'seller'
+  // Old flat structure (for backward compatibility)
   successStory?: string
+  closingHighlightOrder?: number
+  highlightText?: string
+  // New nested structure
+  closingHighlightDetails?: {
+    order: number
+    highlightText?: string
+    successStory?: string
+  }
   image?: SanityImage
 }
 
