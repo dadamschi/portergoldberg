@@ -594,6 +594,7 @@ body {
   text-decoration: none;
   aspect-ratio: 1 / 1;
   border: 1px solid #d0d0d0;
+  border-radius: 24px;
 }
 
 .pg-starts-here-card:hover .pg-starts-here-img {
@@ -614,6 +615,10 @@ body {
     grid-template-columns: 1fr;
     gap: 24px;
     max-width: 400px;
+  }
+
+  .pg-starts-here-card {
+    border-radius: 16px;
   }
 }
 
@@ -7244,6 +7249,24 @@ ul {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.pg-ch-view-all {
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--pg-navy);
+  color: var(--pg-white);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.pg-ch-view-all:hover {
+  background: #000050;
+  transform: translateY(-1px);
 }
 
 /* Success Story pop-out */

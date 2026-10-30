@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { ClosingHighlight } from '@/types'
 import { textToMoney } from '@/lib/utils/text'
 import { urlFor } from '@/lib/image'
@@ -238,6 +239,12 @@ export function ClosingHighlights({ items }: ClosingHighlightsProps) {
             </button>
           </div>
         )}
+
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <Link href="/inventory#sold" className="pg-ch-view-all">
+            View All Sold Properties
+          </Link>
+        </div>
       </div>
 
       <dialog
